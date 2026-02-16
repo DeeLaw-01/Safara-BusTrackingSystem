@@ -1,0 +1,58 @@
+export enum UserRole {
+  RIDER = 'rider',
+  DRIVER = 'driver',
+  ADMIN = 'admin',
+}
+
+export interface IUser {
+  _id: string;
+  email: string;
+  password?: string;
+  name: string;
+  phone?: string;
+  role: UserRole;
+  homeStop?: string;
+  isApproved: boolean;
+  fcmToken?: string;
+  googleId?: string;
+  avatar?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IUserCreate {
+  email: string;
+  password?: string;
+  name: string;
+  phone?: string;
+  role: UserRole;
+  googleId?: string;
+  avatar?: string;
+}
+
+export interface IUserUpdate {
+  name?: string;
+  phone?: string;
+  homeStop?: string;
+  fcmToken?: string;
+  isApproved?: boolean;
+  avatar?: string;
+}
+
+export interface ILoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface IRegisterRequest {
+  email: string;
+  password: string;
+  name: string;
+  phone?: string;
+  role: UserRole;
+}
+
+export interface IAuthResponse {
+  user: Omit<IUser, 'password'>;
+  token: string;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@bus-tracking/shared",
+  "version": "1.0.0",
+  "description": "Shared types for bus tracking system",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
