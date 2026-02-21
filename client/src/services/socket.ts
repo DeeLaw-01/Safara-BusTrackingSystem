@@ -24,6 +24,8 @@ class SocketService {
 
     this.socket.on('connect', () => {
       console.log('Socket connected');
+      // Notify listeners so they can rejoin rooms after reconnection
+      this.emit('socket:connected', {});
     });
 
     this.socket.on('disconnect', (reason) => {
@@ -32,6 +34,7 @@ class SocketService {
 
     this.socket.on('error', (error: { message: string }) => {
       console.error('Socket error:', error.message);
+      this.emit('error', error);
     });
 
     this.socket.on('authenticated', (data: { userId: string }) => {
@@ -111,6 +114,11 @@ class SocketService {
   onTripEnded(callback: (data: { tripId: string; busId: string }) => void): () => void {
     this.on('bus:tripEnded', callback as SocketCallback);
     return () => this.off('bus:tripEnded', callback as SocketCallback);
+  }
+
+  onConnected(callback: () => void): () => void {
+    this.on('socket:connected', callback as SocketCallback);
+    return () => this.off('socket:connected', callback as SocketCallback);
   }
 }
 

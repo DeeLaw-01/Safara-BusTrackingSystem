@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   MapContainer,
@@ -83,6 +83,64 @@ function MapClickHandler ({ onMapClick, disabled }: MapClickHandlerProps) {
     }
   })
   return null
+}
+
+// ─── Draggable map marker for stops ──────────────────────────────────────────
+
+interface DraggableStopMarkerProps {
+  stop: Stop
+  index: number
+  totalStops: number
+  draggable: boolean
+  onDragEnd: (stopId: string, lat: number, lng: number) => void
+}
+
+function DraggableStopMarker ({
+  stop,
+  index,
+  totalStops,
+  draggable,
+  onDragEnd
+}: DraggableStopMarkerProps) {
+  const markerRef = useRef<L.Marker | null>(null)
+
+  const eventHandlers = useMemo(
+    () => ({
+      dragend () {
+        const marker = markerRef.current
+        if (marker) {
+          const pos = marker.getLatLng()
+          onDragEnd(stop._id, pos.lat, pos.lng)
+        }
+      }
+    }),
+    [stop._id, onDragEnd]
+  )
+
+  return (
+    <Marker
+      ref={markerRef}
+      position={[stop.latitude, stop.longitude]}
+      icon={createStopIcon(index, index === 0, index === totalStops - 1)}
+      draggable={draggable}
+      eventHandlers={eventHandlers}
+    >
+      <Popup>
+        <div className='text-sm'>
+          <div className='font-semibold'>{stop.name}</div>
+          <div className='text-slate-500 text-xs mt-1'>
+            Stop #{index + 1}
+            {draggable && ' • Drag to reposition'}
+          </div>
+          {stop.estimatedArrivalTime && (
+            <div className='text-xs text-slate-500'>
+              ETA: {stop.estimatedArrivalTime}
+            </div>
+          )}
+        </div>
+      </Popup>
+    </Marker>
+  )
 }
 
 // ─── Sortable stop item ─────────────────────────────────────────────────────
@@ -562,6 +620,32 @@ export default function RouteBuilder () {
     [stops]
   )
 
+  // ─── Drag marker to reposition stop ─────────────────────────────────────────
+
+  const handleMarkerDrag = useCallback(
+    async (stopId: string, lat: number, lng: number) => {
+      // Optimistic update
+      setStops(prev =>
+        prev.map(s =>
+          s._id === stopId ? { ...s, latitude: lat, longitude: lng } : s
+        )
+      )
+      // Clear path since stops moved
+      setRoutePath([])
+      setPathInfo(null)
+
+      try {
+        await stopsApi.update(stopId, { latitude: lat, longitude: lng })
+      } catch (error) {
+        console.error('Failed to update stop position:', error)
+        showToast('Failed to update stop position', 'error')
+        // Reload to revert
+        loadRoute()
+      }
+    },
+    [showToast, loadRoute]
+  )
+
   // ─── Generate route path (OSRM) ───────────────────────────────────────────
 
   const handleGeneratePath = useCallback(async () => {
@@ -815,31 +899,16 @@ export default function RouteBuilder () {
                 disabled={isLocked || addingStop}
               />
 
-              {/* Stop markers */}
+              {/* Stop markers (draggable when not locked) */}
               {stops.map((stop, index) => (
-                <Marker
+                <DraggableStopMarker
                   key={stop._id}
-                  position={[stop.latitude, stop.longitude]}
-                  icon={createStopIcon(
-                    index,
-                    index === 0,
-                    index === stops.length - 1
-                  )}
-                >
-                  <Popup>
-                    <div className='text-sm'>
-                      <div className='font-semibold'>{stop.name}</div>
-                      <div className='text-slate-500 text-xs mt-1'>
-                        Stop #{index + 1}
-                      </div>
-                      {stop.estimatedArrivalTime && (
-                        <div className='text-xs text-slate-500'>
-                          ETA: {stop.estimatedArrivalTime}
-                        </div>
-                      )}
-                    </div>
-                  </Popup>
-                </Marker>
+                  stop={stop}
+                  index={index}
+                  totalStops={stops.length}
+                  draggable={!isLocked}
+                  onDragEnd={handleMarkerDrag}
+                />
               ))}
 
               {/* OSRM route path (road-following) */}

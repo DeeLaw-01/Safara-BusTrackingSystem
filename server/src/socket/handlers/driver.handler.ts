@@ -133,32 +133,86 @@ export function driverHandlers(
   // End Trip
   socket.on('driver:endTrip', async () => {
     try {
-      if (!socket.currentTripId || !socket.currentBusId || !socket.currentRouteId) {
-        socket.emit('error', { message: 'No active trip to end' });
+      const driverId = socket.userId!;
+      let tripId = socket.currentTripId;
+      let busId = socket.currentBusId;
+      let routeId = socket.currentRouteId;
+
+      // If socket state is lost (e.g., after reconnection), find the ongoing trip from DB
+      if (!tripId) {
+        const ongoingTrip = await Trip.findOne({ driverId, status: 'ongoing' });
+        if (!ongoingTrip) {
+          socket.emit('error', { message: 'No active trip to end' });
+          return;
+        }
+        tripId = ongoingTrip._id.toString();
+        busId = ongoingTrip.busId.toString();
+        routeId = ongoingTrip.routeId.toString();
+        
+        // Restore socket state
+        socket.currentTripId = tripId;
+        socket.currentBusId = busId;
+        socket.currentRouteId = routeId;
+      }
+
+      // Verify trip exists and belongs to this driver
+      const trip = await Trip.findById(tripId);
+      if (!trip) {
+        socket.emit('error', { message: 'Trip not found' });
+        return;
+      }
+
+      if (trip.driverId.toString() !== driverId) {
+        socket.emit('error', { message: 'You are not authorized to end this trip' });
+        return;
+      }
+
+      if (trip.status === 'completed') {
+        // Trip already ended, just clear socket state
+        socket.currentTripId = undefined;
+        socket.currentBusId = undefined;
+        socket.currentRouteId = undefined;
+        socket.emit('trip:ended', { tripId, busId, routeId });
         return;
       }
 
       // Update trip in database
-      await Trip.findByIdAndUpdate(socket.currentTripId, {
-        status: 'completed',
-        endTime: new Date(),
-      });
+      const updatedTrip = await Trip.findByIdAndUpdate(
+        tripId,
+        {
+          status: 'completed',
+          endTime: new Date(),
+        },
+        { new: true } // Return updated document
+      );
+
+      if (!updatedTrip) {
+        socket.emit('error', { message: 'Failed to update trip' });
+        return;
+      }
 
       // Remove from Redis
-      await removeActiveBus(socket.currentBusId);
+      if (busId) {
+        await removeActiveBus(busId);
+      }
 
       // Notify riders
-      io.to(`route:${socket.currentRouteId}`).emit('bus:tripEnded', {
-        tripId: socket.currentTripId,
-        busId: socket.currentBusId,
-        routeId: socket.currentRouteId,
-      });
+      if (routeId) {
+        io.to(`route:${routeId}`).emit('bus:tripEnded', {
+          tripId,
+          busId,
+          routeId,
+        });
+      }
 
       // Leave rooms
-      socket.leave(`route:${socket.currentRouteId}`);
-      socket.leave(`bus:${socket.currentBusId}`);
+      if (routeId) socket.leave(`route:${routeId}`);
+      if (busId) socket.leave(`bus:${busId}`);
 
-      console.log(`Trip ended: ${socket.currentTripId}`);
+      console.log(`Trip ended: ${tripId} by driver ${driverId}`);
+
+      // Emit success event to driver
+      socket.emit('trip:ended', { tripId, busId, routeId });
 
       // Clear socket state
       socket.currentTripId = undefined;

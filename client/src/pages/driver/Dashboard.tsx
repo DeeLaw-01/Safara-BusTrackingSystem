@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Bus, Route as RouteIcon, Navigation, Clock, AlertCircle, Loader2 } from 'lucide-react';
 import { tripsApi } from '@/services/api'
 import { useAuthStore } from '@/store/authStore'
+import { socketService } from '@/services/socket'
 import type { Bus as BusType, Trip } from '@/types'
 
 export default function DriverDashboard() {
@@ -14,6 +15,23 @@ export default function DriverDashboard() {
 
   useEffect(() => {
     loadData();
+
+    // Listen for trip end events (when trip is ended by driver or admin)
+    const unsubTripEnded = socketService.onTripEnded((data) => {
+      console.log('Trip ended event received:', data);
+      // Refresh trip data immediately
+      loadData();
+    });
+
+    // Periodic refresh as fallback (every 10 seconds)
+    const refreshInterval = setInterval(() => {
+      loadData();
+    }, 10000);
+
+    return () => {
+      unsubTripEnded();
+      clearInterval(refreshInterval);
+    };
   }, []);
 
   const loadData = async () => {

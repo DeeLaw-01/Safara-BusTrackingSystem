@@ -10,7 +10,12 @@
     font-family: 'Poppins', system-ui, sans-serif;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Poppins', system-ui, sans-serif;
   }
 }
@@ -43,15 +48,15 @@
            shadow-lg shadow-coral-500/30 transition-all duration-300
            flex items-center justify-center gap-2;
   }
-  
+
   .btn-coral:hover {
     @apply bg-coral-600 shadow-coral-500/50 scale-[1.02];
   }
-  
+
   .btn-coral:active {
     @apply bg-coral-700;
   }
-  
+
   .btn-coral:disabled {
     @apply opacity-50 cursor-not-allowed scale-100;
   }
@@ -160,7 +165,8 @@
 
 /* Bus marker animation */
 @keyframes bus-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -176,25 +182,36 @@
 
 /* Auth page background pattern */
 .auth-bg-pattern {
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 50%);
+  background-image: radial-gradient(
+      circle at 20% 80%,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%
+    );
 }
 
 /* Animation keyframes */
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  0% { 
-    opacity: 0; 
-    transform: translateY(20px); 
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  100% { 
-    opacity: 1; 
-    transform: translateY(0); 
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -204,4 +221,25 @@
 
 .animate-slide-up {
   animation: slideUp 0.5s ease-out;
+}
+
+/* ─── Driver GPS pulse animation ─── */
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* ─── Hide scrollbar utility ─── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

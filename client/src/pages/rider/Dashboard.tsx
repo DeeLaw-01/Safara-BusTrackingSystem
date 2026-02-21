@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MapContainer,
@@ -16,18 +16,17 @@ import {
   Loader2,
   Phone,
   Info,
-  MoreHorizontal,
   Menu,
   X,
   Settings,
   User,
   LogOut,
   HelpCircle,
-  Bell,
+  Bell as BellIcon,
   Shield,
   ChevronRight
 } from 'lucide-react'
-import { routesApi, busesApi } from '@/services/api'
+import { routesApi, busesApi, remindersApi } from '@/services/api'
 import { socketService } from '@/services/socket'
 import { useBusStore } from '@/store/busStore'
 import { useAuthStore } from '@/store/authStore'
@@ -232,9 +231,21 @@ export default function RiderDashboard () {
 
   // ─── Join all route rooms for live bus updates ──────────────────────
   useEffect(() => {
-    routes.forEach(r => socketService.joinRoute(r._id))
+    const joinAllRoutes = () => {
+      routes.forEach(r => socketService.joinRoute(r._id))
+    }
+
+    joinAllRoutes()
+
+    // Re-join rooms after socket reconnection (rooms are lost on disconnect)
+    const unsubConnected = socketService.onConnected(() => {
+      console.log('Socket reconnected — rejoining route rooms')
+      joinAllRoutes()
+    })
+
     return () => {
       routes.forEach(r => socketService.leaveRoute(r._id))
+      unsubConnected()
     }
   }, [routes])
 
@@ -418,10 +429,17 @@ export default function RiderDashboard () {
             </>
           )}
 
-          {/* Route polyline (preview / tracking) */}
+          {/* Route polyline (preview / tracking) — use OSRM path if available */}
           {(view === 'preview' || view === 'tracking') &&
             selectedRoute &&
-            selectedRoute.stops?.length > 1 && (
+            (selectedRoute.path && selectedRoute.path.length > 1 ? (
+              <Polyline
+                positions={selectedRoute.path}
+                color='#38bdf8'
+                weight={5}
+                opacity={0.9}
+              />
+            ) : selectedRoute.stops?.length > 1 ? (
               <Polyline
                 positions={selectedRoute.stops.map(
                   s => [s.latitude, s.longitude] as [number, number]
@@ -430,7 +448,7 @@ export default function RiderDashboard () {
                 weight={5}
                 opacity={0.9}
               />
-            )}
+            ) : null)}
 
           {/* Stop markers (preview / tracking) */}
           {(view === 'preview' || view === 'tracking') &&
@@ -562,6 +580,10 @@ function BusSelectView ({
   getLiveBusLocation: (busId: string) => BusLocation | undefined
   onSelectBus: (bus: BusWithRoute) => void
 }) {
+  // Split buses into live (active trip) and inactive
+  const liveBuses = buses.filter(b => getLiveBusLocation(b._id))
+  const inactiveBuses = buses.filter(b => !getLiveBusLocation(b._id))
+
   return (
     <div>
       <div className='flex items-center gap-2 mb-4'>
@@ -581,38 +603,60 @@ function BusSelectView ({
         </div>
       ) : (
         <div className='space-y-3'>
-          {buses.map(bus => {
+          {/* Live buses first */}
+          {liveBuses.map(bus => {
             const routeName = getRouteName(bus)
-            const live = getLiveBusLocation(bus._id)
-
             return (
               <button
                 key={bus._id}
                 onClick={() => onSelectBus(bus)}
-                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-coral-200 hover:bg-coral-50/30 transition-all group'
+                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-green-100 bg-green-50/30 hover:border-coral-200 hover:bg-coral-50/30 transition-all group'
               >
-                {/* Bus icon */}
-                <div className='w-12 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0'>
+                <div className='w-12 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0 relative'>
                   <Bus className='w-6 h-6 text-amber-600' />
                 </div>
-
-                {/* Bus info */}
                 <div className='flex-1 text-left'>
                   <div className='font-semibold text-gray-900 group-hover:text-coral-600 transition-colors'>
                     {bus.name}
                   </div>
+                  <div className='text-xs text-green-600 font-medium'>
+                    Live — On route
+                  </div>
                 </div>
-
-                {/* Route badge */}
                 {routeName && (
                   <span className='text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full uppercase tracking-wide'>
                     {routeName}
                   </span>
                 )}
+                <span className='w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shrink-0' />
+              </button>
+            )
+          })}
 
-                {/* Live indicator */}
-                {live && (
-                  <span className='w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shrink-0' />
+          {/* Inactive buses */}
+          {inactiveBuses.map(bus => {
+            const routeName = getRouteName(bus)
+            return (
+              <button
+                key={bus._id}
+                onClick={() => onSelectBus(bus)}
+                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-coral-200 hover:bg-coral-50/30 transition-all group opacity-60'
+              >
+                <div className='w-12 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0'>
+                  <Bus className='w-6 h-6 text-gray-400' />
+                </div>
+                <div className='flex-1 text-left'>
+                  <div className='font-semibold text-gray-500 group-hover:text-coral-600 transition-colors'>
+                    {bus.name}
+                  </div>
+                  <div className='text-xs text-gray-400'>
+                    Not currently active
+                  </div>
+                </div>
+                {routeName && (
+                  <span className='text-xs font-medium text-gray-400 bg-gray-50 px-3 py-1 rounded-full uppercase tracking-wide'>
+                    {routeName}
+                  </span>
                 )}
               </button>
             )
@@ -705,11 +749,110 @@ function ActiveTrackingView ({
   const live = getLiveBusLocation(bus._id)
   const driver = getDriverInfo(bus)
 
-  // Determine which stop the bus is closest to
-  const currentStopIndex = getCurrentStopIndex(stops, live)
+  // Determine which stop the bus is at using path-aware progress
+  const currentStopIndex = getCurrentStopIndex(stops, live, route.path)
 
   // Calculate ETA (rough estimate based on remaining stops)
   const etaMinutes = estimateETA(stops, currentStopIndex)
+
+  // Reminders state
+  const [reminders, setReminders] = useState<
+    Map<string, { id: string; minutesBefore: number }>
+  >(new Map())
+  const [reminderPopup, setReminderPopup] = useState<string | null>(null)
+  const [reminderMinutes, setReminderMinutes] = useState(5)
+  const [savingReminder, setSavingReminder] = useState(false)
+
+  // Load existing reminders for this route
+  useEffect(() => {
+    loadReminders()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route._id])
+
+  const loadReminders = async () => {
+    try {
+      const res = await remindersApi.getMyReminders()
+      const data = res.data.data as Array<{
+        _id: string
+        stopId: { _id: string } | string
+        routeId: { _id: string } | string
+        minutesBefore: number
+        isActive: boolean
+      }>
+      const map = new Map<string, { id: string; minutesBefore: number }>()
+      data
+        .filter(r => {
+          const rRouteId =
+            typeof r.routeId === 'object' ? r.routeId._id : r.routeId
+          return rRouteId === route._id && r.isActive
+        })
+        .forEach(r => {
+          const stopId = typeof r.stopId === 'object' ? r.stopId._id : r.stopId
+          map.set(stopId, { id: r._id, minutesBefore: r.minutesBefore })
+        })
+      setReminders(map)
+    } catch {
+      // Silently fail
+    }
+  }
+
+  const handleSetReminder = useCallback(
+    async (stopId: string, minutes: number) => {
+      setSavingReminder(true)
+      try {
+        // Check if reminder already exists
+        const existing = reminders.get(stopId)
+        if (existing) {
+          // Update
+          await remindersApi.update(existing.id, { minutesBefore: minutes })
+          setReminders(prev => {
+            const next = new Map(prev)
+            next.set(stopId, { ...existing, minutesBefore: minutes })
+            return next
+          })
+        } else {
+          // Create
+          const res = await remindersApi.create({
+            stopId,
+            routeId: route._id,
+            minutesBefore: minutes,
+            notificationType: 'push'
+          })
+          const newReminder = res.data.data
+          setReminders(prev => {
+            const next = new Map(prev)
+            next.set(stopId, { id: newReminder._id, minutesBefore: minutes })
+            return next
+          })
+        }
+        setReminderPopup(null)
+      } catch (err) {
+        console.error('Failed to set reminder:', err)
+      } finally {
+        setSavingReminder(false)
+      }
+    },
+    [reminders, route._id]
+  )
+
+  const handleRemoveReminder = useCallback(
+    async (stopId: string) => {
+      const existing = reminders.get(stopId)
+      if (!existing) return
+      try {
+        await remindersApi.delete(existing.id)
+        setReminders(prev => {
+          const next = new Map(prev)
+          next.delete(stopId)
+          return next
+        })
+        setReminderPopup(null)
+      } catch (err) {
+        console.error('Failed to remove reminder:', err)
+      }
+    },
+    [reminders]
+  )
 
   return (
     <div className='flex flex-col h-full'>
@@ -777,6 +920,8 @@ function ActiveTrackingView ({
           {stops.map((stop, index) => {
             const isPassed = index < currentStopIndex
             const isCurrent = index === currentStopIndex
+            const hasReminder = reminders.has(stop._id)
+            const reminderData = reminders.get(stop._id)
 
             return (
               <div
@@ -807,18 +952,94 @@ function ActiveTrackingView ({
                   >
                     {stop.name}
                   </div>
-                  <div className='text-sm text-gray-400'>
-                    More information about the station
-                  </div>
+                  {hasReminder && (
+                    <div className='text-xs text-amber-600 font-medium mt-0.5'>
+                      🔔 Alert {reminderData?.minutesBefore} min before
+                    </div>
+                  )}
+                  {stop.estimatedArrivalTime && (
+                    <div className='text-xs text-gray-400 mt-0.5'>
+                      ETA: {stop.estimatedArrivalTime}
+                    </div>
+                  )}
                 </div>
 
-                {/* Three dots menu */}
-                <button
-                  className='p-1 hover:bg-gray-100 rounded-lg shrink-0'
-                  title='More'
-                >
-                  <MoreHorizontal className='w-4 h-4 text-gray-400' />
-                </button>
+                {/* Reminder bell button */}
+                {!isPassed && (
+                  <div className='relative shrink-0'>
+                    <button
+                      className={`p-1.5 rounded-lg transition-colors ${
+                        hasReminder
+                          ? 'bg-amber-50 text-amber-500 hover:bg-amber-100'
+                          : 'text-gray-300 hover:bg-gray-100 hover:text-gray-500'
+                      }`}
+                      title={hasReminder ? 'Edit reminder' : 'Set reminder'}
+                      onClick={() => {
+                        if (reminderPopup === stop._id) {
+                          setReminderPopup(null)
+                        } else {
+                          setReminderMinutes(reminderData?.minutesBefore || 5)
+                          setReminderPopup(stop._id)
+                        }
+                      }}
+                    >
+                      <BellIcon className='w-4 h-4' />
+                    </button>
+
+                    {/* Reminder popup */}
+                    {reminderPopup === stop._id && (
+                      <div className='absolute right-0 top-10 z-30 bg-white rounded-xl shadow-xl border border-gray-200 p-3 w-56'>
+                        <div className='text-sm font-semibold text-gray-900 mb-2'>
+                          Set Alert
+                        </div>
+                        <p className='text-xs text-gray-500 mb-3'>
+                          Get notified when the bus is approaching this stop.
+                        </p>
+                        <label className='block text-xs text-gray-600 mb-1'>
+                          Minutes before arrival
+                        </label>
+                        <div className='flex gap-1 mb-3'>
+                          {[2, 5, 10, 15].map(m => (
+                            <button
+                              key={m}
+                              onClick={() => setReminderMinutes(m)}
+                              className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                                reminderMinutes === m
+                                  ? 'bg-coral-500 text-white'
+                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                            >
+                              {m} min
+                            </button>
+                          ))}
+                        </div>
+                        <div className='flex gap-2'>
+                          <button
+                            onClick={() =>
+                              handleSetReminder(stop._id, reminderMinutes)
+                            }
+                            disabled={savingReminder}
+                            className='flex-1 py-2 text-xs font-medium bg-coral-500 text-white rounded-lg hover:bg-coral-600 disabled:opacity-50 transition-colors'
+                          >
+                            {savingReminder
+                              ? 'Saving...'
+                              : hasReminder
+                              ? 'Update'
+                              : 'Set Alert'}
+                          </button>
+                          {hasReminder && (
+                            <button
+                              onClick={() => handleRemoveReminder(stop._id)}
+                              className='px-3 py-2 text-xs font-medium text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition-colors'
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -844,7 +1065,7 @@ function SidebarDrawer ({
 
   const menuItems = [
     { icon: User, label: 'My Account', path: '/account' },
-    { icon: Bell, label: 'Notifications', path: '/notifications' },
+    { icon: BellIcon, label: 'Notifications', path: '/notifications' },
     { icon: Settings, label: 'Settings', path: '/settings' },
     { icon: HelpCircle, label: 'Help & Support', path: '/help' },
     { icon: Shield, label: 'Privacy Policy', path: '/privacy' }
@@ -938,8 +1159,71 @@ function SidebarDrawer ({
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-function getCurrentStopIndex (stops: Stop[], busLocation?: BusLocation): number {
+
+/** Find the index of the closest point in an array of coordinates */
+function findClosestPointIndex (
+  path: [number, number][],
+  pos: [number, number]
+): number {
+  let minDist = Infinity
+  let closestIdx = 0
+  for (let i = 0; i < path.length; i++) {
+    const dist = haversineDistance(pos[0], pos[1], path[i][0], path[i][1])
+    if (dist < minDist) {
+      minDist = dist
+      closestIdx = i
+    }
+  }
+  return closestIdx
+}
+
+/**
+ * Determine which stop the bus is currently at / approaching.
+ * Uses route path (OSRM) when available for accurate directional progress.
+ * Falls back to proximity-based approach otherwise.
+ */
+function getCurrentStopIndex (
+  stops: Stop[],
+  busLocation?: BusLocation,
+  routePath?: [number, number][]
+): number {
   if (!busLocation || stops.length === 0) return 0
+
+  const busPos: [number, number] = [busLocation.latitude, busLocation.longitude]
+
+  // ── Path-based progress (accurate, uses route direction) ───────────
+  if (routePath && routePath.length > 1) {
+    // Where is the bus along the path?
+    const busPathIdx = findClosestPointIndex(routePath, busPos)
+
+    // For each stop, find where it sits on the path
+    let currentStopIdx = 0
+    for (let i = 0; i < stops.length; i++) {
+      const stopPathIdx = findClosestPointIndex(routePath, [
+        stops[i].latitude,
+        stops[i].longitude
+      ])
+      const distToStop = haversineDistance(
+        busLocation.latitude,
+        busLocation.longitude,
+        stops[i].latitude,
+        stops[i].longitude
+      )
+
+      if (busPathIdx > stopPathIdx && distToStop > 200) {
+        // Bus is past this stop on the route AND far enough away
+        currentStopIdx = Math.min(i + 1, stops.length - 1)
+      } else {
+        // Bus hasn't reached this stop yet (or is right at it)
+        break
+      }
+    }
+    return currentStopIdx
+  }
+
+  // ── Fallback: proximity-based (no path data) ──────────────────────
+  // Only consider a stop "passed" if the bus is close enough to be on-route
+  const NEAR_THRESHOLD = 500 // metres
 
   let closestIndex = 0
   let minDist = Infinity
@@ -956,6 +1240,9 @@ function getCurrentStopIndex (stops: Stop[], busLocation?: BusLocation): number 
       closestIndex = index
     }
   })
+
+  // If the bus is far from ALL stops, assume it hasn't reached stop 0 yet
+  if (minDist > NEAR_THRESHOLD) return 0
 
   return closestIndex
 }

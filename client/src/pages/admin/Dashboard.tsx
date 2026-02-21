@@ -35,7 +35,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 30000); // Refresh every 30s
+    const interval = setInterval(loadData, 10000); // Refresh every 10s for live bus accuracy
     return () => clearInterval(interval);
   }, []);
 

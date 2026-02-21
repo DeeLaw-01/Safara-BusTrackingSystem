@@ -1,354 +1,708 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import { 
-  Navigation, 
-  Square, 
-  MapPin, 
-  Loader2, 
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  useMap,
+  Popup
+} from 'react-leaflet'
+import L from 'leaflet'
+import {
+  Navigation,
+  Square,
+  MapPin,
+  Loader2,
   AlertCircle,
   Gauge,
-  Compass
-} from 'lucide-react';
+  Locate,
+  ChevronRight
+} from 'lucide-react'
 import { tripsApi, routesApi } from '@/services/api'
 import { socketService } from '@/services/socket'
 import type { Bus, Route, Stop } from '@/types'
-import 'leaflet/dist/leaflet.css';
+import 'leaflet/dist/leaflet.css'
 
-// Custom bus icon
-const busIcon = L.divIcon({
-  className: 'bus-marker',
-  html: `<div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/50 border-3 border-white">
-    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>
-    </svg>
-  </div>`,
-  iconSize: [48, 48],
-  iconAnchor: [24, 24],
-});
+// ─── Custom Icons ────────────────────────────────────────────────────────────
 
-// Stop icon
-const stopIcon = L.divIcon({
-  className: '',
-  html: `<div class="w-6 h-6 bg-slate-800 rounded-full flex items-center justify-center border-2 border-primary-400">
-    <div class="w-2 h-2 bg-primary-400 rounded-full"></div>
-  </div>`,
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
-});
-
-function MapUpdater({ position }: { position: [number, number] }) {
-  const map = useMap();
-  
-  useEffect(() => {
-    map.setView(position, map.getZoom());
-  }, [map, position]);
-
-  return null;
+function createDriverIcon(heading: number) {
+  return L.divIcon({
+    className: '',
+    html: `
+      <div style="position:relative;width:48px;height:48px;">
+        <!-- Heading cone -->
+        <div style="
+          position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(${heading}deg);
+          width:0;height:0;
+          border-left:16px solid transparent;
+          border-right:16px solid transparent;
+          border-bottom:24px solid rgba(59,130,246,0.25);
+          transform-origin:bottom center;
+        "></div>
+        <!-- GPS dot -->
+        <div style="
+          position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+          width:24px;height:24px;
+          background:#3b82f6;
+          border-radius:50%;
+          border:4px solid white;
+          box-shadow:0 2px 12px rgba(59,130,246,0.5);
+        "></div>
+        <!-- Pulse ring -->
+        <div style="
+          position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+          width:40px;height:40px;
+          border-radius:50%;
+          border:2px solid rgba(59,130,246,0.3);
+          animation:pulse 2s ease-out infinite;
+        "></div>
+      </div>
+    `,
+    iconSize: [48, 48],
+    iconAnchor: [24, 24]
+  })
 }
 
-export default function ActiveTrip() {
-  const navigate = useNavigate();
-  const [bus, setBus] = useState<Bus | null>(null);
-  const [route, setRoute] = useState<Route | null>(null);
-  const [tripActive, setTripActive] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [starting, setStarting] = useState(false);
-  const [ending, setEnding] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const stopIcon = L.divIcon({
+  className: '',
+  html: `
+    <div style="
+      width:16px;height:16px;
+      background:white;
+      border-radius:50%;
+      border:4px solid #0ea5e9;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+    "></div>
+  `,
+  iconSize: [16, 16],
+  iconAnchor: [8, 8]
+})
 
-  // Location state
-  const [position, setPosition] = useState<[number, number] | null>(null);
-  const [speed, setSpeed] = useState<number>(0);
-  const [heading, setHeading] = useState<number>(0);
-  const [locationError, setLocationError] = useState<string | null>(null);
+const nextStopIcon = L.divIcon({
+  className: '',
+  html: `
+    <div style="
+      width:24px;height:24px;
+      background:#f95f5f;
+      border-radius:50%;
+      border:4px solid white;
+      box-shadow:0 2px 8px rgba(249,95,95,0.5);
+    "></div>
+  `,
+  iconSize: [24, 24],
+  iconAnchor: [12, 12]
+})
 
-  const watchIdRef = useRef<number | null>(null);
-  const sendIntervalRef = useRef<NodeJS.Timeout | null>(null);
+// ─── Auto-follow map component ──────────────────────────────────────────────
+
+function AutoFollowMap({
+  position,
+  heading,
+  followMode
+}: {
+  position: [number, number]
+  heading: number
+  followMode: boolean
+}) {
+  const map = useMap()
 
   useEffect(() => {
-    loadData();
+    if (followMode && position) {
+      map.setView(position, Math.max(map.getZoom(), 16), { animate: true })
+    }
+  }, [map, position, followMode, heading])
+
+  return null
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+function haversineDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371e3
+  const toRad = (deg: number) => (deg * Math.PI) / 180
+  const dLat = toRad(lat2 - lat1)
+  const dLon = toRad(lon2 - lon1)
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+function findClosestPointOnPath(
+  path: [number, number][],
+  pos: [number, number]
+): number {
+  let minDist = Infinity
+  let closestIdx = 0
+  for (let i = 0; i < path.length; i++) {
+    const dist = haversineDistance(pos[0], pos[1], path[i][0], path[i][1])
+    if (dist < minDist) {
+      minDist = dist
+      closestIdx = i
+    }
+  }
+  return closestIdx
+}
+
+function getNextStopIndex(
+  stops: Stop[],
+  position: [number, number],
+  routePath?: [number, number][]
+): number {
+  if (!position || stops.length === 0) return 0
+
+  // ── Path-based progress (accurate, directional) ──────────────────
+  if (routePath && routePath.length > 1) {
+    const busPathIdx = findClosestPointOnPath(routePath, position)
+    let nextIdx = 0
+    for (let i = 0; i < stops.length; i++) {
+      const stopPathIdx = findClosestPointOnPath(routePath, [
+        stops[i].latitude,
+        stops[i].longitude
+      ])
+      const distToStop = haversineDistance(
+        position[0],
+        position[1],
+        stops[i].latitude,
+        stops[i].longitude
+      )
+      if (busPathIdx > stopPathIdx && distToStop > 150) {
+        // We've passed this stop on the route
+        nextIdx = Math.min(i + 1, stops.length - 1)
+      } else {
+        break
+      }
+    }
+    return nextIdx
+  }
+
+  // ── Fallback: proximity-based ────────────────────────────────────
+  let closestIdx = 0
+  let minDist = Infinity
+  stops.forEach((stop, idx) => {
+    const dist = haversineDistance(
+      position[0],
+      position[1],
+      stop.latitude,
+      stop.longitude
+    )
+    if (dist < minDist) {
+      minDist = dist
+      closestIdx = idx
+    }
+  })
+
+  // If far from all stops, assume at the start
+  if (minDist > 500) return 0
+
+  // If very close to the current stop (< 100m), next is the one after
+  if (minDist < 100 && closestIdx < stops.length - 1) {
+    return closestIdx + 1
+  }
+  return closestIdx
+}
+
+// ─── Main Component ─────────────────────────────────────────────────────────
+
+export default function ActiveTrip() {
+  const navigate = useNavigate()
+  const [bus, setBus] = useState<Bus | null>(null)
+  const [route, setRoute] = useState<Route | null>(null)
+  const [tripActive, setTripActive] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [starting, setStarting] = useState(false)
+  const [ending, setEnding] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [followMode, setFollowMode] = useState(true)
+
+  // Location state
+  const [position, setPosition] = useState<[number, number] | null>(null)
+  const [speed, setSpeed] = useState<number>(0)
+  const [heading, setHeading] = useState<number>(0)
+  const [locationError, setLocationError] = useState<string | null>(null)
+
+  const watchIdRef = useRef<number | null>(null)
+  const sendIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const latestPositionRef = useRef<[number, number] | null>(null)
+  const latestSpeedRef = useRef(0)
+  const latestHeadingRef = useRef(0)
+  const lastSendTimeRef = useRef(0)
+
+  useEffect(() => {
+    loadData()
+
+    // Listen for trip end events (e.g., if admin ends the trip)
+    const unsubTripEnded = socketService.onTripEnded((data) => {
+      console.log('Trip ended event received:', data)
+      // Stop location tracking and navigate back
+      stopLocationTracking()
+      setTripActive(false)
+      navigate('/driver')
+    })
+
+    // Listen for socket errors
+    const handleError = (error: unknown) => {
+      const err = error as { message?: string }
+      console.error('Socket error:', err.message || 'Unknown error')
+      setError(err.message || 'An error occurred')
+    }
+
+    socketService.on('error', handleError)
+
     return () => {
-      stopLocationTracking();
-    };
-  }, []);
+      stopLocationTracking()
+      unsubTripEnded()
+      socketService.off('error', handleError)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const loadData = async () => {
     try {
       const [busRes, tripRes] = await Promise.all([
         tripsApi.getMyBus().catch(() => ({ data: { data: null } })),
-        tripsApi.getCurrent(),
-      ]);
+        tripsApi.getCurrent()
+      ])
 
-      setBus(busRes.data.data);
+      setBus(busRes.data.data)
 
       if (busRes.data.data?.routeId) {
-        const routeId = typeof busRes.data.data.routeId === 'object'
-          ? (busRes.data.data.routeId as { _id: string })._id
-          : busRes.data.data.routeId;
-        
-        const routeRes = await routesApi.getById(routeId);
-        setRoute(routeRes.data.data);
+        const routeId =
+          typeof busRes.data.data.routeId === 'object'
+            ? (busRes.data.data.routeId as { _id: string })._id
+            : busRes.data.data.routeId
+
+        const routeRes = await routesApi.getById(routeId)
+        setRoute(routeRes.data.data)
       }
 
       if (tripRes.data.data) {
-        setTripActive(true);
-        startLocationTracking();
+        setTripActive(true)
+        startLocationTracking()
       }
-    } catch (error) {
-      console.error('Failed to load data:', error);
+    } catch (err) {
+      console.error('Failed to load data:', err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const startLocationTracking = useCallback(() => {
     if (!navigator.geolocation) {
-      setLocationError('Geolocation is not supported');
-      return;
+      setLocationError('Geolocation is not supported')
+      return
     }
 
-    // Watch position
     watchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        const newPosition: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-        setPosition(newPosition);
-        setSpeed(pos.coords.speed ? pos.coords.speed * 3.6 : 0); // Convert m/s to km/h
-        setHeading(pos.coords.heading || 0);
-        setLocationError(null);
-      },
-      (err) => {
-        setLocationError(err.message);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
-    );
+      pos => {
+        const newPos: [number, number] = [
+          pos.coords.latitude,
+          pos.coords.longitude
+        ]
+        setPosition(newPos)
+        latestPositionRef.current = newPos
 
-    // Send location every 5 seconds
+        const spd = pos.coords.speed ? pos.coords.speed * 3.6 : 0
+        setSpeed(spd)
+        latestSpeedRef.current = spd
+
+        const hdg = pos.coords.heading || 0
+        setHeading(hdg)
+        latestHeadingRef.current = hdg
+
+        setLocationError(null)
+
+        // Send location immediately on every GPS fix (throttled to once per 3s)
+        const now = Date.now()
+        if (now - lastSendTimeRef.current >= 3000) {
+          lastSendTimeRef.current = now
+          socketService.sendLocation(newPos[0], newPos[1], spd, hdg)
+        }
+      },
+      err => setLocationError(err.message),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    )
+
+    // Fallback: send location every 5 seconds in case watchPosition fires infrequently
     sendIntervalRef.current = setInterval(() => {
-      if (position) {
-        socketService.sendLocation(position[0], position[1], speed, heading);
+      if (latestPositionRef.current) {
+        const now = Date.now()
+        if (now - lastSendTimeRef.current >= 3000) {
+          lastSendTimeRef.current = now
+          socketService.sendLocation(
+            latestPositionRef.current[0],
+            latestPositionRef.current[1],
+            latestSpeedRef.current,
+            latestHeadingRef.current
+          )
+        }
       }
-    }, 5000);
-  }, [position, speed, heading]);
+    }, 5000)
+  }, [])
 
   const stopLocationTracking = () => {
     if (watchIdRef.current !== null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
+      navigator.geolocation.clearWatch(watchIdRef.current)
+      watchIdRef.current = null
     }
     if (sendIntervalRef.current) {
-      clearInterval(sendIntervalRef.current);
-      sendIntervalRef.current = null;
+      clearInterval(sendIntervalRef.current)
+      sendIntervalRef.current = null
     }
-  };
+  }
 
   const handleStartTrip = async () => {
-    if (!bus) return;
+    if (!bus) return
 
-    const routeId = typeof bus.routeId === 'object'
-      ? (bus.routeId as { _id: string })._id
-      : bus.routeId;
+    const routeId =
+      typeof bus.routeId === 'object'
+        ? (bus.routeId as { _id: string })._id
+        : bus.routeId
 
     if (!routeId) {
-      setError('No route assigned to your bus');
-      return;
+      setError('No route assigned to your bus')
+      return
     }
 
-    setStarting(true);
-    setError(null);
+    setStarting(true)
+    setError(null)
 
     try {
-      socketService.startTrip(bus._id, routeId);
-      setTripActive(true);
-      startLocationTracking();
+      socketService.startTrip(bus._id, routeId)
+      setTripActive(true)
+      startLocationTracking()
     } catch (err) {
-      setError('Failed to start trip');
-      console.error(err);
+      setError('Failed to start trip')
+      console.error(err)
     } finally {
-      setStarting(false);
+      setStarting(false)
     }
-  };
+  }
 
   const handleEndTrip = async () => {
-    if (!confirm('Are you sure you want to end this trip?')) return;
+    if (!confirm('Are you sure you want to end this trip?')) return
 
-    setEnding(true);
+    setEnding(true)
     try {
-      socketService.endTrip();
-      stopLocationTracking();
-      setTripActive(false);
-      navigate('/driver');
+      socketService.endTrip()
+      stopLocationTracking()
+      setTripActive(false)
+      navigate('/driver')
     } catch (err) {
-      setError('Failed to end trip');
-      console.error(err);
+      setError('Failed to end trip')
+      console.error(err)
     } finally {
-      setEnding(false);
+      setEnding(false)
     }
-  };
+  }
+
+  // ─── Compute path segments (covered vs remaining) ────────────────────────
+
+  const stops = useMemo(() => route?.stops || [], [route])
+  const routePath: [number, number][] = useMemo(() => {
+    if (route?.path && route.path.length > 1) return route.path
+    if (stops.length > 1) return stops.map(s => [s.latitude, s.longitude] as [number, number])
+    return []
+  }, [route, stops])
+
+  const nextStopIdx = useMemo(
+    () => (position ? getNextStopIndex(stops, position, routePath) : 0),
+    [stops, position, routePath]
+  )
+
+  const nextStop = stops[nextStopIdx] || null
+  const distToNextStop = useMemo(() => {
+    if (!position || !nextStop) return null
+    return Math.round(
+      haversineDistance(
+        position[0],
+        position[1],
+        nextStop.latitude,
+        nextStop.longitude
+      )
+    )
+  }, [position, nextStop])
+
+  // Split the path into covered (dimmed) and remaining (bright)
+  const { coveredPath, remainingPath } = useMemo(() => {
+    if (!position || routePath.length === 0) {
+      return { coveredPath: [] as [number, number][], remainingPath: routePath }
+    }
+    const closestIdx = findClosestPointOnPath(routePath, position)
+    return {
+      coveredPath: routePath.slice(0, closestIdx + 1),
+      remainingPath: routePath.slice(closestIdx)
+    }
+  }, [routePath, position])
+
+  const driverIcon = useMemo(() => createDriverIcon(heading), [heading])
+
+  // ─── Loading / Error States ───────────────────────────────────────────────
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
+      <div className='flex items-center justify-center min-h-[60vh]'>
+        <Loader2 className='w-8 h-8 text-primary-500 animate-spin' />
       </div>
-    );
+    )
   }
 
   if (!bus) {
     return (
-      <div className="max-w-md mx-auto p-4 text-center">
-        <AlertCircle className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-        <h2 className="text-xl font-semibold text-white mb-2">No Bus Assigned</h2>
-        <p className="text-slate-400">You need a bus assigned to start a trip.</p>
+      <div className='max-w-md mx-auto p-4 text-center'>
+        <AlertCircle className='w-12 h-12 text-amber-400 mx-auto mb-4' />
+        <h2 className='text-xl font-semibold text-white mb-2'>
+          No Bus Assigned
+        </h2>
+        <p className='text-slate-400'>
+          You need a bus assigned to start a trip.
+        </p>
       </div>
-    );
+    )
   }
 
-  const stops = route?.stops || [];
-  const routePath: [number, number][] = stops.map((s: Stop) => [s.latitude, s.longitude]);
-  const center: [number, number] = position || 
-    (stops.length > 0 ? [stops[0].latitude, stops[0].longitude] : [31.5204, 74.3587]);
+  const center: [number, number] = position ||
+    (stops.length > 0
+      ? [stops[0].latitude, stops[0].longitude]
+      : [31.5204, 74.3587])
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col">
-      {/* Status Bar */}
-      <div className={`p-4 ${tripActive ? 'bg-green-600' : 'bg-slate-800'}`}>
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {tripActive && (
-              <span className="w-3 h-3 bg-white rounded-full animate-pulse"></span>
+    <div className='h-[calc(100vh-4rem)] flex flex-col'>
+      {/* ─── Navigation Header (Google Maps style) ─────────────────── */}
+      {tripActive && nextStop && (
+        <div className='bg-green-600 text-white px-4 py-3 flex items-center gap-3 shrink-0 z-10'>
+          <div className='p-2 bg-white/20 rounded-lg'>
+            <Navigation className='w-5 h-5' />
+          </div>
+          <div className='flex-1 min-w-0'>
+            <div className='text-sm opacity-80'>Next stop</div>
+            <div className='font-bold text-lg truncate'>{nextStop.name}</div>
+          </div>
+          <div className='text-right shrink-0'>
+            {distToNextStop !== null && (
+              <div className='text-2xl font-bold tabular-nums'>
+                {distToNextStop > 1000
+                  ? `${(distToNextStop / 1000).toFixed(1)} km`
+                  : `${distToNextStop} m`}
+              </div>
             )}
-            <div>
-              <div className="text-white font-semibold">
-                {tripActive ? 'Trip in Progress' : 'Trip Not Started'}
+            {speed > 0 && (
+              <div className='text-xs opacity-80 flex items-center gap-1 justify-end'>
+                <Gauge className='w-3 h-3' />
+                {Math.round(speed)} km/h
               </div>
-              <div className="text-white/70 text-sm">
-                {bus.name} • {bus.plateNumber}
-              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ─── Pre-trip header ──────────────────────────────────────── */}
+      {!tripActive && (
+        <div className='bg-slate-800 text-white p-4 flex items-center justify-between shrink-0'>
+          <div>
+            <div className='font-semibold text-lg'>{bus.name}</div>
+            <div className='text-slate-400 text-sm'>
+              {bus.plateNumber} •{' '}
+              {route ? `${stops.length} stops` : 'No route assigned'}
             </div>
           </div>
-
-          {tripActive ? (
-            <button
-              onClick={handleEndTrip}
-              disabled={ending}
-              className="btn bg-white text-red-600 hover:bg-red-50"
-            >
-              {ending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Square className="w-5 h-5" />}
-              End Trip
-            </button>
-          ) : (
-            <button
-              onClick={handleStartTrip}
-              disabled={starting}
-              className="btn btn-primary"
-            >
-              {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Navigation className="w-5 h-5" />}
-              Start Trip
-            </button>
-          )}
+          <button
+            onClick={handleStartTrip}
+            disabled={starting || !route}
+            className='btn btn-primary px-6'
+          >
+            {starting ? (
+              <Loader2 className='w-5 h-5 animate-spin' />
+            ) : (
+              <Navigation className='w-5 h-5' />
+            )}
+            Start Trip
+          </button>
         </div>
-      </div>
+      )}
 
       {error && (
-        <div className="bg-red-500/10 border-b border-red-500/20 p-3">
-          <p className="text-red-400 text-sm text-center">{error}</p>
+        <div className='bg-red-500/10 border-b border-red-500/20 p-3'>
+          <p className='text-red-400 text-sm text-center'>{error}</p>
         </div>
       )}
 
       {locationError && tripActive && (
-        <div className="bg-amber-500/10 border-b border-amber-500/20 p-3">
-          <p className="text-amber-400 text-sm text-center">
+        <div className='bg-amber-500/10 border-b border-amber-500/20 p-3'>
+          <p className='text-amber-400 text-sm text-center'>
             Location error: {locationError}
           </p>
         </div>
       )}
 
-      {/* Map */}
-      <div className="flex-1 relative">
+      {/* ─── Map ──────────────────────────────────────────────────── */}
+      <div className='flex-1 relative'>
         <MapContainer
           center={center}
-          zoom={15}
-          className="h-full w-full"
+          zoom={16}
+          className='h-full w-full'
           zoomControl={false}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
 
-          {/* Route polyline */}
-          {routePath.length > 1 && (
+          {/* Auto-follow */}
+          {position && tripActive && (
+            <AutoFollowMap
+              position={position}
+              heading={heading}
+              followMode={followMode}
+            />
+          )}
+
+          {/* Covered path (dimmed) */}
+          {tripActive && coveredPath.length > 1 && (
+            <Polyline
+              positions={coveredPath}
+              color='#94a3b8'
+              weight={5}
+              opacity={0.4}
+            />
+          )}
+
+          {/* Remaining path (bright) */}
+          {remainingPath.length > 1 && (
+            <Polyline
+              positions={remainingPath}
+              color='#0ea5e9'
+              weight={5}
+              opacity={0.9}
+            />
+          )}
+
+          {/* Full path (when not tripping) */}
+          {!tripActive && routePath.length > 1 && (
             <Polyline
               positions={routePath}
-              color='#0ea5e9' // primary-500
+              color='#0ea5e9'
               weight={4}
               opacity={0.7}
             />
           )}
 
           {/* Stop markers */}
-          {stops.map((stop: Stop, index: number) => (
+          {stops.map((stop, index) => (
             <Marker
               key={stop._id}
               position={[stop.latitude, stop.longitude]}
-              icon={stopIcon}
-            />
+              icon={
+                tripActive && index === nextStopIdx ? nextStopIcon : stopIcon
+              }
+            >
+              <Popup>
+                <div className='text-sm'>
+                  <div className='font-semibold text-gray-900'>{stop.name}</div>
+                  <div className='text-gray-500'>
+                    Stop #{index + 1}
+                    {tripActive && index === nextStopIdx && ' — Next'}
+                    {tripActive && index < nextStopIdx && ' — Passed'}
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
           ))}
 
-          {/* Current position marker */}
+          {/* Driver position marker */}
           {position && (
-            <Marker
-              position={position}
-              icon={busIcon}
-            />
+            <Marker position={position} icon={driverIcon}>
+              <Popup>
+                <div className='text-sm'>
+                  <div className='font-semibold text-gray-900'>You are here</div>
+                  {speed > 0 && (
+                    <div className='text-gray-500'>
+                      {Math.round(speed)} km/h
+                    </div>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
           )}
-
-          {position && <MapUpdater position={position} />}
         </MapContainer>
 
-        {/* Stats overlay */}
-        {tripActive && position && (
-          <div className="absolute bottom-4 left-4 right-4 z-[1000]">
-            <div className="glass rounded-xl p-4">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="flex items-center justify-center gap-1 text-slate-400 text-xs mb-1">
-                    <Gauge className="w-3 h-3" />
-                    Speed
+        {/* ─── Map overlay controls ──────────────────────────────── */}
+
+        {/* Re-center button */}
+        {tripActive && (
+          <button
+            onClick={() => setFollowMode(true)}
+            className={`absolute bottom-24 right-4 z-[1000] p-3 rounded-full shadow-lg transition-all ${
+              followMode
+                ? 'bg-blue-500 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50'
+            }`}
+            title='Re-center on your location'
+          >
+            <Locate className='w-5 h-5' />
+          </button>
+        )}
+
+        {/* Stop list bar (bottom of map when trip active) */}
+        {tripActive && (
+          <div className='absolute bottom-0 left-0 right-0 z-[1000]'>
+            <div className='bg-slate-900/95 backdrop-blur-md rounded-t-2xl px-4 py-3'>
+              <div className='flex items-center justify-between mb-2'>
+                <span className='text-xs font-medium text-slate-400 uppercase tracking-wider'>
+                  Upcoming stops
+                </span>
+                <button
+                  onClick={handleEndTrip}
+                  disabled={ending}
+                  className='flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition-colors'
+                >
+                  {ending ? (
+                    <Loader2 className='w-3.5 h-3.5 animate-spin' />
+                  ) : (
+                    <Square className='w-3.5 h-3.5' />
+                  )}
+                  End Trip
+                </button>
+              </div>
+
+              <div className='flex gap-3 overflow-x-auto pb-1 scrollbar-hide'>
+                {stops.slice(nextStopIdx).map((stop, i) => (
+                  <div
+                    key={stop._id}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg shrink-0 ${
+                      i === 0
+                        ? 'bg-coral-500/20 border border-coral-500/30'
+                        : 'bg-slate-800'
+                    }`}
+                  >
+                    <MapPin
+                      className={`w-3.5 h-3.5 shrink-0 ${
+                        i === 0 ? 'text-coral-400' : 'text-slate-500'
+                      }`}
+                    />
+                    <span
+                      className={`text-sm font-medium whitespace-nowrap ${
+                        i === 0 ? 'text-white' : 'text-slate-400'
+                      }`}
+                    >
+                      {stop.name}
+                    </span>
+                    {i < stops.slice(nextStopIdx).length - 1 && (
+                      <ChevronRight className='w-3.5 h-3.5 text-slate-600 shrink-0' />
+                    )}
                   </div>
-                  <div className="text-xl font-bold text-white">
-                    {Math.round(speed)} <span className="text-sm font-normal">km/h</span>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-center gap-1 text-slate-400 text-xs mb-1">
-                    <Compass className="w-3 h-3" />
-                    Heading
-                  </div>
-                  <div className="text-xl font-bold text-white">
-                    {Math.round(heading)}°
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-center gap-1 text-slate-400 text-xs mb-1">
-                    <MapPin className="w-3 h-3" />
-                    Stops
-                  </div>
-                  <div className="text-xl font-bold text-white">
-                    {stops.length}
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }

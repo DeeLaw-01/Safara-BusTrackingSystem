@@ -7,8 +7,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@shared': path.resolve(__dirname, '../shared/src'),
-    },
+      '@shared': path.resolve(__dirname, '../shared/src')
+    }
   },
   plugins: [
     react(),
@@ -27,20 +27,20 @@ export default defineConfig({
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable',
-          },
-        ],
+            purpose: 'any maskable'
+          }
+        ]
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
@@ -52,25 +52,26 @@ export default defineConfig({
               cacheName: 'osm-tiles',
               expiration: {
                 maxEntries: 500,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-              },
-            },
-          },
-        ],
-      },
-    }),
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+              }
+            }
+          }
+        ]
+      }
+    })
   ],
   server: {
+    host: true,
     port: 5173,
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/socket.io': {
         target: 'http://localhost:5000',
-        ws: true,
-      },
-    },
-  },
+        ws: true
+      }
+    }
+  }
 })
