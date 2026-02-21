@@ -15,7 +15,6 @@ interface AuthState {
 
   // Actions
   login: (email: string, password: string) => Promise<void>
-  googleLogin: (credential: string) => Promise<void>
   verifyRegisterOtp: (data: { email: string; otp: string }) => Promise<void>
   logout: () => void
   checkAuth: () => Promise<void>
@@ -64,25 +63,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         return
       }
       const message = resp?.error || 'Login failed'
-      set({ error: message, isLoading: false })
-      throw error
-    }
-  },
-
-  googleLogin: async credential => {
-    set({ isLoading: true, error: null })
-    try {
-      const { data } = await authApi.googleAuth(credential)
-      const { user, token } = data.data
-
-      localStorage.setItem('token', token)
-      socketService.connect(token)
-
-      set({ user, token, isAuthenticated: true, isLoading: false })
-    } catch (error: unknown) {
-      const message =
-        (error as { response?: { data?: { error?: string } } })?.response?.data
-          ?.error || 'Google sign-in failed'
       set({ error: message, isLoading: false })
       throw error
     }

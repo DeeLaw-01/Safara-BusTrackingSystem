@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-import passport from 'passport'
 
 import {
   sendRegisterOtp,
@@ -9,8 +8,7 @@ import {
   login,
   forgotPassword,
   resetPassword,
-  googleTokenAuth,
-  googleCallback,
+  validateInvitation,
   getMe
 } from '../controllers/auth.controller'
 import { validate } from '../middleware/validation.middleware'
@@ -23,21 +21,24 @@ const router = Router()
 const sendRegisterOtpValidation = [
   body('email')
     .isEmail()
-    .normalizeEmail()
+    .toLowerCase()
+    .trim()
     .withMessage('Valid email is required'),
   body('name').trim().notEmpty().withMessage('Name is required'),
   body('password')
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters'),
-  body('role')
-    .isIn(['rider', 'driver'])
-    .withMessage('Role must be rider or driver')
+  body('inviteToken')
+    .trim()
+    .notEmpty()
+    .withMessage('Invitation token is required')
 ]
 
 const verifyRegisterOtpValidation = [
   body('email')
     .isEmail()
-    .normalizeEmail()
+    .toLowerCase()
+    .trim()
     .withMessage('Valid email is required'),
   body('otp').trim().notEmpty().withMessage('Verification code is required')
 ]
@@ -45,7 +46,8 @@ const verifyRegisterOtpValidation = [
 const loginValidation = [
   body('email')
     .isEmail()
-    .normalizeEmail()
+    .toLowerCase()
+    .trim()
     .withMessage('Valid email is required'),
   body('password').notEmpty().withMessage('Password is required')
 ]
@@ -53,14 +55,16 @@ const loginValidation = [
 const emailOnly = [
   body('email')
     .isEmail()
-    .normalizeEmail()
+    .toLowerCase()
+    .trim()
     .withMessage('Valid email is required')
 ]
 
 const resetPasswordValidation = [
   body('email')
     .isEmail()
-    .normalizeEmail()
+    .toLowerCase()
+    .trim()
     .withMessage('Valid email is required'),
   body('otp').trim().notEmpty().withMessage('Verification code is required'),
   body('newPassword')
@@ -90,22 +94,8 @@ router.post('/login', validate(loginValidation), login)
 router.post('/forgot-password', validate(emailOnly), forgotPassword)
 router.post('/reset-password', validate(resetPasswordValidation), resetPassword)
 
-// Google OAuth — credential flow (@react-oauth/google sends ID token here)
-router.post('/google', googleTokenAuth)
-
-// Google OAuth — redirect flow (kept for backwards compatibility)
-router.get(
-  '/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-)
-router.get(
-  '/google/callback',
-  passport.authenticate('google', {
-    session: false,
-    failureRedirect: '/login'
-  }),
-  googleCallback
-)
+// Validate invitation token (public)
+router.get('/invitations/:token', validateInvitation)
 
 // Get current user
 router.get('/me', authenticate, getMe)

@@ -1,21 +1,21 @@
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { OAuth2Client } from 'google-auth-library'
 
 import User from '../models/user.model'
 import Otp from '../models/otp.model'
+import Invitation from '../models/invitation.model'
 import { UserRole, IAuthResponse } from '../../../shared/src/user.types'
 import { sendOtpEmail } from '../services/email.service'
-
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const generateToken = (userId: string, role: string): string => {
-  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET || 'secret', {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d'
-  })
+  const secret: string = process.env.JWT_SECRET || 'secret'
+  const expiresIn: string = process.env.JWT_EXPIRES_IN || '7d'
+  return jwt.sign({ id: userId, role }, secret, {
+    expiresIn
+  } as jwt.SignOptions)
 }
 
 function generateOtp (): string {
@@ -84,32 +84,60 @@ function buildUserPayload (
 
 // ─── Registration ─────────────────────────────────────────────────────────────
 
-// Step 1 – create unverified user + send OTP
+// Step 1 – validate invitation + create unverified user + send OTP
 export const sendRegisterOtp = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { email, name, password, phone, role } = req.body
+    const { email, name, password, phone, inviteToken } = req.body
 
     if (!email || !name || !password) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: 'Email, name, and password are required'
-        })
+      res.status(400).json({
+        success: false,
+        error: 'Email, name, and password are required'
+      })
       return
     }
 
-    if (!Object.values(UserRole).includes(role)) {
-      res.status(400).json({ success: false, error: 'Invalid role' })
+    if (!inviteToken) {
+      res.status(400).json({
+        success: false,
+        error: 'An invitation is required to register'
+      })
       return
     }
-    if (role === UserRole.ADMIN) {
+
+    // Validate invitation token
+    const invitation = await Invitation.findOne({
+      token: inviteToken,
+      status: 'pending',
+      expiresAt: { $gt: new Date() }
+    })
+
+    if (!invitation) {
       res
-        .status(403)
-        .json({ success: false, error: 'Admin registration not allowed' })
+        .status(400)
+        .json({ success: false, error: 'Invalid or expired invitation' })
+      return
+    }
+
+    // Invitation email must match the registration email exactl
+    const normalizedInviteEmail = invitation.email.toLowerCase().trim()
+    const normalizedRegEmail = String(email).toLowerCase().trim()
+
+    if (normalizedInviteEmail !== normalizedRegEmail) {
+      console.error('Email mismatch:', {
+        invitationEmail: invitation.email,
+        normalizedInviteEmail,
+        requestEmail: email,
+        normalizedRegEmail,
+        inviteToken
+      })
+      res.status(400).json({
+        success: false,
+        error: 'This invitation was sent to a different email address'
+      })
       return
     }
 
@@ -127,8 +155,8 @@ export const sendRegisterOtp = async (
       existing.name = name
       existing.password = password // pre-save hook will hash it
       existing.phone = phone
-      existing.role = role
-      existing.isApproved = role === UserRole.RIDER
+      existing.role = UserRole.RIDER
+      existing.isApproved = true
       await existing.save()
     } else {
       // Create new unverified user
@@ -137,8 +165,8 @@ export const sendRegisterOtp = async (
         password,
         name,
         phone,
-        role,
-        isApproved: role === UserRole.RIDER,
+        role: UserRole.RIDER,
+        isApproved: true,
         isEmailVerified: false
       })
     }
@@ -167,12 +195,10 @@ export const resendRegisterOtp = async (
 
     const existing = await User.findOne({ email: email.toLowerCase() })
     if (!existing || existing.isEmailVerified) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: 'No pending verification for this email'
-        })
+      res.status(400).json({
+        success: false,
+        error: 'No pending verification for this email'
+      })
       return
     }
 
@@ -195,12 +221,10 @@ export const verifyRegisterOtp = async (
     const { email, otp } = req.body
 
     if (!email || !otp) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: 'Email and verification code are required'
-        })
+      res.status(400).json({
+        success: false,
+        error: 'Email and verification code are required'
+      })
       return
     }
 
@@ -214,17 +238,21 @@ export const verifyRegisterOtp = async (
 
     const user = await User.findOne({ email: email.toLowerCase() })
     if (!user) {
-      res
-        .status(404)
-        .json({
-          success: false,
-          error: 'User not found. Please register again.'
-        })
+      res.status(404).json({
+        success: false,
+        error: 'User not found. Please register again.'
+      })
       return
     }
 
     user.isEmailVerified = true
     await user.save()
+
+    // Mark the invitation as accepted
+    await Invitation.findOneAndUpdate(
+      { email: email.toLowerCase(), status: 'pending' },
+      { status: 'accepted' }
+    )
 
     const token = generateToken(user._id.toString(), user.role)
 
@@ -326,22 +354,18 @@ export const resetPassword = async (
     const { email, otp, newPassword } = req.body
 
     if (!email || !otp || !newPassword) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: 'Email, code, and new password are required'
-        })
+      res.status(400).json({
+        success: false,
+        error: 'Email, code, and new password are required'
+      })
       return
     }
 
     if (newPassword.length < 6) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: 'Password must be at least 6 characters'
-        })
+      res.status(400).json({
+        success: false,
+        error: 'Password must be at least 6 characters'
+      })
       return
     }
 
@@ -369,93 +393,42 @@ export const resetPassword = async (
   }
 }
 
-// ─── Google OAuth ─────────────────────────────────────────────────────────────
+// ─── Validate Invitation ─────────────────────────────────────────────────────
 
-// POST /api/auth/google — verifies a Google ID token from @react-oauth/google
-export const googleTokenAuth = async (
+export const validateInvitation = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { credential } = req.body
-
-  if (!credential) {
-    res
-      .status(400)
-      .json({ success: false, error: 'Google credential is required' })
-    return
-  }
-
   try {
-    const ticket = await googleClient.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID
+    const { token } = req.params
+
+    if (!token) {
+      res.status(400).json({ success: false, error: 'Token is required' })
+      return
+    }
+
+    const invitation = await Invitation.findOne({
+      token,
+      status: 'pending',
+      expiresAt: { $gt: new Date() }
     })
 
-    const payload = ticket.getPayload()
-    if (!payload) {
-      res.status(401).json({ success: false, error: 'Invalid Google token' })
+    if (!invitation) {
+      res
+        .status(404)
+        .json({ success: false, error: 'Invalid or expired invitation' })
       return
     }
 
-    const { sub: googleId, email, name, picture: avatar } = payload
-
-    let user = await User.findOne({ googleId })
-
-    if (!user && email) {
-      user = await User.findOne({ email })
-      if (user) {
-        user.googleId = googleId
-        if (avatar) user.avatar = avatar
-        user.isEmailVerified = true // Google-verified email
-        await user.save()
-      }
-    }
-
-    if (!user) {
-      user = await User.create({
-        googleId,
-        email,
-        name,
-        avatar,
-        role: UserRole.RIDER,
-        isApproved: true,
-        isEmailVerified: true // Google-verified email
-      })
-    }
-
-    const token = generateToken(user._id.toString(), user.role)
-
-    const response: IAuthResponse = {
-      ...buildUserPayload(user),
-      token
-    }
-
-    res.json({ success: true, data: response })
+    res.json({
+      success: true,
+      data: { email: invitation.email }
+    })
   } catch (error) {
-    console.error('Google token auth error:', error)
+    console.error('validateInvitation error:', error)
     res
-      .status(401)
-      .json({ success: false, error: 'Google authentication failed' })
-  }
-}
-
-// GET /api/auth/google/callback — redirect-based OAuth (passport)
-export const googleCallback = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const user = req.user
-    if (!user) {
-      res.redirect(`${process.env.CLIENT_URL}/login?error=auth_failed`)
-      return
-    }
-
-    const token = generateToken(user._id.toString(), user.role)
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`)
-  } catch (error) {
-    console.error('Google callback error:', error)
-    res.redirect(`${process.env.CLIENT_URL}/login?error=auth_failed`)
+      .status(500)
+      .json({ success: false, error: 'Failed to validate invitation' })
   }
 }
 

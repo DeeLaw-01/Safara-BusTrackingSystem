@@ -15,7 +15,6 @@ export interface IUser {
   isApproved: boolean;
   isEmailVerified: boolean;
   fcmToken?: string;
-  googleId?: string;
   avatar?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -27,7 +26,6 @@ export interface IUserCreate {
   name: string;
   phone?: string;
   role: UserRole;
-  googleId?: string;
   avatar?: string;
 }
 
@@ -50,7 +48,7 @@ export interface IRegisterRequest {
   password: string;
   name: string;
   phone?: string;
-  role: UserRole;
+  inviteToken: string;
 }
 
 export interface IAuthResponse {

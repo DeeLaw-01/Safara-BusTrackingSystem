@@ -117,3 +117,97 @@ export async function sendOtpEmail (
     html: buildOtpHtml(otp, type),
   })
 }
+
+// ─── Invitation Email ──────────────────────────────────────────────────────────
+
+function buildInvitationHtml (registrationUrl: string): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>You're Invited to BusTrack</title>
+      </head>
+      <body style="margin:0;padding:0;background:#f4f4f5;font-family:'Poppins',Arial,sans-serif;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+          <tr>
+            <td align="center">
+              <table width="480" cellpadding="0" cellspacing="0"
+                     style="background:#ffffff;border-radius:16px;overflow:hidden;
+                            box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+                <!-- Header -->
+                <tr>
+                  <td style="background:#f95f5f;padding:32px;text-align:center;">
+                    <div style="font-size:28px;margin-bottom:8px;">🚌</div>
+                    <h1 style="color:#ffffff;margin:0;font-size:22px;font-weight:700;
+                               letter-spacing:-0.5px;">BusTrack</h1>
+                  </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                  <td style="padding:40px 32px;">
+                    <h2 style="color:#111827;font-size:18px;font-weight:600;
+                               margin:0 0 12px;">You've Been Invited!</h2>
+                    <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 32px;">
+                      An administrator has invited you to join BusTrack. Click the
+                      button below to create your account and get started.
+                    </p>
+
+                    <!-- CTA Button -->
+                    <div style="text-align:center;margin-bottom:32px;">
+                      <a href="${registrationUrl}"
+                         style="display:inline-block;background:#f95f5f;color:#ffffff;
+                                font-size:16px;font-weight:600;text-decoration:none;
+                                padding:14px 40px;border-radius:12px;">
+                        Create Your Account
+                      </a>
+                    </div>
+
+                    <p style="color:#9ca3af;font-size:12px;text-align:center;margin:0 0 16px;">
+                      Or copy and paste this link into your browser:
+                    </p>
+                    <p style="color:#6b7280;font-size:11px;word-break:break-all;
+                              text-align:center;margin:0;background:#f9fafb;
+                              padding:12px;border-radius:8px;">
+                      ${registrationUrl}
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                  <td style="background:#f9fafb;padding:16px 32px;text-align:center;
+                             border-top:1px solid #e5e7eb;">
+                    <p style="color:#9ca3af;font-size:11px;margin:0;">
+                      &copy; ${new Date().getFullYear()} BusTrack. All rights reserved.
+                    </p>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+  `
+}
+
+export async function sendInvitationEmail (
+  email: string,
+  token: string
+): Promise<void> {
+  const transporter = createTransporter()
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173'
+  const registrationUrl = `${clientUrl}/register?invite=${token}`
+
+  await transporter.sendMail({
+    from: `"BusTrack" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "You're invited to BusTrack!",
+    html: buildInvitationHtml(registrationUrl),
+  })
+}

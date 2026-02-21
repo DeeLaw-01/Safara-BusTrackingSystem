@@ -53,10 +53,6 @@ const userSchema = new Schema<IUserDocument>(
     fcmToken: {
       type: String,
     },
-    googleId: {
-      type: String,
-      sparse: true,
-    },
     avatar: {
       type: String,
     },
@@ -91,7 +87,6 @@ userSchema.methods.comparePassword = async function (
 
 // Indexes
 // Note: email already has unique: true which creates an index automatically
-userSchema.index({ googleId: 1 }, { sparse: true });
 userSchema.index({ role: 1 });
 
 const User = mongoose.model<IUserDocument>('User', userSchema);

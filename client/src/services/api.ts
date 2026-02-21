@@ -44,13 +44,13 @@ export default api
 
 // Auth API
 export const authApi = {
-  // Registration (2-step)
+  // Registration (2-step, invitation-gated)
   sendRegisterOtp: (data: {
     email: string
     name: string
     password: string
     phone?: string
-    role: string
+    inviteToken: string
   }) => api.post('/auth/send-register-otp', data),
   resendRegisterOtp: (email: string) =>
     api.post('/auth/resend-register-otp', { email }),
@@ -64,8 +64,9 @@ export const authApi = {
     api.post('/auth/forgot-password', { email }),
   resetPassword: (data: { email: string; otp: string; newPassword: string }) =>
     api.post('/auth/reset-password', data),
-  // Google OAuth
-  googleAuth: (credential: string) => api.post('/auth/google', { credential }),
+  // Invitation validation (public)
+  validateInvitation: (token: string) =>
+    api.get(`/auth/invitations/${token}`),
   // Me
   getMe: () => api.get('/auth/me')
 }
@@ -197,7 +198,21 @@ export const adminApi = {
   getPendingDrivers: () => api.get('/admin/drivers/pending'),
   approveDriver: (id: string) => api.patch(`/admin/users/${id}/approve`),
   rejectDriver: (id: string) => api.delete(`/admin/users/${id}/reject`),
+  changeUserRole: (id: string, role: string) =>
+    api.patch(`/admin/users/${id}/role`, { role }),
   deleteUser: (id: string) => api.delete(`/admin/users/${id}`),
+  // Invitations
+  createInvitation: (email: string) => api.post('/admin/invitations', { email }),
+  createBatchInvitations: (emails: string[]) =>
+    api.post('/admin/invitations/batch', { emails }),
+  listInvitations: (params?: {
+    status?: string
+    limit?: number
+    page?: number
+  }) => api.get('/admin/invitations', { params }),
+  revokeInvitation: (id: string) => api.delete(`/admin/invitations/${id}`),
+  resendInvitation: (id: string) => api.post(`/admin/invitations/${id}/resend`),
+  // Dashboard
   getDashboard: () => api.get('/admin/dashboard'),
   getRecentTrips: (limit?: number) =>
     api.get('/admin/trips/recent', { params: { limit } }),

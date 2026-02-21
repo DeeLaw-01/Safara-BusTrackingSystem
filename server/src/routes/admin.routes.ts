@@ -6,9 +6,15 @@ import {
   approveDriver,
   rejectDriver,
   deleteUser,
+  changeUserRole,
   getDashboardStats,
   getRecentTrips,
   getLiveBuses,
+  createInvitation,
+  createBatchInvitations,
+  listInvitations,
+  revokeInvitation,
+  resendInvitation,
 } from '../controllers/admin.controller';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 
@@ -21,8 +27,16 @@ router.use(authenticate, requireAdmin);
 router.get('/users', getAllUsers);
 router.get('/drivers/pending', getPendingDrivers);
 router.patch('/users/:id/approve', approveDriver);
+router.patch('/users/:id/role', changeUserRole);
 router.delete('/users/:id/reject', rejectDriver);
 router.delete('/users/:id', deleteUser);
+
+// Invitations
+router.post('/invitations', createInvitation);
+router.post('/invitations/batch', createBatchInvitations);
+router.get('/invitations', listInvitations);
+router.post('/invitations/:id/resend', resendInvitation);
+router.delete('/invitations/:id', revokeInvitation);
 
 // Dashboard & Analytics
 router.get('/dashboard', getDashboardStats);

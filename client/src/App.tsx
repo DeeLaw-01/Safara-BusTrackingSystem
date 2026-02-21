@@ -12,7 +12,6 @@ import AdminLayout from '@/components/layout/AdminLayout'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import ForgotPassword from '@/pages/auth/ForgotPassword'
-import AuthCallback from '@/pages/auth/AuthCallback'
 
 // Rider Pages
 import RiderHome from '@/pages/rider/RiderHome'
@@ -27,6 +26,8 @@ import ActiveTrip from '@/pages/driver/ActiveTrip'
 // Admin Pages
 import AdminDashboard from '@/pages/admin/Dashboard'
 import ManageUsers from '@/pages/admin/ManageUsers'
+import ManageInvitations from '@/pages/admin/ManageInvitations'
+import ManageRoles from '@/pages/admin/ManageRoles'
 import ManageRoutes from '@/pages/admin/ManageRoutes'
 import ManageBuses from '@/pages/admin/ManageBuses'
 
@@ -94,7 +95,6 @@ export default function App () {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/auth/callback' element={<AuthCallback />} />
       </Route>
 
       {/* Rider Routes */}
@@ -133,6 +133,8 @@ export default function App () {
       >
         <Route path='/admin' element={<AdminDashboard />} />
         <Route path='/admin/users' element={<ManageUsers />} />
+        <Route path='/admin/invitations' element={<ManageInvitations />} />
+        <Route path='/admin/roles' element={<ManageRoles />} />
         <Route path='/admin/routes' element={<ManageRoutes />} />
         <Route path='/admin/buses' element={<ManageBuses />} />
       </Route>

@@ -6,7 +6,9 @@ import {
   Route as RouteIcon,
   LogOut,
   Menu,
-  X
+  X,
+  Mail,
+  ShieldCheck
 } from 'lucide-react'
 import { useState } from 'react'
 import { useAuthStore } from '@/store/authStore'
@@ -14,6 +16,8 @@ import { useAuthStore } from '@/store/authStore'
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/admin/users', icon: Users, label: 'Users' },
+  { to: '/admin/invitations', icon: Mail, label: 'Invitations' },
+  { to: '/admin/roles', icon: ShieldCheck, label: 'Roles' },
   { to: '/admin/routes', icon: RouteIcon, label: 'Routes' },
   { to: '/admin/buses', icon: Bus, label: 'Buses' },
 ];

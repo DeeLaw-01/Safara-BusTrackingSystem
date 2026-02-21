@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Eye, EyeOff, Loader2, Check, Mail, ArrowLeft } from 'lucide-react'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { Eye, EyeOff, Loader2, Mail, ArrowLeft, AlertTriangle } from 'lucide-react'
 import { authApi } from '@/services/api'
 import { useAuthStore } from '@/store/authStore'
 import { socketService } from '@/services/socket'
@@ -9,6 +9,12 @@ type Step = 'form' | 'otp'
 
 export default function Register () {
   const location = useLocation()
+  const [searchParams] = useSearchParams()
+
+  // Invitation token from URL query param (?invite=TOKEN)
+  const inviteToken = searchParams.get('invite') || ''
+
+  // If coming from login redirect (unverified email)
   const pendingEmail = (location.state as { pendingEmail?: string })
     ?.pendingEmail
 
@@ -18,17 +24,47 @@ export default function Register () {
     email: pendingEmail ?? '',
     phone: '',
     password: '',
-    confirmPassword: '',
-    role: 'rider' as 'rider' | 'driver'
+    confirmPassword: ''
   })
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [localError, setLocalError] = useState('')
   const [resendCooldown, setResendCooldown] = useState(pendingEmail ? 60 : 0)
+  const [inviteLoading, setInviteLoading] = useState(!!inviteToken)
+  const [inviteValid, setInviteValid] = useState(!!pendingEmail)
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([])
   const { error: storeError, clearError } = useAuthStore()
+
+  // If no invite token and not a pending email redirect, show an error
+  const hasInvite = inviteValid || !!pendingEmail
+
+  // Validate the invitation token and pre-fill email
+  useEffect(() => {
+    if (!inviteToken) return
+    let cancelled = false
+
+    ;(async () => {
+      try {
+        const { data } = await authApi.validateInvitation(inviteToken)
+        if (!cancelled) {
+          setFormData(prev => ({ ...prev, email: data.data.email }))
+          setInviteValid(true)
+        }
+      } catch {
+        if (!cancelled) {
+          setInviteValid(false)
+          setLocalError('This invitation link is invalid or has expired.')
+        }
+      } finally {
+        if (!cancelled) setInviteLoading(false)
+      }
+    })()
+
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inviteToken])
 
   // Start cooldown if coming from login redirect (OTP was already sent server-side)
   useEffect(() => {
@@ -62,11 +98,11 @@ export default function Register () {
     setIsSubmitting(true)
     try {
       await authApi.sendRegisterOtp({
-        email: formData.email,
-        name: formData.name,
+        email: formData.email.trim(),
+        name: formData.name.trim(),
         password: formData.password,
-        phone: formData.phone || undefined,
-        role: formData.role
+        phone: formData.phone?.trim() || undefined,
+        inviteToken
       })
       setStep('otp')
       startResendCooldown()
@@ -127,14 +163,12 @@ export default function Register () {
 
     setIsSubmitting(true)
     try {
-      // Call API directly to avoid setting store isLoading (which would unmount component)
       const { data: response } = await authApi.verifyRegisterOtp({
         email: formData.email,
         otp: code
       })
       const { user, token } = response.data
 
-      // Only update store on success — this will trigger AuthLayout redirect
       localStorage.setItem('token', token)
       socketService.connect(token)
       useAuthStore.setState({
@@ -163,16 +197,14 @@ export default function Register () {
 
     try {
       if (pendingEmail) {
-        // Coming from login redirect — user already exists, just resend OTP
         await authApi.resendRegisterOtp(formData.email)
       } else {
-        // Normal registration flow — resend with full data
         await authApi.sendRegisterOtp({
           email: formData.email,
           name: formData.name,
           password: formData.password,
           phone: formData.phone || undefined,
-          role: formData.role
+          inviteToken
         })
       }
       startResendCooldown()
@@ -202,12 +234,53 @@ export default function Register () {
 
   const displayError = storeError || localError
 
+  // ── Loading invitation ────────────────────────────────────────────────────
+
+  if (inviteLoading) {
+    return (
+      <div className='flex flex-col items-center justify-center py-12'>
+        <Loader2 className='w-8 h-8 animate-spin text-gray-400 mb-4' />
+        <p className='text-gray-500 text-sm'>Validating invitation...</p>
+      </div>
+    )
+  }
+
+  // ── No invitation ─────────────────────────────────────────────────────────
+
+  if (!hasInvite) {
+    return (
+      <div className='space-y-6'>
+        <div className='text-center'>
+          <div className='w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4'>
+            <AlertTriangle className='w-7 h-7 text-amber-500' />
+          </div>
+          <h2 className='text-2xl font-bold text-gray-800'>
+            Invitation Required
+          </h2>
+          <p className='text-gray-500 text-sm mt-2'>
+            You need an invitation from your organization's administrator to
+            create an account. Please check your email for an invitation link.
+          </p>
+        </div>
+
+        <p className='text-center text-gray-600 text-sm'>
+          Already have an account?{' '}
+          <Link
+            to='/login'
+            className='text-red-500 hover:text-red-600 font-semibold transition-colors'
+          >
+            Sign in
+          </Link>
+        </p>
+      </div>
+    )
+  }
+
   // ── Render: OTP step ────────────────────────────────────────────────────────
 
   if (step === 'otp') {
     return (
       <div className='space-y-6'>
-        {/* Back button — only show if they came from the form (not from login redirect) */}
         {!pendingEmail && (
           <button
             onClick={() => {
@@ -314,7 +387,7 @@ export default function Register () {
       <div>
         <h2 className='text-2xl font-bold text-gray-800'>Create Account</h2>
         <p className='text-gray-500 text-sm mt-1'>
-          Join Bus Smart System today
+          Complete your registration to join BusTrack
         </p>
       </div>
 
@@ -349,10 +422,16 @@ export default function Register () {
             name='email'
             value={formData.email}
             onChange={handleChange}
-            className='input-auth'
+            className='input-auth read-only:bg-gray-100 read-only:cursor-not-allowed'
             placeholder='Enter your email'
             required
+            readOnly={!!inviteToken}
           />
+          {inviteToken && (
+            <p className='mt-1 text-xs text-gray-400'>
+              Email is set by your invitation and cannot be changed.
+            </p>
+          )}
         </div>
 
         <div>
@@ -368,46 +447,6 @@ export default function Register () {
             className='input-auth'
             placeholder='Enter your phone number'
           />
-        </div>
-
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-3'>
-            I am a
-          </label>
-          <div className='grid grid-cols-2 gap-3'>
-            {(['rider', 'driver'] as const).map(r => (
-              <button
-                key={r}
-                type='button'
-                onClick={() => setFormData({ ...formData, role: r })}
-                className={`relative p-4 rounded-xl border-2 transition-all duration-200 ${
-                  formData.role === r
-                    ? 'border-red-400 bg-red-50'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
-                }`}
-              >
-                {formData.role === r && (
-                  <div className='absolute top-2 right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center'>
-                    <Check className='w-3 h-3 text-white' />
-                  </div>
-                )}
-                <div className='text-2xl mb-1'>
-                  {r === 'rider' ? '🚌' : '🎫'}
-                </div>
-                <div className='text-sm font-semibold text-gray-800 capitalize'>
-                  {r}
-                </div>
-                <div className='text-xs text-gray-500'>
-                  {r === 'rider' ? 'Student / Parent' : 'Bus Operator'}
-                </div>
-              </button>
-            ))}
-          </div>
-          {formData.role === 'driver' && (
-            <p className='mt-2 text-xs text-amber-600 bg-amber-50 p-2 rounded-lg'>
-              ⚠️ Driver accounts require admin approval before activation.
-            </p>
-          )}
         </div>
 
         <div>
