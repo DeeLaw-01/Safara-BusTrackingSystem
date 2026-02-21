@@ -8,8 +8,8 @@ import {
   User,
   Route as RouteIcon
 } from 'lucide-react';
-import { busesApi, routesApi, adminApi } from '../../services/api';
-import type { Bus as BusType, Route, User as UserType } from '../../types';
+import { busesApi, routesApi, adminApi } from '@/services/api'
+import type { Bus as BusType, Route, User as UserType } from '@/types'
 
 export default function ManageBuses() {
   const [buses, setBuses] = useState<BusType[]>([]);

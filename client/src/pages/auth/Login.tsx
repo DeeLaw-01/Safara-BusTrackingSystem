@@ -1,14 +1,23 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
-import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
-import { useAuthStore } from '../../store/authStore';
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { GoogleLogin, type CredentialResponse } from '@react-oauth/google'
+import { useAuthStore } from '@/store/authStore'
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { login, googleLogin, isLoading, error, clearError } = useAuthStore();
+  const { login, googleLogin, isLoading, error, clearError, pendingVerificationEmail, clearPendingVerification } = useAuthStore();
+
+  // Redirect to register OTP screen if login detected an unverified email
+  useEffect(() => {
+    if (pendingVerificationEmail) {
+      clearPendingVerification();
+      navigate('/register', { state: { pendingEmail: pendingVerificationEmail } });
+    }
+  }, [pendingVerificationEmail, navigate, clearPendingVerification]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -9,8 +9,8 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { routesApi, stopsApi } from '../../services/api';
-import type { Route, Stop } from '../../types';
+import { routesApi, stopsApi } from '@/services/api'
+import type { Route, Stop } from '@/types'
 
 export default function ManageRoutes() {
   const [routes, setRoutes] = useState<Route[]>([]);

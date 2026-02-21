@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Bell, Plus, Trash2, Loader2, Clock, MapPin, ToggleLeft, ToggleRight } from 'lucide-react';
-import { remindersApi, routesApi, stopsApi } from '../../services/api';
-import type { Reminder, Route, Stop } from '../../types';
+import { remindersApi, routesApi, stopsApi } from '@/services/api'
+import type { Reminder, Route, Stop } from '@/types'
 
 export default function MyReminders() {
   const [reminders, setReminders] = useState<Reminder[]>([]);

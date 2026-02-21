@@ -13,6 +13,7 @@ export interface User {
   role: UserRole;
   homeStop?: string;
   isApproved: boolean;
+  isEmailVerified: boolean;
   fcmToken?: string;
   avatar?: string;
   createdAt: string;

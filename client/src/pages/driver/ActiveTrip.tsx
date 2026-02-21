@@ -11,9 +11,9 @@ import {
   Gauge,
   Compass
 } from 'lucide-react';
-import { tripsApi, routesApi } from '../../services/api';
-import { socketService } from '../../services/socket';
-import type { Bus, Route, Stop } from '../../types';
+import { tripsApi, routesApi } from '@/services/api'
+import { socketService } from '@/services/socket'
+import type { Bus, Route, Stop } from '@/types'
 import 'leaflet/dist/leaflet.css';
 
 // Custom bus icon
@@ -286,7 +286,7 @@ export default function ActiveTrip() {
           {routePath.length > 1 && (
             <Polyline
               positions={routePath}
-              color="#0ea5e9"
+              color='#0ea5e9' // primary-500
               weight={4}
               opacity={0.7}
             />

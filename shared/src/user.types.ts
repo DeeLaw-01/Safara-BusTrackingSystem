@@ -13,6 +13,7 @@ export interface IUser {
   role: UserRole;
   homeStop?: string;
   isApproved: boolean;
+  isEmailVerified: boolean;
   fcmToken?: string;
   googleId?: string;
   avatar?: string;

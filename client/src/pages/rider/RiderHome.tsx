@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Navigation, ChevronRight, Loader2, Bus } from 'lucide-react';
-import { routesApi } from '../../services/api';
-import { useAuthStore } from '../../store/authStore';
-import type { Route } from '../../types';
+import { routesApi } from '@/services/api'
+import { useAuthStore } from '@/store/authStore'
+import type { Route } from '@/types'
 
 export default function RiderHome() {
   const [routes, setRoutes] = useState<Route[]>([]);

@@ -1,15 +1,15 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { 
-  Bus, 
-  LayoutDashboard, 
-  Users, 
-  Route as RouteIcon, 
+import { Outlet, Link, useLocation } from 'react-router-dom'
+import {
+  Bus,
+  LayoutDashboard,
+  Users,
+  Route as RouteIcon,
   LogOut,
   Menu,
   X
-} from 'lucide-react';
-import { useState } from 'react';
-import { useAuthStore } from '../../store/authStore';
+} from 'lucide-react'
+import { useState } from 'react'
+import { useAuthStore } from '@/store/authStore'
 
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard' },

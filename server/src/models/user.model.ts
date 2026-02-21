@@ -46,6 +46,10 @@ const userSchema = new Schema<IUserDocument>(
         return this.role === UserRole.RIDER;
       },
     },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
     fcmToken: {
       type: String,
     },

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Loader2, ChevronRight, Check } from 'lucide-react';
-import { routesApi, userApi } from '../../services/api';
-import type { Route, Stop } from '../../types';
+import { routesApi, userApi } from '@/services/api'
+import type { Route, Stop } from '@/types'
 
 export default function Onboarding() {
   const [routes, setRoutes] = useState<Route[]>([]);

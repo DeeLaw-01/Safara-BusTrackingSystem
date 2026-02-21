@@ -37,35 +37,23 @@
     @apply bg-red-600 text-white hover:bg-red-700;
   }
 
-  /* Auth page specific button - using direct CSS for coral color */
+  /* Auth page specific button - using Tailwind coral colors */
   .btn-coral {
-    background-color: #f95f5f;
-    color: white;
-    font-weight: 600;
-    padding: 1rem 1.5rem;
-    border-radius: 9999px;
-    box-shadow: 0 10px 15px -3px rgba(249, 95, 95, 0.3);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    @apply bg-coral-500 text-white font-semibold px-6 py-4 rounded-full
+           shadow-lg shadow-coral-500/30 transition-all duration-300
+           flex items-center justify-center gap-2;
   }
   
   .btn-coral:hover {
-    background-color: #e64545;
-    box-shadow: 0 10px 20px -3px rgba(249, 95, 95, 0.5);
-    transform: scale(1.02);
+    @apply bg-coral-600 shadow-coral-500/50 scale-[1.02];
   }
   
   .btn-coral:active {
-    background-color: #c23636;
+    @apply bg-coral-700;
   }
   
   .btn-coral:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+    @apply opacity-50 cursor-not-allowed scale-100;
   }
 
   .input {
@@ -79,13 +67,8 @@
   .input-auth {
     @apply w-full px-4 py-3 bg-gray-50 border border-gray-200 
            rounded-xl text-gray-800 placeholder-gray-400
-           focus:outline-none focus:ring-2 focus:border-transparent
-           transition-all duration-200;
-    --tw-ring-color: rgba(249, 95, 95, 0.5);
-  }
-  
-  .input-auth:focus {
-    border-color: #f95f5f;
+           focus:outline-none focus:ring-2 focus:ring-coral-500/50 
+           focus:border-coral-500 transition-all duration-200;
   }
 
   .card {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bus, Route as RouteIcon, Navigation, Clock, AlertCircle, Loader2 } from 'lucide-react';
-import { tripsApi } from '../../services/api';
-import { useAuthStore } from '../../store/authStore';
-import type { Bus as BusType, Trip } from '../../types';
+import { tripsApi } from '@/services/api'
+import { useAuthStore } from '@/store/authStore'
+import type { Bus as BusType, Trip } from '@/types'
 
 export default function DriverDashboard() {
   const [assignedBus, setAssignedBus] = useState<BusType | null>(null);

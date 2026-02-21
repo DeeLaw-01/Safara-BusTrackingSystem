@@ -1,5 +1,5 @@
-import { io, Socket } from 'socket.io-client';
-import type { BusLocation } from '../types';
+import { io, Socket } from 'socket.io-client'
+import type { BusLocation } from '@/types'
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || '';
 
@@ -114,5 +114,5 @@ class SocketService {
   }
 }
 
-export const socketService = new SocketService();
-export default socketService;
+export const socketService = new SocketService()
+export default socketService

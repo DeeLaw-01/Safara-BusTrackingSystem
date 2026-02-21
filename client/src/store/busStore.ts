@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import type { BusLocation } from '../types';
+import { create } from 'zustand'
+import type { BusLocation } from '@/types'
 
 interface BusState {
   // Live bus locations indexed by busId

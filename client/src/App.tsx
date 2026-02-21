@@ -1,33 +1,34 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
-import { useAuthStore } from './store/authStore'
+import { useAuthStore } from '@/store/authStore'
 
 // Layouts
-import AuthLayout from './components/layout/AuthLayout'
-import AppLayout from './components/layout/AppLayout'
-import AdminLayout from './components/layout/AdminLayout'
+import AuthLayout from '@/components/layout/AuthLayout'
+import AppLayout from '@/components/layout/AppLayout'
+import AdminLayout from '@/components/layout/AdminLayout'
 
 // Auth Pages
-import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
-import AuthCallback from './pages/auth/AuthCallback'
+import Login from '@/pages/auth/Login'
+import Register from '@/pages/auth/Register'
+import ForgotPassword from '@/pages/auth/ForgotPassword'
+import AuthCallback from '@/pages/auth/AuthCallback'
 
 // Rider Pages
-import RiderHome from './pages/rider/RiderHome'
-import RiderOnboarding from './pages/rider/Onboarding'
-import TrackBus from './pages/rider/TrackBus'
-import MyReminders from './pages/rider/MyReminders'
+import RiderHome from '@/pages/rider/RiderHome'
+import RiderOnboarding from '@/pages/rider/Onboarding'
+import TrackBus from '@/pages/rider/TrackBus'
+import MyReminders from '@/pages/rider/MyReminders'
 
 // Driver Pages
-import DriverDashboard from './pages/driver/Dashboard'
-import ActiveTrip from './pages/driver/ActiveTrip'
+import DriverDashboard from '@/pages/driver/Dashboard'
+import ActiveTrip from '@/pages/driver/ActiveTrip'
 
 // Admin Pages
-import AdminDashboard from './pages/admin/Dashboard'
-import ManageUsers from './pages/admin/ManageUsers'
-import ManageRoutes from './pages/admin/ManageRoutes'
-import ManageBuses from './pages/admin/ManageBuses'
+import AdminDashboard from '@/pages/admin/Dashboard'
+import ManageUsers from '@/pages/admin/ManageUsers'
+import ManageRoutes from '@/pages/admin/ManageRoutes'
+import ManageBuses from '@/pages/admin/ManageBuses'
 
 // Protected Route Component
 function ProtectedRoute ({
@@ -92,6 +93,7 @@ export default function App () {
       <Route element={<AuthLayout />}>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/callback' element={<AuthCallback />} />
       </Route>
 

@@ -1,13 +1,13 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import { ArrowLeft, Bus, MapPin, Clock, Loader2 } from 'lucide-react';
-import { routesApi } from '../../services/api';
-import { socketService } from '../../services/socket';
-import { useBusStore } from '../../store/busStore';
-import type { Route, BusLocation } from '../../types';
-import 'leaflet/dist/leaflet.css';
+import { useEffect, useState, useCallback } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
+import L from 'leaflet'
+import { ArrowLeft, Bus, MapPin, Clock, Loader2 } from 'lucide-react'
+import { routesApi } from '@/services/api'
+import { socketService } from '@/services/socket'
+import { useBusStore } from '@/store/busStore'
+import type { Route, BusLocation } from '@/types'
+import 'leaflet/dist/leaflet.css'
 
 // Fix Leaflet default icon issue
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: () => void })._getIconUrl;
@@ -181,7 +181,7 @@ export default function TrackBus() {
           {routePath.length > 1 && (
             <Polyline
               positions={routePath}
-              color="#0ea5e9"
+              color='#0ea5e9' // primary-500
               weight={4}
               opacity={0.7}
             />

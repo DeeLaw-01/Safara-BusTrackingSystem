@@ -12,8 +12,8 @@ import {
   Loader2,
   ChevronRight
 } from 'lucide-react';
-import { adminApi } from '../../services/api';
-import type { DashboardStats, Trip, BusLocation } from '../../types';
+import { adminApi } from '@/services/api'
+import type { DashboardStats, Trip, BusLocation } from '@/types'
 import 'leaflet/dist/leaflet.css';
 
 // Custom bus icon

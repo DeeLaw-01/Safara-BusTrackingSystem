@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Bus, MapPin, Bell, LogOut, Navigation } from 'lucide-react'
-import UserAvatar from '../ui/UserAvatar'
-import { useAuthStore } from '../../store/authStore'
+import UserAvatar from '@/components/ui/UserAvatar'
+import { useAuthStore } from '@/store/authStore'
 
 export default function AppLayout () {
   const location = useLocation()

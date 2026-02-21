@@ -10,9 +10,9 @@ import {
   UserCheck,
   AlertCircle
 } from 'lucide-react';
-import { adminApi } from '../../services/api';
-import type { User } from '../../types';
-import UserAvatar from '../../components/ui/UserAvatar';
+import { adminApi } from '@/services/api'
+import type { User } from '@/types'
+import UserAvatar from '@/components/ui/UserAvatar'
 
 export default function ManageUsers() {
   const [users, setUsers] = useState<User[]>([]);
