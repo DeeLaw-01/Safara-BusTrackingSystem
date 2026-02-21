@@ -73,7 +73,7 @@ export const authApi = {
 
 // User API
 export const userApi = {
-  updateProfile: (data: { name?: string; phone?: string }) =>
+  updateProfile: (data: { name?: string; phone?: string; avatar?: string }) =>
     api.patch('/users/profile', data),
   setHomeStop: (stopId: string) => api.patch('/users/home-stop', { stopId }),
   updateFcmToken: (fcmToken: string) =>

@@ -5,7 +5,6 @@ import { useAuthStore } from '@/store/authStore'
 
 // Layouts
 import AuthLayout from '@/components/layout/AuthLayout'
-import AppLayout from '@/components/layout/AppLayout'
 import AdminLayout from '@/components/layout/AdminLayout'
 
 // Auth Pages
@@ -14,10 +13,12 @@ import Register from '@/pages/auth/Register'
 import ForgotPassword from '@/pages/auth/ForgotPassword'
 
 // Rider Pages
-import RiderHome from '@/pages/rider/RiderHome'
-import RiderOnboarding from '@/pages/rider/Onboarding'
-import TrackBus from '@/pages/rider/TrackBus'
-import MyReminders from '@/pages/rider/MyReminders'
+import RiderDashboard from '@/pages/rider/Dashboard'
+import Settings from '@/pages/rider/Settings'
+import MyAccount from '@/pages/rider/MyAccount'
+import Notifications from '@/pages/rider/Notifications'
+import HelpSupport from '@/pages/rider/HelpSupport'
+import PrivacyPolicy from '@/pages/rider/PrivacyPolicy'
 
 // Driver Pages
 import DriverDashboard from '@/pages/driver/Dashboard'
@@ -30,6 +31,9 @@ import ManageInvitations from '@/pages/admin/ManageInvitations'
 import ManageRoles from '@/pages/admin/ManageRoles'
 import ManageRoutes from '@/pages/admin/ManageRoutes'
 import ManageBuses from '@/pages/admin/ManageBuses'
+
+// Driver layout wrapper (reuses the old AppLayout for drivers)
+import AppLayout from '@/components/layout/AppLayout'
 
 // Protected Route Component
 function ProtectedRoute ({
@@ -97,19 +101,55 @@ export default function App () {
         <Route path='/forgot-password' element={<ForgotPassword />} />
       </Route>
 
-      {/* Rider Routes */}
+      {/* Rider Routes — full-screen pages (no AppLayout chrome) */}
       <Route
+        path='/'
         element={
           <ProtectedRoute roles={['rider']}>
-            <AppLayout />
+            <RiderDashboard />
           </ProtectedRoute>
         }
-      >
-        <Route path='/' element={<RiderHome />} />
-        <Route path='/onboarding' element={<RiderOnboarding />} />
-        <Route path='/track/:routeId' element={<TrackBus />} />
-        <Route path='/reminders' element={<MyReminders />} />
-      </Route>
+      />
+      <Route
+        path='/settings'
+        element={
+          <ProtectedRoute roles={['rider']}>
+            <Settings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/account'
+        element={
+          <ProtectedRoute roles={['rider']}>
+            <MyAccount />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/notifications'
+        element={
+          <ProtectedRoute roles={['rider']}>
+            <Notifications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/help'
+        element={
+          <ProtectedRoute roles={['rider']}>
+            <HelpSupport />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/privacy'
+        element={
+          <ProtectedRoute roles={['rider']}>
+            <PrivacyPolicy />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Driver Routes */}
       <Route

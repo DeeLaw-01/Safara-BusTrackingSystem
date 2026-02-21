@@ -86,30 +86,57 @@
   }
 }
 
-/* Leaflet overrides */
+/* Leaflet overrides — light map for rider dashboard */
 .leaflet-container {
-  @apply bg-slate-900 rounded-xl;
   height: 100%;
   width: 100%;
-}
-
-.leaflet-control-zoom {
-  @apply border-slate-700 !important;
-}
-
-.leaflet-control-zoom a {
-  @apply bg-slate-900 text-slate-100 border-slate-700 !important;
-}
-
-.leaflet-control-zoom a:hover {
-  @apply bg-slate-800 !important;
+  background: #f8f9fa;
 }
 
 .leaflet-popup-content-wrapper {
-  @apply bg-slate-900 text-slate-100 rounded-lg !important;
+  @apply bg-white text-gray-900 rounded-xl shadow-lg !important;
 }
 
 .leaflet-popup-tip {
+  @apply bg-white !important;
+}
+
+/* Lower Leaflet z-index when sidebar is open */
+.sidebar-open .leaflet-container,
+.sidebar-open .leaflet-pane,
+.sidebar-open .leaflet-map-pane,
+.sidebar-open .leaflet-tile-pane,
+.sidebar-open .leaflet-overlay-pane,
+.sidebar-open .leaflet-shadow-pane,
+.sidebar-open .leaflet-marker-pane,
+.sidebar-open .leaflet-tooltip-pane,
+.sidebar-open .leaflet-popup-pane,
+.sidebar-open .leaflet-control {
+  z-index: 50 !important;
+}
+
+/* Dark leaflet overrides for admin pages */
+.leaflet-dark .leaflet-container {
+  @apply bg-slate-900 rounded-xl;
+}
+
+.leaflet-dark .leaflet-control-zoom {
+  @apply border-slate-700 !important;
+}
+
+.leaflet-dark .leaflet-control-zoom a {
+  @apply bg-slate-900 text-slate-100 border-slate-700 !important;
+}
+
+.leaflet-dark .leaflet-control-zoom a:hover {
+  @apply bg-slate-800 !important;
+}
+
+.leaflet-dark .leaflet-popup-content-wrapper {
+  @apply bg-slate-900 text-slate-100 rounded-lg !important;
+}
+
+.leaflet-dark .leaflet-popup-tip {
   @apply bg-slate-900 !important;
 }
 

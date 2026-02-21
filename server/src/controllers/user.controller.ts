@@ -5,13 +5,27 @@ import User from '../models/user.model';
 export const updateProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.user?._id;
-    const { name, phone, homeStop, fcmToken } = req.body;
+    const { name, phone, avatar, homeStop, fcmToken } = req.body;
+
+    const updateData: {
+      name?: string;
+      phone?: string;
+      avatar?: string;
+      homeStop?: string;
+      fcmToken?: string;
+    } = {};
+
+    if (name !== undefined) updateData.name = name;
+    if (phone !== undefined) updateData.phone = phone;
+    if (avatar !== undefined) updateData.avatar = avatar;
+    if (homeStop !== undefined) updateData.homeStop = homeStop;
+    if (fcmToken !== undefined) updateData.fcmToken = fcmToken;
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { name, phone, homeStop, fcmToken },
+      updateData,
       { new: true, runValidators: true }
-    );
+    ).select('-password');
 
     if (!user) {
       res.status(404).json({ success: false, error: 'User not found' });

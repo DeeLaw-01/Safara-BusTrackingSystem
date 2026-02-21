@@ -19,6 +19,7 @@ interface AuthState {
   logout: () => void
   checkAuth: () => Promise<void>
   setToken: (token: string) => Promise<void>
+  updateUser: (userData: Partial<User>) => void
   clearError: () => void
   clearPendingVerification: () => void
 }
@@ -126,6 +127,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     localStorage.setItem('token', token)
     set({ token })
     await get().checkAuth()
+  },
+
+  updateUser: (userData) => {
+    const currentUser = get().user
+    if (currentUser) {
+      set({ user: { ...currentUser, ...userData } })
+    }
   },
 
   clearError: () => set({ error: null }),

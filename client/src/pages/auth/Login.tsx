@@ -111,7 +111,7 @@ export default function Login () {
 
       {/* Forgot Password Link */}
       <div className='text-center'>
-        <Link
+        <Link 
           to='/forgot-password'
           className='text-primary-600 hover:text-primary-700 font-medium text-sm transition-colors'
         >

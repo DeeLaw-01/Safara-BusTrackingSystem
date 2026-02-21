@@ -16,6 +16,16 @@ router.patch(
   validate([
     body('name').optional().trim().notEmpty().withMessage('Name cannot be empty'),
     body('phone').optional().trim(),
+    body('avatar')
+      .optional()
+      .custom((value) => {
+        // Allow URLs or base64 data URLs
+        if (typeof value !== 'string') return false
+        if (value.startsWith('data:image/')) return true // Base64 data URL
+        if (value.startsWith('http://') || value.startsWith('https://')) return true // Regular URL
+        return false
+      })
+      .withMessage('Avatar must be a valid URL or base64 data URL'),
   ]),
   updateProfile
 );

@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Bus, MapPin, Bell, LogOut, Navigation } from 'lucide-react'
+import { Bus, LogOut, Navigation } from 'lucide-react'
 import UserAvatar from '@/components/ui/UserAvatar'
 import { useAuthStore } from '@/store/authStore'
 
@@ -7,30 +7,17 @@ export default function AppLayout () {
   const location = useLocation()
   const { user, logout } = useAuthStore()
 
-  const isRider = user?.role === 'rider'
-  const isDriver = user?.role === 'driver'
-
-  const riderNavItems = [
-    { to: '/', icon: MapPin, label: 'Routes' },
-    { to: '/reminders', icon: Bell, label: 'Reminders' }
-  ]
-
-  const driverNavItems = [
+  const navItems = [
     { to: '/driver', icon: Bus, label: 'Dashboard' },
     { to: '/driver/trip', icon: Navigation, label: 'Active Trip' }
   ]
-
-  const navItems = isDriver ? driverNavItems : riderNavItems
 
   return (
     <div className='min-h-screen bg-slate-950 flex flex-col'>
       {/* Header */}
       <header className='bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50'>
         <div className='max-w-7xl mx-auto px-4 h-16 flex items-center justify-between'>
-          <Link
-            to={isDriver ? '/driver' : '/'}
-            className='flex items-center gap-2'
-          >
+          <Link to='/driver' className='flex items-center gap-2'>
             <div className='p-2 bg-primary-600 rounded-lg'>
               <Bus className='w-5 h-5 text-white' />
             </div>
@@ -41,7 +28,7 @@ export default function AppLayout () {
 
           <div className='flex items-center gap-4'>
             <div className='hidden sm:flex items-center gap-2 text-sm'>
-              <UserAvatar name={user?.name} avatar={user?.avatar} size='sm' />
+              <UserAvatar name={user?.name} size='sm' />
               <span className='text-slate-300'>{user?.name}</span>
             </div>
             <button

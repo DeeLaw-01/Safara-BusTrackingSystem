@@ -203,7 +203,7 @@ export default function Register () {
           email: formData.email,
           name: formData.name,
           password: formData.password,
-          phone: formData.phone || undefined,
+        phone: formData.phone || undefined,
           inviteToken
         })
       }
