@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Mail, Phone, Shield, Calendar } from 'lucide-react'
+import { ArrowLeft, Mail, Phone, Shield, Calendar, Settings, Bell, ChevronRight, Sparkles } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import UserAvatar from '@/components/ui/UserAvatar'
 
@@ -22,125 +22,126 @@ export default function MyAccount () {
       </header>
 
       <div className='max-w-2xl mx-auto px-4 py-6 space-y-5'>
-        {/* Profile Card */}
-        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
-          <div className='flex items-center gap-4 mb-6'>
-            <UserAvatar
-              name={user?.name}
-              avatar={user?.avatar}
-              size='xl'
-              className='ring-4 ring-teal-500/10'
-            />
-            <div>
-              <h2 className='text-xl font-semibold font-bold text-slate-800'>{user?.name}</h2>
-              <p className='text-sm text-slate-500'>{user?.email}</p>
-              <span className='badge badge-primary mt-2 capitalize'>
-                {user?.role}
-              </span>
+
+        {/* ── Profile Hero ── */}
+        <div className='relative bg-gradient-to-br from-teal-500 via-teal-600 to-emerald-600 rounded-2xl p-6 pt-8 text-white overflow-hidden animated-gradient'>
+          {/* Digital grid overlay */}
+          <div className='absolute inset-0 opacity-10'
+            style={{
+              backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }}
+          />
+          {/* Decorative circles */}
+          <div className='absolute -top-8 -right-8 w-32 h-32 border border-white/10 rounded-full' />
+          <div className='absolute -bottom-12 -left-12 w-40 h-40 border border-white/5 rounded-full' />
+          <div className='absolute top-2 right-16 float-particle'>
+            <Sparkles className='w-5 h-5 text-white/10' />
+          </div>
+
+          <div className='relative z-10 flex flex-col items-center text-center'>
+            <div className='mb-3'>
+              <UserAvatar
+                name={user?.name}
+                avatar={user?.avatar}
+                size='xl'
+                className='ring-4 ring-white/30 shadow-lg'
+              />
             </div>
+            <h2 className='text-xl font-bold mb-0.5'>{user?.name}</h2>
+            <p className='text-white/70 text-sm mb-2'>{user?.email}</p>
+            <span className='inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1 rounded-full capitalize'>
+              <Shield className='w-3 h-3' />
+              {user?.role}
+            </span>
           </div>
 
           <button
             title='Edit Profile'
             onClick={() => navigate('/settings')}
-            className='w-full bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors'
+            className='relative z-10 mt-5 w-full bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all border border-white/10'
           >
             Edit Profile
           </button>
         </div>
 
-        {/* Account Details */}
-        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
-          <h3 className='text-base font-semibold text-slate-800 mb-4'>
-            Account Details
-          </h3>
+        {/* ── Account Details ── */}
+        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden'>
+          <div className='px-5 py-4 border-b border-slate-100'>
+            <h3 className='text-sm font-semibold text-slate-800'>Account Details</h3>
+          </div>
 
-          <div className='space-y-3'>
-            <div className='flex items-center gap-4 p-3 bg-slate-50 rounded-xl'>
-              <Mail className='w-5 h-5 text-slate-400' />
-              <div className='flex-1'>
-                <p className='text-xs text-slate-500 mb-0.5'>Email</p>
-                <p className='text-sm font-medium text-slate-800'>
-                  {user?.email}
-                </p>
-              </div>
-            </div>
-
-            {user?.phone && (
-              <div className='flex items-center gap-4 p-3 bg-slate-50 rounded-xl'>
-                <Phone className='w-5 h-5 text-slate-400' />
-                <div className='flex-1'>
-                  <p className='text-xs text-slate-500 mb-0.5'>Phone</p>
-                  <p className='text-sm font-medium text-slate-800'>
-                    {user.phone}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            <div className='flex items-center gap-4 p-3 bg-slate-50 rounded-xl'>
-              <Shield className='w-5 h-5 text-slate-400' />
-              <div className='flex-1'>
-                <p className='text-xs text-slate-500 mb-0.5'>Account Status</p>
-                <p className='text-sm font-medium text-slate-800'>
-                  {user?.isEmailVerified ? (
-                    <span className='text-emerald-600'>Verified</span>
-                  ) : (
-                    <span className='text-amber-600 font-semibold'>Unverified</span>
-                  )}
-                </p>
-              </div>
-            </div>
-
-            <div className='flex items-center gap-4 p-3 bg-slate-50 rounded-xl'>
-              <Calendar className='w-5 h-5 text-slate-400' />
-              <div className='flex-1'>
-                <p className='text-xs text-slate-500 mb-0.5'>Member Since</p>
-                <p className='text-sm font-medium text-slate-800'>
-                  {user?.createdAt
-                    ? new Date(user.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })
-                    : 'N/A'}
-                </p>
-              </div>
-            </div>
+          <div className='divide-y divide-slate-100'>
+            <DetailRow icon={Mail} label='Email' value={user?.email || 'N/A'} />
+            {user?.phone && <DetailRow icon={Phone} label='Phone' value={user.phone} />}
+            <DetailRow
+              icon={Shield}
+              label='Account Status'
+              value={user?.isEmailVerified ? 'Verified' : 'Unverified'}
+              valueColor={user?.isEmailVerified ? 'text-emerald-600' : 'text-amber-600'}
+            />
+            <DetailRow
+              icon={Calendar}
+              label='Member Since'
+              value={user?.createdAt
+                ? new Date(user.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                  })
+                : 'N/A'
+              }
+            />
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
-          <h3 className='text-base font-semibold text-slate-800 mb-4'>
-            Quick Actions
-          </h3>
+        {/* ── Quick Actions ── */}
+        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden'>
+          <div className='px-5 py-4 border-b border-slate-100'>
+            <h3 className='text-sm font-semibold text-slate-800'>Quick Actions</h3>
+          </div>
 
-          <div className='space-y-2'>
-            <button
-              title='Settings'
-              onClick={() => navigate('/settings')}
-              className='w-full text-left p-3 rounded-xl hover:bg-slate-100 transition-colors'
-            >
-              <p className='text-sm font-medium text-slate-800'>Settings</p>
-              <p className='text-xs text-slate-500'>
-                Manage your account settings
-              </p>
-            </button>
-
-            <button
-              title='Notifications'
-              onClick={() => navigate('/notifications')}
-              className='w-full text-left p-3 rounded-xl hover:bg-slate-100 transition-colors'
-            >
-              <p className='text-sm font-medium text-slate-800'>Notifications</p>
-              <p className='text-xs text-slate-500'>
-                Configure notification preferences
-              </p>
-            </button>
+          <div className='divide-y divide-slate-100'>
+            <ActionRow icon={Settings} label='Settings' desc='Manage your account settings'
+              onClick={() => navigate('/settings')} />
+            <ActionRow icon={Bell} label='Notifications' desc='Configure notification preferences'
+              onClick={() => navigate('/notifications')} />
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+function DetailRow ({ icon: Icon, label, value, valueColor }:
+  { icon: React.ElementType; label: string; value: string; valueColor?: string }) {
+  return (
+    <div className='flex items-center gap-4 px-5 py-3.5'>
+      <div className='w-9 h-9 bg-slate-50 rounded-xl flex items-center justify-center shrink-0'>
+        <Icon className='w-4 h-4 text-slate-400' />
+      </div>
+      <div className='flex-1 min-w-0'>
+        <p className='text-xs text-slate-400 mb-0.5'>{label}</p>
+        <p className={`text-sm font-medium truncate ${valueColor || 'text-slate-700'}`}>{value}</p>
+      </div>
+    </div>
+  )
+}
+
+function ActionRow ({ icon: Icon, label, desc, onClick }:
+  { icon: React.ElementType; label: string; desc: string; onClick: () => void }) {
+  return (
+    <button
+      title={label}
+      onClick={onClick}
+      className='w-full flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 transition-colors text-left'
+    >
+      <div className='w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center shrink-0'>
+        <Icon className='w-4 h-4 text-teal-600' />
+      </div>
+      <div className='flex-1 min-w-0'>
+        <p className='text-sm font-medium text-slate-700'>{label}</p>
+        <p className='text-xs text-slate-400'>{desc}</p>
+      </div>
+      <ChevronRight className='w-4 h-4 text-slate-300' />
+    </button>
   )
 }
