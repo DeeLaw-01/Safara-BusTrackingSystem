@@ -37,24 +37,24 @@ function createDriverIcon(heading: number) {
           width:0;height:0;
           border-left:16px solid transparent;
           border-right:16px solid transparent;
-          border-bottom:24px solid rgba(59,130,246,0.25);
+          border-bottom:24px solid rgba(15,118,110,0.25);
           transform-origin:bottom center;
         "></div>
         <!-- GPS dot -->
         <div style="
           position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
           width:24px;height:24px;
-          background:#3b82f6;
+          background:#0F766E;
           border-radius:50%;
           border:4px solid white;
-          box-shadow:0 2px 12px rgba(59,130,246,0.5);
+          box-shadow:0 2px 12px rgba(15,118,110,0.4);
         "></div>
         <!-- Pulse ring -->
         <div style="
           position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
           width:40px;height:40px;
           border-radius:50%;
-          border:2px solid rgba(59,130,246,0.3);
+          border:2px solid rgba(15,118,110,0.3);
           animation:pulse 2s ease-out infinite;
         "></div>
       </div>
@@ -71,8 +71,8 @@ const stopIcon = L.divIcon({
       width:16px;height:16px;
       background:white;
       border-radius:50%;
-      border:4px solid #0ea5e9;
-      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+      border:4px solid #0D9488;
+      box-shadow:0 2px 6px rgba(15,118,110,0.3);
     "></div>
   `,
   iconSize: [16, 16],
@@ -84,10 +84,10 @@ const nextStopIcon = L.divIcon({
   html: `
     <div style="
       width:24px;height:24px;
-      background:#f95f5f;
+      background:#F59E0B;
       border-radius:50%;
       border:4px solid white;
-      box-shadow:0 2px 8px rgba(249,95,95,0.5);
+      box-shadow:0 2px 8px rgba(245,158,11,0.5);
     "></div>
   `,
   iconSize: [24, 24],
@@ -457,20 +457,20 @@ export default function ActiveTrip() {
 
   if (loading) {
     return (
-      <div className='flex items-center justify-center min-h-[60vh] bg-white'>
-        <Loader2 className='w-8 h-8 text-primary animate-spin' />
+      <div className='flex items-center justify-center min-h-[60vh] bg-slate-50'>
+        <Loader2 className='w-8 h-8 text-teal-600 animate-spin' />
       </div>
     )
   }
 
   if (!bus) {
     return (
-      <div className='max-w-md mx-auto p-8 text-center bg-white rounded-2xl shadow-sm mt-8'>
-        <AlertCircle className='w-12 h-12 text-amber-500 mx-auto mb-4' />
-        <h2 className='text-xl font-semibold text-content-primary mb-2'>
+      <div className='max-w-md mx-auto p-8 text-center bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mt-8'>
+        <AlertCircle className='w-12 h-12 text-amber-600 mx-auto mb-4' />
+        <h2 className='text-xl font-semibold font-semibold text-slate-800 mb-2'>
           No Bus Assigned
         </h2>
-        <p className='text-content-secondary'>
+        <p className='text-slate-500'>
           You need a bus assigned to start a trip.
         </p>
       </div>
@@ -486,8 +486,8 @@ export default function ActiveTrip() {
     <div className='h-[calc(100vh-4rem)] flex flex-col'>
       {/* ─── Navigation Header (Google Maps style) ─────────────────── */}
       {tripActive && nextStop && (
-        <div className='bg-green-600 text-white px-4 py-3 flex items-center gap-3 shrink-0 z-10'>
-          <div className='p-2 bg-white/20 rounded-lg'>
+        <div className='bg-teal-600 text-white px-4 py-3 flex items-center gap-3 shrink-0 z-10'>
+          <div className='p-2 bg-white/20 rounded-xl'>
             <Navigation className='w-5 h-5' />
           </div>
           <div className='flex-1 min-w-0'>
@@ -514,10 +514,10 @@ export default function ActiveTrip() {
 
       {/* ─── Pre-trip header ──────────────────────────────────────── */}
       {!tripActive && (
-        <div className='bg-white border-b border-ui-border p-4 flex items-center justify-between shrink-0'>
+        <div className='bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0'>
           <div>
-            <div className='font-semibold text-lg text-content-primary'>{bus.name}</div>
-            <div className='text-content-secondary text-sm'>
+            <div className='font-semibold font-semibold text-lg text-slate-800'>{bus.name}</div>
+            <div className='text-slate-500 text-sm'>
               {bus.plateNumber} •{' '}
               {route ? `${stops.length} stops` : 'No route assigned'}
             </div>
@@ -525,7 +525,7 @@ export default function ActiveTrip() {
           <button
             onClick={handleStartTrip}
             disabled={starting || !route}
-            className='btn-coral px-6 py-2 h-auto'
+            className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors px-6 py-2 h-auto'
           >
             {starting ? (
               <Loader2 className='w-5 h-5 animate-spin' />
@@ -538,14 +538,14 @@ export default function ActiveTrip() {
       )}
 
       {error && (
-        <div className='bg-red-500/10 border-b border-red-500/20 p-3'>
-          <p className='text-red-400 text-sm text-center'>{error}</p>
+        <div className='bg-red-50 border-b border-red-200 p-3'>
+          <p className='text-red-600 text-sm text-center'>{error}</p>
         </div>
       )}
 
       {locationError && tripActive && (
-        <div className='bg-amber-500/10 border-b border-amber-500/20 p-3'>
-          <p className='text-amber-400 text-sm text-center'>
+        <div className='bg-amber-50 border-b border-amber-200 p-3'>
+          <p className='text-amber-700 text-sm text-center'>
             Location error: {locationError}
           </p>
         </div>
@@ -560,8 +560,8 @@ export default function ActiveTrip() {
           zoomControl={false}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+            url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
           />
 
           {/* Auto-follow */}
@@ -583,11 +583,11 @@ export default function ActiveTrip() {
             />
           )}
 
-          {/* Remaining path (bright) */}
+          {/* Remaining path (bright teal) */}
           {remainingPath.length > 1 && (
             <Polyline
               positions={remainingPath}
-              color='#0ea5e9'
+              color='#0D9488'
               weight={5}
               opacity={0.9}
             />
@@ -597,7 +597,7 @@ export default function ActiveTrip() {
           {!tripActive && routePath.length > 1 && (
             <Polyline
               positions={routePath}
-              color='#0ea5e9'
+              color='#0D9488'
               weight={4}
               opacity={0.7}
             />
@@ -614,8 +614,8 @@ export default function ActiveTrip() {
             >
               <Popup>
                 <div className='text-sm'>
-                  <div className='font-semibold text-gray-900'>{stop.name}</div>
-                  <div className='text-gray-500'>
+                  <div className='font-semibold text-slate-800'>{stop.name}</div>
+                  <div className='text-slate-500'>
                     Stop #{index + 1}
                     {tripActive && index === nextStopIdx && ' — Next'}
                     {tripActive && index < nextStopIdx && ' — Passed'}
@@ -630,9 +630,9 @@ export default function ActiveTrip() {
             <Marker position={position} icon={driverIcon}>
               <Popup>
                 <div className='text-sm'>
-                  <div className='font-semibold text-gray-900'>You are here</div>
+                  <div className='font-semibold text-slate-800'>You are here</div>
                   {speed > 0 && (
-                    <div className='text-gray-500'>
+                    <div className='text-slate-500'>
                       {Math.round(speed)} km/h
                     </div>
                   )}
@@ -650,8 +650,8 @@ export default function ActiveTrip() {
             onClick={() => setFollowMode(true)}
             className={`absolute bottom-24 right-4 z-[1000] p-3 rounded-full shadow-lg transition-all ${
               followMode
-                ? 'bg-blue-500 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
+                ? 'bg-teal-600 text-white'
+                : 'bg-white text-slate-800 hover:bg-slate-100'
             }`}
             title='Re-center on your location'
           >
@@ -662,9 +662,9 @@ export default function ActiveTrip() {
         {/* Stop list bar (bottom of map when trip active) */}
         {tripActive && (
           <div className='absolute bottom-0 left-0 right-0 z-[1000]'>
-            <div className='bg-white/95 backdrop-blur-md rounded-t-2xl px-4 py-4 border-t border-ui-border shadow-2xl'>
+            <div className='bg-white/95 backdrop-blur-xl rounded-t-2xl px-4 py-4 border-t border-slate-200 shadow-xl'>
               <div className='flex items-center justify-between mb-4'>
-                <span className='text-xs font-bold text-content-secondary uppercase tracking-wider'>
+                <span className='text-xs font-bold text-slate-400 uppercase tracking-wider'>
                   Upcoming stops
                 </span>
                 <button
@@ -685,26 +685,26 @@ export default function ActiveTrip() {
                 {stops.slice(nextStopIdx).map((stop, i) => (
                   <div
                     key={stop._id}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg shrink-0 ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 ${
                       i === 0
-                        ? 'bg-primary/10 border border-primary/20'
-                        : 'bg-app-bg border border-ui-border'
+                        ? 'bg-teal-50 border border-teal-600/20'
+                        : 'bg-slate-50 border border-slate-200'
                     }`}
                   >
                     <MapPin
                       className={`w-3.5 h-3.5 shrink-0 ${
-                        i === 0 ? 'text-primary' : 'text-content-secondary'
+                        i === 0 ? 'text-teal-600' : 'text-slate-500'
                       }`}
                     />
                     <span
                       className={`text-sm font-medium whitespace-nowrap ${
-                        i === 0 ? 'text-primary' : 'text-content-secondary'
+                        i === 0 ? 'text-teal-600' : 'text-slate-500'
                       }`}
                     >
                       {stop.name}
                     </span>
                     {i < stops.slice(nextStopIdx).length - 1 && (
-                      <ChevronRight className='w-3.5 h-3.5 text-ui-border shrink-0' />
+                      <ChevronRight className='w-3.5 h-3.5 text-slate-200 shrink-0' />
                     )}
                   </div>
                 ))}
@@ -716,14 +716,14 @@ export default function ActiveTrip() {
 
       {/* End Trip Confirmation Modal */}
       {showEndTripConfirm && (
-        <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[2000] p-4'>
-          <div className='bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl'>
-            <h3 className='text-lg font-bold text-content-primary mb-2'>End Trip?</h3>
-            <p className='text-content-secondary text-sm mb-6'>Are you sure you want to end this trip? This cannot be undone.</p>
+        <div className='fixed inset-0 bg-ink/40 backdrop-blur-sm flex items-center justify-center z-[2000] p-4'>
+          <div className='bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl'>
+            <h3 className='text-lg font-semibold font-bold text-slate-800 mb-2'>End Trip?</h3>
+            <p className='text-slate-500 text-sm mb-6'>Are you sure you want to end this trip? This cannot be undone.</p>
             <div className='flex gap-3'>
               <button
                 onClick={() => setShowEndTripConfirm(false)}
-                className='flex-1 px-4 py-3 rounded-xl border border-ui-border text-content-primary font-semibold hover:bg-app-bg transition-colors'
+                className='flex-1 px-4 py-3 rounded-xl border border-slate-200 text-slate-800 font-semibold hover:bg-slate-100 transition-colors'
               >
                 Cancel
               </button>

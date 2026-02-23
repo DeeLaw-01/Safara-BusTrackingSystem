@@ -1,120 +1,278 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
 @layer base {
-  body {
-    @apply bg-app-bg text-content-primary antialiased;
-    font-family: 'Poppins', system-ui, sans-serif;
+  * {
+    @apply box-border;
   }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-content-primary;
+  body {
+    @apply bg-surface-bg text-ink antialiased;
+    font-family: 'Inter', 'Poppins', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-ink;
     font-family: 'Poppins', system-ui, sans-serif;
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
 @layer components {
+
+  /* ─── Buttons ───────────────────────────────────────────────────────── */
   .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 
-           flex items-center justify-center gap-2 disabled:opacity-50 
-           disabled:cursor-not-allowed;
+    @apply px-5 py-2.5 rounded-xl font-semibold text-sm
+           transition-all duration-200 ease-out
+           flex items-center justify-center gap-2
+           disabled:opacity-50 disabled:cursor-not-allowed
+           focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2;
   }
 
   .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-hover 
-           shadow-sm transition-colors;
+    @apply bg-primary text-ink-inverted
+           hover:bg-primary-hover hover:shadow-spatial
+           active:scale-[0.98];
   }
 
   .btn-secondary {
-    @apply bg-app-card text-content-primary hover:bg-gray-50 
-           border border-ui-border;
+    @apply bg-surface-card text-ink border border-line
+           hover:bg-surface-hover hover:border-line-strong
+           active:scale-[0.98];
   }
 
   .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700;
+    @apply bg-danger text-ink-inverted
+           hover:bg-red-700 hover:shadow-spatial
+           active:scale-[0.98];
   }
 
-  /* Core primary button - based on #F23B3B */
-  .btn-coral {
-    @apply bg-primary text-white font-semibold px-6 py-4 rounded-xl
-           shadow-md hover:shadow-lg transition-all duration-300
-           flex items-center justify-center gap-2 hover:scale-[1.02];
+  .btn-ghost {
+    @apply bg-transparent text-ink-secondary
+           hover:bg-surface-hover hover:text-ink
+           active:scale-[0.98];
   }
 
-  .btn-coral:hover {
-    @apply bg-primary-hover;
+  /* Spatial CTA (used on auth, rider dashboard) */
+  .btn-spatial {
+    @apply bg-primary text-ink-inverted font-bold
+           px-7 py-3.5 rounded-2xl
+           shadow-spatial hover:shadow-spatial-md
+           hover:bg-primary-hover
+           transition-all duration-300 ease-out
+           flex items-center justify-center gap-2.5
+           hover:translate-y-[-1px] active:translate-y-0 active:shadow-spatial-sm;
   }
 
-  .btn-coral:active {
-    @apply scale-100;
+  .btn-spatial:disabled {
+    @apply opacity-50 cursor-not-allowed translate-y-0 shadow-spatial-sm;
   }
 
-  .btn-coral:disabled {
-    @apply opacity-50 cursor-not-allowed scale-100;
-  }
-
+  /* ─── Inputs ────────────────────────────────────────────────────────── */
   .input {
-    @apply w-full px-4 py-3 bg-app-card border border-ui-border 
-           rounded-lg text-content-primary placeholder-content-secondary
-           focus:outline-none focus:ring-2 focus:ring-content-primary/10 
-           focus:border-ui-focus transition-all;
-  }
-
-  /* Auth page input style */
-  .input-auth {
-    @apply w-full px-4 py-3 bg-white border border-ui-border 
-           rounded-xl text-content-primary placeholder-content-secondary
-           focus:outline-none focus:ring-2 focus:ring-primary/20 
+    @apply w-full px-4 py-3 bg-surface-card border border-line
+           rounded-xl text-ink placeholder-ink-muted
+           focus:outline-none focus:ring-2 focus:ring-primary/15
            focus:border-primary transition-all duration-200;
   }
 
-  .card {
-    @apply bg-white/75 border border-ui-border 
-           shadow-sm rounded-xl p-6 backdrop-blur-md;
+  .input-auth {
+    @apply w-full px-4 py-3.5 bg-surface-muted border border-line
+           rounded-2xl text-ink placeholder-ink-muted
+           focus:outline-none focus:ring-2 focus:ring-primary/20
+           focus:border-primary focus:bg-surface-card
+           transition-all duration-200;
   }
 
+  /* ─── Spatial Cards ─────────────────────────────────────────────────── */
+  .spatial-card {
+    @apply bg-surface-card border border-line
+           rounded-2xl p-6
+           shadow-spatial-sm
+           transition-all duration-300 ease-out;
+  }
+
+  .spatial-card-hover {
+    @apply spatial-card
+           hover:shadow-spatial hover:translate-y-[-2px]
+           hover:border-line-strong;
+  }
+
+  .spatial-card-interactive {
+    @apply spatial-card
+           hover:shadow-spatial-md hover:translate-y-[-3px]
+           hover:border-primary/20
+           cursor-pointer;
+  }
+
+  /* ─── Glass Effect (for overlays on maps, images) ───────────────────── */
   .glass {
-    @apply bg-white/80 backdrop-blur-md border border-ui-border;
+    @apply bg-white/80 backdrop-blur-lg border border-white/60;
   }
 
-  .glass-dark {
-    @apply bg-slate-900/40 backdrop-blur-md border border-white/10;
+  .glass-strong {
+    @apply bg-white/90 backdrop-blur-xl border border-line;
   }
 
-  .admin-header {
-    @apply text-white font-display font-bold drop-shadow-md;
+  /* ─── Infographic Stat ──────────────────────────────────────────────── */
+  .info-stat {
+    @apply spatial-card flex items-center gap-4;
   }
 
-  /* Auth card with curved top */
-  .auth-card {
-    @apply bg-app-card rounded-t-[3rem] shadow-2xl;
+  .info-stat-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center shrink-0;
+  }
+
+  /* ─── Badge ─────────────────────────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5
+           text-xs font-semibold rounded-full;
+  }
+
+  .badge-primary {
+    @apply bg-primary-light text-primary;
+  }
+
+  .badge-accent {
+    @apply bg-accent-light text-amber-800;
+  }
+
+  .badge-danger {
+    @apply bg-danger-light text-danger;
+  }
+
+  .badge-success {
+    @apply bg-emerald-50 text-emerald-700;
+  }
+
+  .badge-neutral {
+    @apply bg-slate-100 text-slate-600;
+  }
+
+  /* ─── Section header ────────────────────────────────────────────────── */
+  .section-title {
+    @apply text-lg font-display font-bold text-ink;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-ink-secondary;
+  }
+
+  /* ─── Page header (rider sub-pages) ─────────────────────────────────── */
+  .page-header {
+    @apply bg-surface-card/80 backdrop-blur-xl border-b border-line
+           px-4 h-14 flex items-center gap-3 sticky top-0 z-50;
   }
 }
 
-/* Leaflet overrides — light map for rider dashboard */
+/* ═══════════════════════════════════════════════════════════════════════════
+   PARALLAX & SPATIAL LAYERS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Parallax container — used as background of auth pages, dashboard, etc. */
+.parallax-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.parallax-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.12;
+  will-change: transform;
+}
+
+.parallax-shape-1 {
+  width: 400px; height: 400px;
+  background: linear-gradient(135deg, #0F766E, #14B8A6);
+  top: -10%; left: -5%;
+  animation: float 8s ease-in-out infinite;
+}
+
+.parallax-shape-2 {
+  width: 300px; height: 300px;
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  top: 60%; right: -8%;
+  animation: float 10s ease-in-out 2s infinite;
+}
+
+.parallax-shape-3 {
+  width: 200px; height: 200px;
+  background: linear-gradient(135deg, #0F766E, #5EEAD4);
+  bottom: 10%; left: 30%;
+  animation: float 12s ease-in-out 4s infinite;
+}
+
+.parallax-shape-4 {
+  width: 150px; height: 150px;
+  background: linear-gradient(135deg, #E2E8F0, #CBD5E1);
+  top: 25%; right: 20%;
+  animation: float 7s ease-in-out 1s infinite;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+/* Blob variants for variety */
+.parallax-blob {
+  position: absolute;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  opacity: 0.08;
+  will-change: transform;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEAFLET OVERRIDES — LIGHT MAP
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .leaflet-container {
   height: 100%;
   width: 100%;
-  background: #f8f9fa;
+  background: #F8FAFB;
+  border-radius: 1rem;
 }
 
 .leaflet-popup-content-wrapper {
-  @apply bg-white text-gray-900 rounded-xl shadow-lg !important;
+  background: #FFFFFF !important;
+  color: #1E293B !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 8px 30px rgba(15,118,110,0.10), 0 4px 8px rgba(0,0,0,0.04) !important;
+  border: 1px solid #E2E8F0 !important;
 }
 
 .leaflet-popup-tip {
-  @apply bg-white !important;
+  background: #FFFFFF !important;
 }
 
-/* Lower Leaflet z-index when sidebar is open */
+.leaflet-control-zoom {
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15,118,110,0.08) !important;
+}
+
+.leaflet-control-zoom a {
+  background: #FFFFFF !important;
+  color: #1E293B !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 16px !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #F1F5F9 !important;
+}
+
+/* Lower z-index when sidebar is open (rider dashboard) */
 .sidebar-open .leaflet-container,
 .sidebar-open .leaflet-pane,
 .sidebar-open .leaflet-map-pane,
@@ -128,53 +286,35 @@
   z-index: 50 !important;
 }
 
-/* Dark leaflet overrides for admin pages */
-.leaflet-dark .leaflet-container {
-  @apply bg-slate-900 rounded-xl;
-}
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-.leaflet-dark .leaflet-control-zoom {
-  @apply border-slate-700 !important;
-}
-
-.leaflet-dark .leaflet-control-zoom a {
-  @apply bg-slate-900 text-slate-100 border-slate-700 !important;
-}
-
-.leaflet-dark .leaflet-control-zoom a:hover {
-  @apply bg-slate-800 !important;
-}
-
-.leaflet-dark .leaflet-popup-content-wrapper {
-  @apply bg-slate-900 text-slate-100 rounded-lg !important;
-}
-
-.leaflet-dark .leaflet-popup-tip {
-  @apply bg-slate-900 !important;
-}
-
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-app-bg;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full;
+  background: #CBD5E1;
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
+  background: #94A3B8;
 }
 
-/* Bus marker animation */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Bus marker pulse */
 @keyframes bus-pulse {
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -188,50 +328,7 @@
   animation: bus-pulse 2s ease-in-out infinite;
 }
 
-/* Auth page background pattern */
-.auth-bg-pattern {
-  background-image: radial-gradient(
-      circle at 20% 80%,
-      rgba(255, 255, 255, 0.03) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(255, 255, 255, 0.03) 0%,
-      transparent 50%
-    );
-}
-
-/* Animation keyframes */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.5s ease-out;
-}
-
-/* ─── Driver GPS pulse animation ─── */
+/* Driver GPS pulse */
 @keyframes pulse {
   0% {
     transform: translate(-50%, -50%) scale(1);
@@ -243,6 +340,14 @@
   }
 }
 
+/* ─── Scroll-linked parallax effect ─── */
+@keyframes parallax-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25%      { transform: translate(10px, -15px) rotate(1deg); }
+  50%      { transform: translate(-5px, -25px) rotate(-1deg); }
+  75%      { transform: translate(-15px, -10px) rotate(0.5deg); }
+}
+
 /* ─── Hide scrollbar utility ─── */
 .scrollbar-hide {
   -ms-overflow-style: none;
@@ -251,3 +356,218 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODAL OVERLAY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.modal-overlay {
+  @apply fixed inset-0 z-[100] flex items-center justify-center
+         bg-ink/30 backdrop-blur-sm
+         animate-fade-in;
+}
+
+.modal-panel {
+  @apply bg-surface-card rounded-2xl shadow-spatial-xl
+         border border-line w-full max-w-lg mx-4
+         animate-scale-in overflow-hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOGGLE SWITCH
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.toggle-track {
+  @apply relative inline-flex h-6 w-11 items-center rounded-full
+         transition-colors duration-200 ease-in-out cursor-pointer;
+}
+
+.toggle-track[data-checked="true"] {
+  @apply bg-primary;
+}
+
+.toggle-track[data-checked="false"] {
+  @apply bg-slate-200;
+}
+
+.toggle-thumb {
+  @apply inline-block h-4 w-4 rounded-full bg-white shadow-sm
+         transition-transform duration-200 ease-in-out;
+}
+
+.toggle-track[data-checked="true"] .toggle-thumb {
+  @apply translate-x-[22px];
+}
+
+.toggle-track[data-checked="false"] .toggle-thumb {
+  @apply translate-x-[3px];
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CONFIRM DIALOG (replaces native confirm())
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-dialog {
+  @apply modal-panel max-w-sm p-6 text-center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DIGITAL EFFECTS & ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Glitch text effect */
+@keyframes glitch {
+  0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  10% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 1px); }
+  20% { clip-path: inset(80% 0 0 0); transform: translate(1px, -1px); }
+  30% { clip-path: inset(10% 0 85% 0); transform: translate(-1px, 2px); }
+  40% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 0); }
+  50% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}
+
+.glitch-text {
+  position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  color: #0d9488;
+  animation: glitch 4s infinite linear alternate-reverse;
+  opacity: 0.15;
+}
+
+.glitch-text::after {
+  color: #f59e0b;
+  animation: glitch 3s infinite linear alternate;
+  opacity: 0.1;
+}
+
+/* Scan-line overlay */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scan-line-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.15), transparent);
+  animation: scanline 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Pulse-glow for live indicators */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+}
+
+.pulse-live {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Animated gradient background */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Grid pattern (digital background) */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(15, 118, 110, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 118, 110, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Chart bar animation */
+@keyframes chart-grow {
+  from { height: 0; }
+  to { height: var(--bar-height, 50%); }
+}
+
+.chart-bar {
+  animation: chart-grow 1s ease-out forwards;
+}
+
+/* Donut chart animation */
+@keyframes donut-fill {
+  from { stroke-dashoffset: var(--circumference, 283); }
+  to { stroke-dashoffset: var(--offset, 70); }
+}
+
+.donut-ring {
+  animation: donut-fill 1.5s ease-out forwards;
+}
+
+/* Fade-in-up animation */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+/* Stagger children animation */
+.stagger-children > * {
+  opacity: 0;
+  animation: fade-in-up 0.4s ease-out forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }
+
+/* Number counter shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #0f172a 40%, #0d9488 50%, #0f172a 60%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Floating particles */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(2deg); }
+  75% { transform: translateY(4px) rotate(-1deg); }
+}
+
+.float-particle {
+  animation: float 6s ease-in-out infinite;
+}
+
+.float-particle-delay {
+  animation: float 6s ease-in-out 2s infinite;
+}
+

@@ -46,8 +46,8 @@ function ProtectedRoute ({
 
   if (isLoading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-white'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary'></div>
+      <div className='min-h-screen flex items-center justify-center bg-slate-50'>
+        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600'></div>
       </div>
     )
   }
@@ -65,10 +65,10 @@ function ProtectedRoute ({
   // Check if driver is approved
   if (user?.role === 'driver' && !user.isApproved) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-slate-950'>
-        <div className='card max-w-md text-center'>
-          <h2 className='text-2xl font-bold mb-4'>Account Pending Approval</h2>
-          <p className='text-content-secondary mb-6'>
+      <div className='min-h-screen flex items-center justify-center bg-slate-50'>
+        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5 max-w-md text-center'>
+          <h2 className='text-2xl font-semibold font-bold text-slate-800 mb-4'>Account Pending Approval</h2>
+          <p className='text-slate-500 mb-6'>
             Your driver account is pending admin approval. Please wait for
             verification.
           </p>

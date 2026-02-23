@@ -105,23 +105,23 @@ export default function Settings () {
   }
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen bg-slate-50'>
       {/* Header */}
-      <header className='bg-white border-b border-ui-border px-4 h-14 flex items-center gap-3 sticky top-0 z-50'>
+      <header className='page-header'>
         <button
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+          className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
           aria-label='Go back'
         >
-          <ArrowLeft className='w-5 h-5 text-content-primary' />
+          <ArrowLeft className='w-5 h-5 text-slate-800' />
         </button>
-        <h1 className='text-lg font-bold text-content-primary'>Settings</h1>
+        <h1 className='text-lg font-semibold font-bold text-slate-800'>Settings</h1>
       </header>
 
-      <div className='max-w-2xl mx-auto px-4 py-6'>
+      <div className='max-w-2xl mx-auto px-4 py-6 space-y-5'>
         {/* Profile Picture Section */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 mb-6 shadow-sm'>
-          <h2 className='text-lg font-semibold text-content-primary mb-4'>
+        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
+          <h2 className='text-base font-semibold text-slate-800 mb-4'>
             Profile Picture
           </h2>
 
@@ -130,10 +130,10 @@ export default function Settings () {
               name={formData.name}
               avatar={formData.avatar}
               size='xl'
-              className='ring-4 ring-primary/10'
+              className='ring-4 ring-teal-500/10'
             />
             <div className='flex-1'>
-              <p className='text-sm text-content-secondary mb-2'>
+              <p className='text-sm text-slate-500 mb-2'>
                 Upload a new profile picture or enter an image URL
               </p>
               <div className='flex gap-2 flex-wrap'>
@@ -179,7 +179,7 @@ export default function Settings () {
                   <button
                     onClick={() => handleAvatarUrlChange('')}
                     disabled={uploading}
-                    className='btn-secondary text-sm !text-red-500 hover:!bg-red-50 disabled:opacity-50'
+                    className='btn btn-secondary text-sm !text-red-600 hover:!bg-red-50 disabled:opacity-50'
                   >
                     <X className='w-4 h-4' />
                     Remove
@@ -207,7 +207,7 @@ export default function Settings () {
                       }
                     }}
                     disabled={!urlInputValue.trim()}
-                    className='btn btn-coral text-sm px-4 disabled:opacity-50'
+                    className='btn btn-primary text-sm px-4 disabled:opacity-50'
                   >
                     Apply
                   </button>
@@ -223,13 +223,13 @@ export default function Settings () {
               {/* Upload Progress */}
               {uploading && (
                 <div className='mt-3'>
-                  <div className='flex items-center justify-between text-xs text-content-secondary mb-1'>
+                  <div className='flex items-center justify-between text-xs text-slate-500 mb-1'>
                     <span>Uploading...</span>
                     <span>{Math.round(uploadProgress)}%</span>
                   </div>
-                  <div className='w-full bg-app-bg rounded-full h-2 overflow-hidden'>
+                  <div className='w-full bg-slate-100 rounded-full h-2 overflow-hidden'>
                     <div
-                      className='bg-primary h-2 rounded-full transition-all duration-300'
+                      className='bg-teal-600 h-2 rounded-full transition-all duration-300'
                       style={{ width: `${uploadProgress}%` }}
                       role='progressbar'
                       aria-label={`Upload progress: ${Math.round(
@@ -243,11 +243,11 @@ export default function Settings () {
           </div>
 
           {formData.avatar && !formData.avatar.startsWith('data:') && (
-            <div className='mt-4 p-3 bg-app-bg rounded-lg border border-ui-border/50'>
-              <p className='text-xs text-content-secondary mb-1'>
+            <div className='mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200'>
+              <p className='text-xs text-slate-500 mb-1'>
                 Image hosted on Cloudinary
               </p>
-              <p className='text-xs text-content-primary font-mono break-all'>
+              <p className='text-xs text-slate-800 font-mono break-all'>
                 {formData.avatar.length > 60
                   ? `${formData.avatar.substring(0, 60)}...`
                   : formData.avatar}
@@ -257,20 +257,20 @@ export default function Settings () {
         </div>
 
         {/* Account Information Form */}
-        <form onSubmit={handleSubmit} className='space-y-6'>
-          <div className='bg-white rounded-2xl border border-ui-border p-6 shadow-sm'>
-            <h2 className='text-lg font-semibold text-content-primary mb-4'>
+        <form onSubmit={handleSubmit} className='space-y-5'>
+          <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
+            <h2 className='text-base font-semibold text-slate-800 mb-4'>
               Account Information
             </h2>
 
             <div className='space-y-4'>
               {/* Name */}
               <div>
-                <label className='block text-sm font-medium text-content-primary mb-2'>
+                <label className='block text-sm font-medium text-slate-800 mb-2'>
                   Full Name
                 </label>
                 <div className='relative'>
-                  <User className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-content-secondary/60' />
+                  <User className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400' />
                   <input
                     type='text'
                     value={formData.name}
@@ -286,31 +286,31 @@ export default function Settings () {
 
               {/* Email (read-only) */}
               <div>
-                <label className='block text-sm font-medium text-content-primary mb-2'>
+                <label className='block text-sm font-medium text-slate-800 mb-2'>
                   Email Address
                 </label>
                 <div className='relative'>
-                  <Mail className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-content-secondary/60' />
+                  <Mail className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400' />
                   <input
                     type='email'
                     value={formData.email}
                     disabled
                     aria-label='Email address (read-only)'
-                    className='input-auth pl-10 bg-app-bg text-content-secondary cursor-not-allowed border-ui-border'
+                    className='input-auth pl-10 bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200'
                   />
                 </div>
-                <p className='text-xs text-content-secondary mt-1'>
+                <p className='text-xs text-slate-500 mt-1'>
                   Email cannot be changed
                 </p>
               </div>
 
               {/* Phone */}
               <div>
-                <label className='block text-sm font-medium text-content-primary mb-2'>
+                <label className='block text-sm font-medium text-slate-800 mb-2'>
                   Phone Number
                 </label>
                 <div className='relative'>
-                  <Phone className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-content-secondary/60' />
+                  <Phone className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400' />
                   <input
                     type='tel'
                     value={formData.phone}
@@ -327,7 +327,7 @@ export default function Settings () {
 
           {/* Success/Error Messages */}
           {success && (
-            <div className='flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700'>
+            <div className='flex items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700'>
               <Check className='w-5 h-5' />
               <span className='text-sm font-medium'>
                 Profile updated successfully!
@@ -336,13 +336,13 @@ export default function Settings () {
           )}
 
           {error && (
-            <div className='flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700'>
+            <div className='flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600'>
               <X className='w-5 h-5' />
               <span className='text-sm font-medium'>{error}</span>
             </div>
           )}
 
-          {/* Submit Button */}
+          {/* Submit Buttons */}
           <div className='flex gap-3'>
             <button
               type='button'
@@ -354,7 +354,7 @@ export default function Settings () {
             <button
               type='submit'
               disabled={loading}
-              className='btn btn-coral flex-1'
+              className='btn btn-primary flex-1'
             >
               {loading ? (
                 <>

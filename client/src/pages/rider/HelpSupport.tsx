@@ -39,50 +39,50 @@ export default function HelpSupport () {
   ]
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen bg-slate-50'>
       {/* Header */}
-      <header className='bg-white border-b border-ui-border px-4 h-14 flex items-center gap-3 sticky top-0 z-50'>
+      <header className='page-header'>
         <button
           title='Back'
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+          className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
         >
-          <ArrowLeft className='w-5 h-5 text-content-primary' />
+          <ArrowLeft className='w-5 h-5 text-slate-800' />
         </button>
-        <h1 className='text-lg font-bold text-content-primary'>Help & Support</h1>
+        <h1 className='text-lg font-semibold font-bold text-slate-800'>Help & Support</h1>
       </header>
 
-      <div className='max-w-2xl mx-auto px-4 py-6'>
+      <div className='max-w-2xl mx-auto px-4 py-6 space-y-5'>
         {/* Contact Options */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 mb-6 shadow-sm'>
-          <h2 className='text-lg font-semibold text-content-primary mb-4'>
+        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
+          <h2 className='text-base font-semibold text-slate-800 mb-4'>
             Get in Touch
           </h2>
 
           <div className='space-y-3'>
             <a
               href='mailto:support@safara.com'
-              className='flex items-center gap-4 p-4 bg-app-bg rounded-xl hover:bg-ui-border/30 transition-colors'
+              className='flex items-center gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors'
             >
-              <div className='p-2 bg-primary/10 rounded-lg'>
-                <Mail className='w-5 h-5 text-primary' />
+              <div className='info-stat-icon bg-teal-50'>
+                <Mail className='w-5 h-5 text-teal-600' />
               </div>
               <div className='flex-1'>
-                <p className='text-sm font-medium text-content-primary'>
+                <p className='text-sm font-medium text-slate-800'>
                   Email Support
                 </p>
-                <p className='text-xs text-content-secondary'>support@safara.com</p>
+                <p className='text-xs text-slate-500'>support@safara.com</p>
               </div>
-              <ChevronRight className='w-5 h-5 text-content-secondary/60' />
+              <ChevronRight className='w-5 h-5 text-slate-400' />
             </a>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 mb-6 shadow-sm'>
+        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
           <div className='flex items-center gap-3 mb-4'>
-            <HelpCircle className='w-5 h-5 text-primary' />
-            <h2 className='text-lg font-semibold text-content-primary'>
+            <HelpCircle className='w-5 h-5 text-teal-600' />
+            <h2 className='text-base font-semibold text-slate-800'>
               Frequently Asked Questions
             </h2>
           </div>
@@ -91,38 +91,38 @@ export default function HelpSupport () {
             {faqs.map((faq, index) => (
               <details
                 key={index}
-                className='group border-b border-ui-border last:border-0 pb-4 last:pb-0'
+                className='group border-b border-slate-200 last:border-0 pb-4 last:pb-0'
               >
                 <summary className='cursor-pointer list-none'>
                   <div className='flex items-center justify-between'>
-                    <p className='text-sm font-medium text-content-primary group-open:text-primary transition-colors'>
+                    <p className='text-sm font-medium text-slate-800 group-open:text-teal-600 transition-colors'>
                       {faq.question}
                     </p>
-                    <ChevronRight className='w-4 h-4 text-content-secondary/60 group-open:rotate-90 transition-transform' />
+                    <ChevronRight className='w-4 h-4 text-slate-400 group-open:rotate-90 transition-transform' />
                   </div>
                 </summary>
-                <p className='text-sm text-content-secondary mt-2 pl-4'>{faq.answer}</p>
+                <p className='text-sm text-slate-500 mt-2 pl-4'>{faq.answer}</p>
               </details>
             ))}
           </div>
         </div>
 
         {/* Quick Links */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 shadow-sm'>
-          <h2 className='text-lg font-semibold text-content-primary mb-4'>
+        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
+          <h2 className='text-base font-semibold text-slate-800 mb-4'>
             Quick Links
           </h2>
 
           <div className='space-y-2'>
             <button
               onClick={() => navigate('/privacy')}
-              className='w-full flex items-center gap-3 p-3 rounded-lg hover:bg-app-bg transition-colors text-left'
+              className='w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 transition-colors text-left'
             >
-              <FileText className='w-5 h-5 text-content-secondary/60' />
-              <span className='text-sm font-medium text-content-primary'>
+              <FileText className='w-5 h-5 text-slate-400' />
+              <span className='text-sm font-medium text-slate-800'>
                 Privacy Policy
               </span>
-              <ChevronRight className='w-4 h-4 text-content-secondary/60 ml-auto' />
+              <ChevronRight className='w-4 h-4 text-slate-400 ml-auto' />
             </button>
           </div>
         </div>

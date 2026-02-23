@@ -151,21 +151,21 @@ export default function ForgotPassword () {
     return (
       <div className='space-y-6 text-center'>
         <div className='flex flex-col items-center gap-4 py-4'>
-          <div className='w-16 h-16 bg-green-50 rounded-full flex items-center justify-center'>
-            <CheckCircle className='w-9 h-9 text-green-500' />
+          <div className='w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center'>
+            <CheckCircle className='w-9 h-9 text-emerald-500' />
           </div>
           <div>
-            <h2 className='text-2xl font-bold text-content-primary'>
+            <h2 className='text-2xl font-semibold font-bold text-slate-800'>
               Password Reset!
             </h2>
-            <p className='text-content-secondary text-sm mt-2'>
+            <p className='text-slate-500 text-sm mt-2'>
               Your password has been updated successfully.
               <br />
               You can now sign in with your new password.
             </p>
           </div>
         </div>
-        <button onClick={() => navigate('/login')} className='btn-coral w-full'>
+        <button onClick={() => navigate('/login')} className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full'>
           Go to Login
         </button>
       </div>
@@ -182,20 +182,20 @@ export default function ForgotPassword () {
             setError('')
             setOtp(['', '', '', '', '', ''])
           }}
-          className='flex items-center gap-1.5 text-sm text-content-secondary hover:text-content-primary transition-colors'
+          className='flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors'
         >
           <ArrowLeft className='w-4 h-4' /> Back
         </button>
 
         <div className='text-center'>
-          <div className='w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4'>
-            <Mail className='w-7 h-7 text-red-500' />
+          <div className='w-14 h-14 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4'>
+            <Mail className='w-7 h-7 text-teal-600' />
           </div>
-          <h2 className='text-2xl font-bold text-content-primary'>Check your email</h2>
-          <p className='text-content-secondary text-sm mt-2'>
+          <h2 className='text-2xl font-semibold font-bold text-slate-800'>Check your email</h2>
+          <p className='text-slate-500 text-sm mt-2'>
             We sent a reset code to
             <br />
-            <span className='font-semibold text-content-primary'>{email}</span>
+            <span className='font-semibold text-slate-800'>{email}</span>
           </p>
         </div>
 
@@ -208,7 +208,7 @@ export default function ForgotPassword () {
         <form onSubmit={handleResetSubmit} className='space-y-5'>
           {/* OTP boxes */}
           <div>
-            <label className='block text-sm font-medium text-content-primary mb-3 text-center'>
+            <label className='block text-sm font-medium text-slate-800 mb-3 text-center'>
               Enter 6-digit code
             </label>
             <div className='flex justify-center gap-3'>
@@ -226,9 +226,9 @@ export default function ForgotPassword () {
                   onChange={e => handleOtpChange(i, e.target.value)}
                   onKeyDown={e => handleOtpKeyDown(i, e)}
                   onPaste={i === 0 ? handleOtpPaste : undefined}
-                   className='w-12 h-14 text-center text-xl font-bold text-content-primary
-                              bg-gray-50 border-2 border-ui-border rounded-xl
-                              focus:outline-none focus:border-content-primary/20 focus:bg-white
+                   className='w-12 h-14 text-center text-xl font-bold text-slate-800
+                              bg-slate-50 border-2 border-slate-200 rounded-xl
+                              focus:outline-none focus:border-teal-600/40 focus:bg-white
                               transition-all duration-200'
                 />
               ))}
@@ -237,7 +237,7 @@ export default function ForgotPassword () {
 
           {/* New Password */}
           <div>
-            <label className='block text-sm font-medium text-content-primary mb-2'>
+            <label className='block text-sm font-medium text-slate-800 mb-2'>
               New Password
             </label>
             <div className='relative'>
@@ -255,7 +255,7 @@ export default function ForgotPassword () {
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute right-4 top-1/2 -translate-y-1/2 text-content-secondary hover:text-content-primary transition-colors'
+                className='absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 transition-colors'
               >
                 {showPassword ? (
                   <EyeOff className='w-5 h-5' />
@@ -268,7 +268,7 @@ export default function ForgotPassword () {
 
           {/* Confirm Password */}
           <div>
-            <label className='block text-sm font-medium text-content-primary mb-2'>
+            <label className='block text-sm font-medium text-slate-800 mb-2'>
               Confirm Password
             </label>
             <input
@@ -287,7 +287,7 @@ export default function ForgotPassword () {
           <button
             type='submit'
             disabled={isLoading}
-            className='btn-coral w-full'
+            className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full'
           >
             {isLoading ? (
               <Loader2 className='w-5 h-5 animate-spin' />
@@ -297,12 +297,12 @@ export default function ForgotPassword () {
           </button>
         </form>
 
-        <p className='text-center text-sm text-content-secondary'>
+        <p className='text-center text-sm text-slate-500'>
           Didn't receive it?{' '}
           <button
             onClick={handleResend}
             disabled={resendCooldown > 0 || isLoading}
-            className='font-semibold text-primary hover:text-primary-hover disabled:text-content-secondary/50
+            className='font-semibold text-teal-600 hover:text-teal-700 disabled:text-slate-400
                        disabled:cursor-not-allowed transition-colors'
           >
             {resendCooldown > 0
@@ -319,14 +319,14 @@ export default function ForgotPassword () {
     <div className='space-y-6'>
       <button
         onClick={() => navigate('/login')}
-        className='flex items-center gap-1.5 text-sm text-content-secondary hover:text-content-primary transition-colors'
+        className='flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors'
       >
         <ArrowLeft className='w-4 h-4' /> Back to Login
       </button>
 
       <div>
-        <h2 className='text-2xl font-bold text-content-primary'>Forgot Password?</h2>
-        <p className='text-content-secondary text-sm mt-1'>
+        <h2 className='text-2xl font-semibold font-bold text-slate-800'>Forgot Password?</h2>
+        <p className='text-slate-500 text-sm mt-1'>
           Enter your email and we'll send you a reset code.
         </p>
       </div>
@@ -339,7 +339,7 @@ export default function ForgotPassword () {
 
       <form onSubmit={handleEmailSubmit} className='space-y-5'>
         <div>
-          <label className='block text-sm font-medium text-content-primary mb-2'>
+          <label className='block text-sm font-medium text-slate-800 mb-2'>
             Email Address
           </label>
           <input
@@ -356,7 +356,7 @@ export default function ForgotPassword () {
           />
         </div>
 
-        <button type='submit' disabled={isLoading} className='btn-coral w-full'>
+        <button type='submit' disabled={isLoading} className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full'>
           {isLoading ? (
             <Loader2 className='w-5 h-5 animate-spin' />
           ) : (
@@ -365,11 +365,11 @@ export default function ForgotPassword () {
         </button>
       </form>
 
-      <p className='text-center text-content-secondary text-sm'>
+      <p className='text-center text-slate-500 text-sm'>
         Remember your password?{' '}
         <Link
           to='/login'
-          className='text-primary hover:text-primary-hover font-semibold transition-colors'
+          className='text-teal-600 hover:text-teal-700 font-semibold transition-colors'
         >
           Sign in
         </Link>

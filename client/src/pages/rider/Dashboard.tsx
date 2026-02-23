@@ -50,10 +50,10 @@ function createBusIcon (label: string, isActive = false) {
       <div style="position:relative;width:48px;height:56px;">
         <div style="
           width:48px;height:48px;
-          background:${isActive ? '#f95f5f' : '#fbbf24'};
-          border-radius:12px;
+          background:${isActive ? '#0F766E' : '#0D9488'};
+          border-radius:14px;
           display:flex;align-items:center;justify-content:center;
-          box-shadow:0 4px 12px rgba(0,0,0,0.2);
+          box-shadow:0 4px 16px rgba(15,118,110,0.25);
           border:3px solid white;
         ">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
@@ -63,10 +63,10 @@ function createBusIcon (label: string, isActive = false) {
         <div style="
           position:absolute;top:-8px;right:-8px;
           width:24px;height:24px;
-          background:#38bdf8;border:2px solid white;
+          background:#F59E0B;border:2px solid white;
           border-radius:50%;display:flex;align-items:center;justify-content:center;
           font-size:11px;font-weight:700;color:white;
-          box-shadow:0 2px 6px rgba(0,0,0,0.2);
+          box-shadow:0 2px 6px rgba(0,0,0,0.15);
         ">${label}</div>
       </div>
     `,
@@ -80,10 +80,10 @@ const stopIcon = L.divIcon({
   html: `
     <div style="
       width:14px;height:14px;
-      background:#f95f5f;
+      background:#0F766E;
       border-radius:50%;
       border:3px solid white;
-      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+      box-shadow:0 2px 6px rgba(15,118,110,0.3);
     "></div>
   `,
   iconSize: [14, 14],
@@ -96,10 +96,10 @@ const userIcon = L.divIcon({
     <div style="position:relative;width:20px;height:20px;">
       <div style="
         width:20px;height:20px;
-        background:#3b82f6;
+        background:#0F766E;
         border-radius:50%;
         border:3px solid white;
-        box-shadow:0 2px 8px rgba(59,130,246,0.5);
+        box-shadow:0 2px 8px rgba(15,118,110,0.4);
       "></div>
     </div>
   `,
@@ -337,8 +337,8 @@ export default function RiderDashboard () {
   // ─── Loading state ─────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className='flex items-center justify-center h-screen bg-white'>
-        <Loader2 className='w-8 h-8 text-coral-500 animate-spin' />
+      <div className='flex items-center justify-center h-screen bg-slate-50'>
+        <Loader2 className='w-8 h-8 text-teal-600 animate-spin' />
       </div>
     )
   }
@@ -346,18 +346,177 @@ export default function RiderDashboard () {
   const mapBounds = getMapBounds()
   const mapCenter = userLocation || defaultCenter
 
+  // Shared map content (reused in both mobile & desktop layouts)
+  const mapContent = (
+    <MapContainer
+      center={mapCenter}
+      zoom={13}
+      className='h-full w-full'
+      zoomControl={false}
+      style={{ background: '#F8FAFB' }}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+        url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+      />
+
+      {mapBounds && <MapController bounds={mapBounds} />}
+      {!mapBounds && <MapController center={mapCenter} zoom={13} />}
+
+      {/* User location */}
+      {userLocation && (
+        <>
+          <Circle
+            center={userLocation}
+            radius={100}
+            pathOptions={{
+              color: '#0F766E',
+              fillColor: '#0F766E',
+              fillOpacity: 0.1,
+              weight: 1
+            }}
+          />
+          <Marker position={userLocation} icon={userIcon}>
+            <Popup>
+              <span className='text-sm font-medium'>Your location</span>
+            </Popup>
+          </Marker>
+        </>
+      )}
+
+      {/* Route polyline (preview / tracking) — use OSRM path if available */}
+      {(view === 'preview' || view === 'tracking') &&
+        selectedRoute &&
+        (selectedRoute.path && selectedRoute.path.length > 1 ? (
+          <Polyline
+            positions={selectedRoute.path}
+            color='#0D9488'
+            weight={5}
+            opacity={0.9}
+          />
+        ) : selectedRoute.stops?.length > 1 ? (
+          <Polyline
+            positions={selectedRoute.stops.map(
+              s => [s.latitude, s.longitude] as [number, number]
+            )}
+            color='#0D9488'
+            weight={5}
+            opacity={0.9}
+          />
+        ) : null)}
+
+      {/* Stop markers (preview / tracking) */}
+      {(view === 'preview' || view === 'tracking') &&
+        selectedRoute?.stops?.map(stop => (
+          <Marker
+            key={stop._id}
+            position={[stop.latitude, stop.longitude]}
+            icon={stopIcon}
+          >
+            <Popup>
+              <div className='text-sm'>
+                <div className='font-semibold text-slate-800'>
+                  {stop.name}
+                </div>
+                <div className='text-slate-500'>
+                  Stop #{stop.sequence + 1}
+                </div>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+      {/* Bus markers */}
+      {view === 'select' &&
+        buses.map((bus, idx) => {
+          const live = getLiveBusLocation(bus._id)
+          if (!live) return null
+          return (
+            <Marker
+              key={bus._id}
+              position={[live.latitude, live.longitude]}
+              icon={createBusIcon(getBusLabel(idx))}
+              eventHandlers={{ click: () => handleSelectBus(bus) }}
+            >
+              <Popup>
+                <div className='text-sm'>
+                  <div className='font-bold text-slate-800'>{bus.name}</div>
+                  <div className='text-slate-500'>{getRouteName(bus)}</div>
+                </div>
+              </Popup>
+            </Marker>
+          )
+        })}
+
+      {/* Selected bus marker */}
+      {(view === 'preview' || view === 'tracking') &&
+        selectedBus &&
+        (() => {
+          const live = getLiveBusLocation(selectedBus._id)
+          const idx = buses.findIndex(b => b._id === selectedBus._id)
+          if (!live) return null
+          return (
+            <Marker
+              position={[live.latitude, live.longitude]}
+              icon={createBusIcon(getBusLabel(idx >= 0 ? idx : 0), true)}
+            >
+              <Popup>
+                <div className='text-sm'>
+                  <div className='font-bold text-slate-800'>
+                    {selectedBus.name}
+                  </div>
+                  {live.speed && (
+                    <div className='text-slate-500'>
+                      {Math.round(live.speed)} km/h
+                    </div>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          )
+        })()}
+    </MapContainer>
+  )
+
+  // Shared panel content (reused in both mobile bottom sheet & desktop sidebar)
+  const panelContent = (
+    <>
+      {view === 'select' && (
+        <BusSelectView
+          buses={buses}
+          routes={routes}
+          getRouteName={getRouteName}
+          getLiveBusLocation={getLiveBusLocation}
+          onSelectBus={handleSelectBus}
+          user={user}
+        />
+      )}
+
+      {view === 'preview' && selectedRoute && selectedBus && (
+        <RoutePreviewView
+          bus={selectedBus}
+          route={selectedRoute}
+          onViewStops={handleViewStops}
+        />
+      )}
+
+      {view === 'tracking' && selectedRoute && selectedBus && (
+        <ActiveTrackingView
+          bus={selectedBus}
+          route={selectedRoute}
+          getLiveBusLocation={getLiveBusLocation}
+          getDriverInfo={getDriverInfo}
+        />
+      )}
+    </>
+  )
+
   return (
     <div
-      className={`h-screen flex flex-col bg-white relative overflow-hidden ${
+      className={`h-screen flex flex-col bg-slate-50 relative overflow-hidden ${
         sidebarOpen ? 'sidebar-open' : ''
       }`}
     >
-      {/* Decorative Bus Silhouette */}
-      <img 
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/The_Red_Metro_Bus_in_Blue_Area.jpg/1280px-The_Red_Metro_Bus_in_Blue_Area.jpg" 
-        alt="" 
-        className="absolute bottom-1/4 left-[-100px] w-[600px] opacity-[0.02] pointer-events-none select-none z-0" 
-      />
       {/* ─── Sidebar Drawer ───────────────────────────────────────── */}
       <SidebarDrawer
         open={sidebarOpen}
@@ -367,29 +526,29 @@ export default function RiderDashboard () {
       />
 
       {/* ─── Header ─────────────────────────────────────────────────── */}
-      <header className='bg-white border-b border-ui-border px-4 h-14 flex items-center gap-3 z-[120] shrink-0 relative'>
+      <header className='bg-white/90 backdrop-blur-xl border-b border-slate-200 px-4 lg:px-6 h-14 flex items-center gap-3 z-[120] shrink-0 relative shadow-sm'>
         {view !== 'select' ? (
           <button
             title='Back'
             onClick={handleBack}
-            className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+            className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
           >
-            <ArrowLeft className='w-5 h-5 text-content-primary' />
+            <ArrowLeft className='w-5 h-5 text-slate-800' />
           </button>
         ) : (
           <button
             title='Open Sidebar'
             onClick={() => setSidebarOpen(true)}
-            className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+            className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
           >
-            <Menu className='w-5 h-5 text-content-primary' />
+            <Menu className='w-5 h-5 text-slate-800' />
           </button>
         )}
         <div className='flex items-center gap-2 flex-1'>
-          <div className='p-1.5 bg-primary rounded-lg'>
+          <div className='p-1.5 bg-teal-600 rounded-xl'>
             <Bus className='w-4 h-4 text-white' />
           </div>
-          <h1 className='text-lg font-bold text-content-primary tracking-tight'>
+          <h1 className='text-lg font-semibold font-bold text-slate-800 tracking-tight'>
             Safara
           </h1>
         </div>
@@ -401,183 +560,52 @@ export default function RiderDashboard () {
         )}
       </header>
 
-      {/* ─── Map Area ───────────────────────────────────────────────── */}
-      <div
-        className={`relative transition-all duration-300 ${
-          view === 'tracking' && sheetExpanded ? 'h-[25vh]' : 'h-[45vh]'
-        }`}
-      >
-        <MapContainer
-          center={mapCenter}
-          zoom={13}
-          className='h-full w-full'
-          zoomControl={false}
-          style={{ background: '#f8f9fa' }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-            url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
-          />
+      {/* ═══════════════════════════════════════════════════════════════
+           DESKTOP LAYOUT (lg+): Side panel + full-height map
+           ═══════════════════════════════════════════════════════════════ */}
+      <div className='hidden lg:flex flex-1 min-h-0'>
+        {/* Left Panel */}
+        <aside className='w-[400px] xl:w-[420px] shrink-0 bg-white border-r border-slate-200 flex flex-col overflow-hidden'>
+          <div className='flex-1 overflow-y-auto p-5'>
+            {panelContent}
+          </div>
+        </aside>
 
-          {mapBounds && <MapController bounds={mapBounds} />}
-          {!mapBounds && <MapController center={mapCenter} zoom={13} />}
-
-          {/* User location */}
-          {userLocation && (
-            <>
-              <Circle
-                center={userLocation}
-                radius={100}
-                pathOptions={{
-                  color: '#3b82f6',
-                  fillColor: '#3b82f6',
-                  fillOpacity: 0.1,
-                  weight: 1
-                }}
-              />
-              <Marker position={userLocation} icon={userIcon}>
-                <Popup>
-                  <span className='text-sm font-medium'>Your location</span>
-                </Popup>
-              </Marker>
-            </>
-          )}
-
-          {/* Route polyline (preview / tracking) — use OSRM path if available */}
-          {(view === 'preview' || view === 'tracking') &&
-            selectedRoute &&
-            (selectedRoute.path && selectedRoute.path.length > 1 ? (
-              <Polyline
-                positions={selectedRoute.path}
-                color='#38bdf8'
-                weight={5}
-                opacity={0.9}
-              />
-            ) : selectedRoute.stops?.length > 1 ? (
-              <Polyline
-                positions={selectedRoute.stops.map(
-                  s => [s.latitude, s.longitude] as [number, number]
-                )}
-                color='#38bdf8'
-                weight={5}
-                opacity={0.9}
-              />
-            ) : null)}
-
-          {/* Stop markers (preview / tracking) */}
-          {(view === 'preview' || view === 'tracking') &&
-            selectedRoute?.stops?.map(stop => (
-              <Marker
-                key={stop._id}
-                position={[stop.latitude, stop.longitude]}
-                icon={stopIcon}
-              >
-                <Popup>
-                  <div className='text-sm'>
-                    <div className='font-semibold text-gray-900'>
-                      {stop.name}
-                    </div>
-                    <div className='text-gray-500'>
-                      Stop #{stop.sequence + 1}
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-
-          {/* Bus markers */}
-          {view === 'select' &&
-            buses.map((bus, idx) => {
-              const live = getLiveBusLocation(bus._id)
-              if (!live) return null
-              return (
-                <Marker
-                  key={bus._id}
-                  position={[live.latitude, live.longitude]}
-                  icon={createBusIcon(getBusLabel(idx))}
-                  eventHandlers={{ click: () => handleSelectBus(bus) }}
-                >
-                  <Popup>
-                    <div className='text-sm'>
-                      <div className='font-bold text-gray-900'>{bus.name}</div>
-                      <div className='text-gray-500'>{getRouteName(bus)}</div>
-                    </div>
-                  </Popup>
-                </Marker>
-              )
-            })}
-
-          {/* Selected bus marker */}
-          {(view === 'preview' || view === 'tracking') &&
-            selectedBus &&
-            (() => {
-              const live = getLiveBusLocation(selectedBus._id)
-              const idx = buses.findIndex(b => b._id === selectedBus._id)
-              if (!live) return null
-              return (
-                <Marker
-                  position={[live.latitude, live.longitude]}
-                  icon={createBusIcon(getBusLabel(idx >= 0 ? idx : 0), true)}
-                >
-                  <Popup>
-                    <div className='text-sm'>
-                      <div className='font-bold text-gray-900'>
-                        {selectedBus.name}
-                      </div>
-                      {live.speed && (
-                        <div className='text-gray-500'>
-                          {Math.round(live.speed)} km/h
-                        </div>
-                      )}
-                    </div>
-                  </Popup>
-                </Marker>
-              )
-            })()}
-        </MapContainer>
+        {/* Map — fills remaining space */}
+        <div className='flex-1 relative'>
+          {mapContent}
+        </div>
       </div>
 
-      {/* ─── Bottom Sheet ───────────────────────────────────────────── */}
-      <div
-        className={`flex-1 bg-white rounded-t-3xl -mt-4 relative z-10 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] flex flex-col overflow-hidden`}
-      >
-        {/* Drag handle */}
+      {/* ═══════════════════════════════════════════════════════════════
+           MOBILE LAYOUT (<lg): Map on top + bottom sheet
+           ═══════════════════════════════════════════════════════════════ */}
+      <div className='flex flex-col flex-1 lg:hidden min-h-0'>
+        {/* ─── Map Area ───────────────────────────────────────────── */}
         <div
-          className='flex justify-center pt-3 pb-2 cursor-pointer'
-          onClick={() => setSheetExpanded(!sheetExpanded)}
+          className={`relative transition-all duration-300 ${
+            view === 'tracking' && sheetExpanded ? 'h-[25vh]' : 'h-[45vh]'
+          }`}
         >
-          <div className='w-10 h-1 bg-ui-border rounded-full' />
+          {mapContent}
         </div>
 
-        {/* Sheet content */}
-        <div className='flex-1 overflow-y-auto px-4 pb-4'>
-          {view === 'select' && (
-            <BusSelectView
-              buses={buses}
-              routes={routes}
-              getRouteName={getRouteName}
-              getLiveBusLocation={getLiveBusLocation}
-              onSelectBus={handleSelectBus}
-              user={user}
-            />
-          )}
+        {/* ─── Bottom Sheet ───────────────────────────────────────── */}
+        <div
+          className='flex-1 bg-white rounded-t-3xl -mt-4 relative z-10 shadow-lg flex flex-col overflow-hidden border-t border-slate-200'
+        >
+          {/* Drag handle */}
+          <div
+            className='flex justify-center pt-3 pb-2 cursor-pointer'
+            onClick={() => setSheetExpanded(!sheetExpanded)}
+          >
+            <div className='w-10 h-1 bg-slate-300 rounded-full' />
+          </div>
 
-          {view === 'preview' && selectedRoute && selectedBus && (
-            <RoutePreviewView
-              bus={selectedBus}
-              route={selectedRoute}
-              onViewStops={handleViewStops}
-            />
-          )}
-
-          {view === 'tracking' && selectedRoute && selectedBus && (
-            <ActiveTrackingView
-              bus={selectedBus}
-              route={selectedRoute}
-              getLiveBusLocation={getLiveBusLocation}
-              getDriverInfo={getDriverInfo}
-            />
-          )}
+          {/* Sheet content */}
+          <div className='flex-1 overflow-y-auto px-4 pb-4'>
+            {panelContent}
+          </div>
         </div>
       </div>
     </div>
@@ -613,9 +641,9 @@ function BusSelectView ({
     <div>
       {/* Greeting */}
       <div className='mb-5'>
-        <p className='text-content-secondary text-sm font-medium'>{greeting}, {firstName} 👋</p>
-        <h2 className='text-xl font-bold text-content-primary mt-0.5'>Choose a bus to track</h2>
-        <p className='text-xs text-content-secondary mt-1'>
+        <p className='text-slate-500 text-sm font-medium'>{greeting}, {firstName} 👋</p>
+        <h2 className='text-xl font-semibold font-bold text-slate-800 mt-0.5'>Choose a bus to track</h2>
+        <p className='text-xs text-slate-500 mt-1'>
           {liveBuses.length > 0
             ? `${liveBuses.length} bus${liveBuses.length > 1 ? 'es' : ''} live now across ${routes.length} routes`
             : 'No buses are currently active'}
@@ -624,9 +652,9 @@ function BusSelectView ({
 
       {liveBuses.length === 0 && inactiveBuses.length === 0 ? (
         <div className='text-center py-12'>
-          <Bus className='w-12 h-12 text-ui-border mx-auto mb-4' />
-          <p className='text-content-secondary font-medium'>No buses configured</p>
-          <p className='text-content-secondary/70 text-sm mt-1'>
+          <Bus className='w-12 h-12 text-slate-200 mx-auto mb-4' />
+          <p className='text-slate-500 font-medium'>No buses configured</p>
+          <p className='text-slate-400 text-sm mt-1'>
             Contact your administrator to set up routes.
           </p>
         </div>
@@ -634,10 +662,10 @@ function BusSelectView ({
         <div className='space-y-3'>
           {/* Live buses */}
           {liveBuses.length === 0 ? (
-            <div className='text-center py-8 rounded-2xl border border-dashed border-ui-border'>
-              <Bus className='w-10 h-10 text-ui-border mx-auto mb-3' />
-              <p className='text-content-secondary font-medium text-sm'>No buses are active right now</p>
-              <p className='text-content-secondary/60 text-xs mt-1'>Try again later or check the schedule.</p>
+            <div className='text-center py-8 rounded-2xl border border-dashed border-slate-200'>
+              <Bus className='w-10 h-10 text-slate-200 mx-auto mb-3' />
+              <p className='text-slate-500 font-medium text-sm'>No buses are active right now</p>
+              <p className='text-slate-400 text-xs mt-1'>Try again later or check the schedule.</p>
             </div>
           ) : liveBuses.map(bus => {
             const routeName = getRouteName(bus)
@@ -645,26 +673,26 @@ function BusSelectView ({
               <button
                 key={bus._id}
                 onClick={() => onSelectBus(bus)}
-                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-green-100 bg-green-50/30 hover:border-primary/20 hover:bg-primary/5 transition-all group'
+                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-emerald-100 bg-emerald-50/30 hover:border-teal-600/20 hover:bg-teal-50 transition-all group'
               >
-                <div className='w-12 h-10 bg-amber-100 rounded-xl flex items-center justify-center shrink-0'>
-                  <Bus className='w-6 h-6 text-amber-600' />
+                <div className='w-12 h-10 bg-teal-100 rounded-xl flex items-center justify-center shrink-0'>
+                  <Bus className='w-6 h-6 text-teal-600' />
                 </div>
                 <div className='flex-1 text-left min-w-0'>
-                  <div className='font-bold text-content-primary group-hover:text-primary transition-colors truncate'>
+                  <div className='font-bold text-slate-800 group-hover:text-teal-600 transition-colors truncate'>
                     {bus.name}
                   </div>
-                  <div className='text-xs text-green-600 font-semibold mt-0.5 flex items-center gap-1'>
-                    <span className='w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse inline-block' />
+                  <div className='text-xs text-emerald-600 font-semibold mt-0.5 flex items-center gap-1'>
+                    <span className='w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse inline-block' />
                     Live on route
                   </div>
                 </div>
                 {routeName && (
-                  <span className='text-xs font-semibold text-content-secondary bg-app-bg px-2.5 py-1 rounded-full shrink-0'>
+                  <span className='text-xs font-semibold text-slate-500 bg-slate-50 px-2.5 py-1 rounded-full shrink-0'>
                     {routeName}
                   </span>
                 )}
-                <ChevronRight className='w-4 h-4 text-ui-border group-hover:text-primary transition-colors shrink-0' />
+                <ChevronRight className='w-4 h-4 text-slate-200 group-hover:text-teal-600 transition-colors shrink-0' />
               </button>
             )
           })}
@@ -674,7 +702,7 @@ function BusSelectView ({
             <div>
               <button
                 onClick={() => setShowInactive(v => !v)}
-                className='w-full flex items-center justify-between px-1 py-2 text-xs font-bold text-content-secondary/60 uppercase tracking-wider hover:text-content-secondary transition-colors'
+                className='w-full flex items-center justify-between px-1 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider hover:text-slate-500 transition-colors'
               >
                 <span>Offline buses ({inactiveBuses.length})</span>
                 <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showInactive ? 'rotate-90' : ''}`} />
@@ -686,17 +714,17 @@ function BusSelectView ({
                     return (
                       <div
                         key={bus._id}
-                        className='w-full flex items-center gap-3 p-3 rounded-xl border border-ui-border/50 opacity-50'
+                        className='w-full flex items-center gap-3 p-3 rounded-xl border border-slate-200 opacity-50'
                       >
-                        <div className='w-10 h-9 bg-app-bg rounded-lg flex items-center justify-center shrink-0'>
-                          <Bus className='w-5 h-5 text-content-secondary/40' />
+                        <div className='w-10 h-9 bg-slate-100 rounded-lg flex items-center justify-center shrink-0'>
+                          <Bus className='w-5 h-5 text-slate-400' />
                         </div>
                         <div className='flex-1 text-left min-w-0'>
-                          <div className='font-semibold text-content-secondary text-sm truncate'>{bus.name}</div>
-                          <div className='text-xs text-content-secondary/50'>Not active</div>
+                          <div className='font-semibold text-slate-500 text-sm truncate'>{bus.name}</div>
+                          <div className='text-xs text-slate-400'>Not active</div>
                         </div>
                         {routeName && (
-                          <span className='text-[10px] font-semibold text-content-secondary/50 bg-app-bg px-2 py-0.5 rounded-full shrink-0'>
+                          <span className='text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full shrink-0'>
                             {routeName}
                           </span>
                         )}
@@ -731,11 +759,11 @@ function RoutePreviewView ({
     <div className='flex flex-col h-full'>
       {/* Route header */}
       <div className='mb-4'>
-        <div className='text-xs font-bold text-content-secondary uppercase tracking-wider mb-0.5'>Route Preview</div>
-        <h2 className='text-xl font-bold text-content-primary'>
+        <div className='text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5'>Route Preview</div>
+        <h2 className='text-xl font-semibold font-bold text-slate-800'>
           {stops.length >= 2 ? `${stops[0].name} → ${stops[last].name}` : bus.name}
         </h2>
-        <p className='text-xs text-content-secondary mt-1'>{stops.length} stops · {bus.name}</p>
+        <p className='text-xs text-slate-500 mt-1'>{stops.length} stops · {bus.name}</p>
       </div>
 
       {/* Timeline */}
@@ -744,7 +772,7 @@ function RoutePreviewView ({
           {/* Connector line */}
           {stops.length > 1 && (
             <div
-              className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-primary/20'
+              className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-teal-600/20'
               style={{ zIndex: 0 }}
             />
           )}
@@ -758,19 +786,19 @@ function RoutePreviewView ({
               <div
                 className={`absolute left-[-17px] top-1 w-4 h-4 rounded-full border-2 z-10 ${
                   index === first
-                    ? 'bg-green-500 border-green-500 ring-4 ring-green-100'
+                    ? 'bg-emerald-500 border-emerald-500 ring-4 ring-emerald-100'
                     : index === last
-                    ? 'bg-amber-500 border-amber-500 ring-4 ring-amber-100'
-                    : 'bg-ui-border border-ui-border'
+                    ? 'bg-accent border-accent ring-4 ring-accent-light'
+                    : 'bg-slate-200 border-slate-200'
                 }`}
               />
 
               {/* Stop info */}
               <div className='flex-1 min-w-0'>
                 <div className={`font-semibold ${
-                  index === first ? 'text-green-700' : index === last ? 'text-amber-700' : 'text-content-primary'
+                  index === first ? 'text-emerald-700' : index === last ? 'text-amber-700' : 'text-slate-800'
                 }`}>{stop.name}</div>
-                <div className='text-xs text-content-secondary mt-0.5'>
+                <div className='text-xs text-slate-500 mt-0.5'>
                   {index === first ? 'Origin' : index === last ? 'Destination' : `Stop ${stop.sequence + 1}`}
                 </div>
               </div>
@@ -782,7 +810,7 @@ function RoutePreviewView ({
       {/* Track Live CTA */}
       <button
         onClick={onViewStops}
-        className='btn-coral w-full mt-4 py-4 text-base rounded-2xl flex items-center justify-center gap-2'
+        className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full mt-4 py-4 text-base rounded-2xl flex items-center justify-center gap-2'
       >
         <Bus className='w-5 h-5' />
         Track Live
@@ -917,34 +945,34 @@ function ActiveTrackingView ({
   return (
     <div className='flex flex-col h-full'>
       {/* Driver Info Card */}
-      <div className='flex items-center gap-3 p-4 rounded-2xl bg-app-bg border border-ui-border mb-5'>
+      <div className='flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-5'>
         <UserAvatar name={driver?.name || 'Driver'} size='md' />
         <div className='flex-1 min-w-0'>
-          <div className='font-bold text-content-primary text-sm'>
+          <div className='font-bold text-slate-800 text-sm'>
             {driver?.name || 'Unknown Driver'}
           </div>
           {driver?.phone ? (
-            <a href={`tel:${driver.phone}`} className='text-xs text-primary flex items-center gap-1 mt-0.5 hover:underline'>
+            <a href={`tel:${driver.phone}`} className='text-xs text-teal-600 flex items-center gap-1 mt-0.5 hover:underline'>
               <Phone className='w-3 h-3' />
               {driver.phone}
             </a>
           ) : (
-            <div className='text-xs text-content-secondary/50 mt-0.5'>No contact info</div>
+            <div className='text-xs text-slate-400 mt-0.5'>No contact info</div>
           )}
         </div>
         <div className='text-right shrink-0'>
-          <div className='text-[10px] text-content-secondary font-bold uppercase tracking-wider'>ETA</div>
-          <div className='text-2xl font-bold text-primary tabular-nums leading-none mt-0.5'>
+          <div className='text-[10px] text-slate-400 font-bold uppercase tracking-wider'>ETA</div>
+          <div className='text-2xl font-bold text-teal-600 tabular-nums leading-none mt-0.5'>
             {etaMinutes === 0 ? 'Now' : `${etaMinutes} min`}
           </div>
-          <div className='text-[10px] text-content-secondary mt-0.5'>{remainingStops} stop{remainingStops !== 1 ? 's' : ''} left</div>
+          <div className='text-[10px] text-slate-500 mt-0.5'>{remainingStops} stop{remainingStops !== 1 ? 's' : ''} left</div>
         </div>
       </div>
 
       {/* Route Timeline Header */}
       <div className='mb-3'>
-        <div className='text-xs font-bold text-content-secondary uppercase tracking-wider'>Live Route</div>
-        <h3 className='text-base font-bold text-content-primary mt-0.5'>
+        <div className='text-xs font-bold text-slate-400 uppercase tracking-wider'>Live Route</div>
+        <h3 className='text-base font-semibold font-bold text-slate-800 mt-0.5'>
           {stops.length >= 2 ? `${stops[0].name} → ${stops[stops.length - 1].name}` : bus.name}
         </h3>
       </div>
@@ -954,9 +982,9 @@ function ActiveTrackingView ({
           {/* Progress line */}
           {stops.length > 1 && (
             <>
-              {/* Completed portion (red) */}
+              {/* Completed portion (teal) */}
               <div
-                className='absolute left-[11px] top-2 w-0.5 bg-primary'
+                className='absolute left-[11px] top-2 w-0.5 bg-teal-600'
                 style={{
                   height: `${
                     (currentStopIndex / Math.max(stops.length - 1, 1)) * 100
@@ -966,7 +994,7 @@ function ActiveTrackingView ({
               />
               {/* Remaining portion (gray) */}
               <div
-                className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-ui-border'
+                className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-200'
                 style={{ zIndex: 0 }}
               />
             </>
@@ -987,10 +1015,10 @@ function ActiveTrackingView ({
                 <div
                   className={`absolute left-[-17px] top-1 w-4 h-4 rounded-full border-2 z-10 ${
                     isCurrent
-                      ? 'bg-white border-primary ring-4 ring-primary/10'
+                      ? 'bg-white border-teal-600 ring-4 ring-teal-500/10'
                       : isPassed
-                      ? 'bg-primary border-primary'
-                      : 'bg-ui-border border-ui-border'
+                      ? 'bg-teal-600 border-teal-600'
+                      : 'bg-slate-200 border-slate-200'
                   }`}
                 />
 
@@ -999,10 +1027,10 @@ function ActiveTrackingView ({
                   <div
                     className={`font-semibold ${
                       isCurrent
-                        ? 'text-content-primary text-base'
+                        ? 'text-slate-800 text-base'
                         : isPassed
-                        ? 'text-content-secondary'
-                        : 'text-content-primary/80'
+                        ? 'text-slate-500'
+                        : 'text-slate-800/80'
                     }`}
                   >
                     {stop.name}
@@ -1013,7 +1041,7 @@ function ActiveTrackingView ({
                     </div>
                   )}
                   {stop.estimatedArrivalTime && (
-                    <div className='text-xs text-gray-400 mt-0.5'>
+                    <div className='text-xs text-slate-400 mt-0.5'>
                       ETA: {stop.estimatedArrivalTime}
                     </div>
                   )}
@@ -1025,8 +1053,8 @@ function ActiveTrackingView ({
                     <button
                       className={`p-1.5 rounded-lg transition-colors ${
                         hasReminder
-                          ? 'bg-amber-50 text-amber-500 hover:bg-amber-100'
-                          : 'text-ui-border hover:bg-app-bg hover:text-content-secondary'
+                          ? 'bg-amber-50 text-amber-600 hover:bg-amber-200'
+                          : 'text-slate-200 hover:bg-slate-100 hover:text-slate-500'
                       }`}
                       title={hasReminder ? 'Edit reminder' : 'Set reminder'}
                       onClick={() => {
@@ -1043,14 +1071,14 @@ function ActiveTrackingView ({
 
                     {/* Reminder popup */}
                     {reminderPopup === stop._id && (
-                      <div className='absolute right-0 left-auto top-10 z-30 bg-white rounded-xl shadow-xl border border-ui-border p-3 w-56 max-w-[calc(100vw-2rem)]'>
-                        <div className='text-sm font-semibold text-content-primary mb-2'>
+                      <div className='absolute right-0 left-auto top-10 z-30 bg-white rounded-xl shadow-lg border border-slate-200 p-3 w-56 max-w-[calc(100vw-2rem)]'>
+                        <div className='text-sm font-semibold text-slate-800 mb-2'>
                           Set Alert
                         </div>
-                        <p className='text-xs text-content-secondary mb-3'>
+                        <p className='text-xs text-slate-500 mb-3'>
                           Get notified when the bus is approaching this stop.
                         </p>
-                        <label className='block text-xs text-content-secondary mb-1'>
+                        <label className='block text-xs text-slate-500 mb-1'>
                           Minutes before arrival
                         </label>
                         <div className='flex gap-1 mb-3'>
@@ -1060,8 +1088,8 @@ function ActiveTrackingView ({
                               onClick={() => setReminderMinutes(m)}
                               className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                                 reminderMinutes === m
-                                  ? 'bg-primary text-white'
-                                  : 'bg-app-bg text-content-secondary hover:bg-ui-border/50'
+                                  ? 'bg-teal-600 text-white'
+                                  : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
                               }`}
                             >
                               {m} min
@@ -1074,7 +1102,7 @@ function ActiveTrackingView ({
                               handleSetReminder(stop._id, reminderMinutes)
                             }
                             disabled={savingReminder}
-                            className='flex-1 py-2 text-xs font-medium bg-primary text-white rounded-lg hover:bg-primary-hover disabled:opacity-50 transition-colors'
+                            className='flex-1 py-2 text-xs font-medium bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 transition-colors'
                           >
                             {savingReminder
                               ? 'Saving...'
@@ -1085,7 +1113,7 @@ function ActiveTrackingView ({
                           {hasReminder && (
                             <button
                               onClick={() => handleRemoveReminder(stop._id)}
-                              className='px-3 py-2 text-xs font-medium text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition-colors'
+                              className='px-3 py-2 text-xs font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors'
                             >
                               Remove
                             </button>
@@ -1127,7 +1155,7 @@ function SidebarDrawer ({
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/40 z-[100] transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-ink/30 backdrop-blur-sm z-[100] transition-opacity duration-300 ${
           open ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onClose}
@@ -1135,12 +1163,12 @@ function SidebarDrawer ({
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 left-0 bottom-0 w-[280px] bg-white z-[110] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`fixed top-0 left-0 bottom-0 w-[280px] bg-white z-[110] shadow-xl transform transition-transform duration-300 ease-out flex flex-col ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Header / Profile area */}
-        <div className='bg-app-splash px-5 pt-12 pb-6'>
+        <div className='bg-teal-600 px-5 pt-12 pb-6 relative'>
           <button
             title='Close Sidebar'
             onClick={onClose}
@@ -1175,26 +1203,26 @@ function SidebarDrawer ({
                 navigate(path)
                 onClose()
               }}
-              className='w-full flex items-center gap-4 px-5 py-3.5 text-left hover:bg-app-bg transition-colors group'
+              className='w-full flex items-center gap-4 px-5 py-3.5 text-left hover:bg-slate-100 transition-colors group'
             >
-              <Icon className='w-5 h-5 text-content-secondary/60 group-hover:text-primary transition-colors' />
-              <span className='flex-1 text-sm font-medium text-content-primary/80 group-hover:text-content-primary transition-colors'>
+              <Icon className='w-5 h-5 text-slate-400 group-hover:text-teal-600 transition-colors' />
+              <span className='flex-1 text-sm font-medium text-slate-800/80 group-hover:text-slate-800 transition-colors'>
                 {label}
               </span>
-              <ChevronRight className='w-4 h-4 text-ui-border group-hover:text-content-secondary transition-colors' />
+              <ChevronRight className='w-4 h-4 text-slate-200 group-hover:text-slate-500 transition-colors' />
             </button>
           ))}
         </nav>
 
         {/* Logout */}
-        <div className='border-t border-gray-100 p-4'>
+        <div className='border-t border-slate-200 p-4'>
           <button
             title='Logout'
             onClick={() => {
               onLogout()
               onClose()
             }}
-            className='w-full flex items-center gap-3 px-3 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors group'
+            className='w-full flex items-center gap-3 px-3 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors group'
           >
             <LogOut className='w-5 h-5' />
             <span className='text-sm font-medium'>Log out</span>
@@ -1203,7 +1231,7 @@ function SidebarDrawer ({
 
         {/* App version */}
         <div className='px-5 pb-4 text-center'>
-          <span className='text-xs text-ui-border font-medium'>Safara v1.0.0</span>
+          <span className='text-xs text-slate-400 font-medium'>Safara v1.0.0</span>
         </div>
       </div>
     </>
@@ -1320,4 +1348,3 @@ function estimateETA (stops: Stop[], currentIndex: number): number {
   const remaining = Math.max(0, stops.length - 1 - currentIndex)
   return remaining * 3
 }
-

@@ -66,7 +66,7 @@ export default function ManageBuses() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+        <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
       </div>
     );
   }
@@ -74,13 +74,13 @@ export default function ManageBuses() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="admin-header text-2xl">Manage Buses</h1>
+        <h1 className="text-xl font-semibold text-slate-900 text-2xl">Manage Buses</h1>
         <button
           onClick={() => {
             setEditingBus(null);
             setShowModal(true);
           }}
-          className="btn-coral flex items-center gap-2"
+          className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
         >
           <Plus className="w-5 h-5" />
           Add Bus
@@ -89,13 +89,13 @@ export default function ManageBuses() {
 
       {/* Buses Grid */}
       {buses.length === 0 ? (
-        <div className="card shadow-sm text-center py-12">
-          <Bus className="w-12 h-12 text-content-secondary/30 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-content-primary mb-2">No Buses Yet</h3>
-          <p className="text-content-secondary mb-6">Add your first bus to get started</p>
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 shadow-sm text-center py-12">
+          <Bus className="w-12 h-12 text-slate-500/30 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-slate-800 mb-2">No Buses Yet</h3>
+          <p className="text-slate-500 mb-6">Add your first bus to get started</p>
           <button
             onClick={() => setShowModal(true)}
-            className="btn-coral"
+            className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
           >
             <Plus className="w-5 h-5" />
             Add Bus
@@ -108,10 +108,10 @@ export default function ManageBuses() {
             const driver = typeof bus.driverId === 'object' ? bus.driverId as UserType : null;
 
             return (
-              <div key={bus._id} className="card shadow-sm">
+              <div key={bus._id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 shadow-sm">
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`p-2 rounded-lg ${bus.isActive ? 'bg-green-50' : 'bg-app-bg'}`}>
-                    <Bus className={`w-5 h-5 ${bus.isActive ? 'text-green-600' : 'text-content-secondary'}`} />
+                  <div className={`p-2 rounded-lg ${bus.isActive ? 'bg-green-50' : 'bg-slate-50'}`}>
+                    <Bus className={`w-5 h-5 ${bus.isActive ? 'text-green-600' : 'text-slate-500'}`} />
                   </div>
                   <div className="flex items-center gap-1">
                     <button
@@ -119,13 +119,13 @@ export default function ManageBuses() {
                         setEditingBus(bus);
                         setShowModal(true);
                       }}
-                      className="p-2 text-content-secondary hover:text-content-primary hover:bg-white/40 rounded-lg transition-colors"
+                      className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors"
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteBus(bus._id)}
-                      className="p-2 text-content-secondary hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -133,36 +133,36 @@ export default function ManageBuses() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="p-4 bg-white/40 rounded-lg border border-ui-border">
-                    <div className="text-sm text-content-secondary mb-1">Bus Name</div>
-                    <div className="text-lg font-semibold text-content-primary">{bus.name}</div>
+                  <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div className="text-sm text-slate-500 mb-1">Bus Name</div>
+                    <div className="text-lg font-semibold text-slate-800">{bus.name}</div>
                   </div>
-                  <div className="p-4 bg-white/40 rounded-lg border border-ui-border">
-                    <div className="text-sm text-content-secondary mb-1">Plate Number</div>
-                    <div className="text-lg font-semibold text-content-primary">{bus.plateNumber}</div>
+                  <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div className="text-sm text-slate-500 mb-1">Plate Number</div>
+                    <div className="text-lg font-semibold text-slate-800">{bus.plateNumber}</div>
                   </div>
-                  <div className="p-4 bg-white/40 rounded-lg border border-ui-border">
-                    <div className="text-sm text-content-secondary mb-1">Capacity</div>
-                    <div className="text-lg font-semibold text-content-primary">{bus.capacity} seats</div>
+                  <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div className="text-sm text-slate-500 mb-1">Capacity</div>
+                    <div className="text-lg font-semibold text-slate-800">{bus.capacity} seats</div>
                   </div>
-                  <div className="p-4 bg-white/40 rounded-lg border border-ui-border">
-                    <div className="text-sm text-content-secondary mb-1">Route</div>
-                    <div className="text-lg font-semibold text-content-primary flex items-center gap-2">
-                      <RouteIcon className="w-4 h-4 text-primary" />
+                  <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div className="text-sm text-slate-500 mb-1">Route</div>
+                    <div className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                      <RouteIcon className="w-4 h-4 text-teal-600" />
                       {route?.name || 'Not assigned'}
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-ui-border flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-content-secondary">
+                <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2 text-slate-500">
                     <User className="w-4 h-4 opacity-70" />
                     <span className="font-medium">{driver?.name || 'No driver assigned'}</span>
                   </div>
                   <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                     bus.isActive
                       ? 'bg-green-50 text-green-600 border border-green-100'
-                      : 'bg-app-bg text-content-secondary border border-ui-border'
+                      : 'bg-slate-50 text-slate-500 border border-slate-200'
                   }`}>
                     {bus.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -193,8 +193,8 @@ export default function ManageBuses() {
       {/* Confirm Dialog */}
       {confirmState.open && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="card max-w-sm w-full shadow-2xl">
-            <p className="text-content-primary font-medium mb-6">{confirmState.message}</p>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 max-w-sm w-full shadow-2xl">
+            <p className="text-slate-800 font-medium mb-6">{confirmState.message}</p>
             <div className="flex gap-3">
               <button onClick={closeConfirm} className="btn-secondary h-[46px] flex-1">Cancel</button>
               <button onClick={confirmState.onConfirm} className="btn btn-danger h-[46px] flex-1">Delete</button>
@@ -276,13 +276,13 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="card max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-        <h2 className="text-xl font-display font-bold text-content-primary mb-6">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <h2 className="text-xl font-semibold font-bold text-slate-800 mb-6">
           {bus ? 'Edit Bus' : 'Add Bus'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="block text-sm font-semibold text-slate-800 mb-2">
               Bus Name
             </label>
             <input
@@ -295,7 +295,7 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="block text-sm font-semibold text-slate-800 mb-2">
               Plate Number
             </label>
             <input
@@ -308,7 +308,7 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="block text-sm font-semibold text-slate-800 mb-2">
               Capacity
             </label>
             <input
@@ -321,7 +321,7 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="block text-sm font-semibold text-slate-800 mb-2">
               Assigned Route
             </label>
             <select
@@ -338,7 +338,7 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
             </select>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="block text-sm font-semibold text-slate-800 mb-2">
               Assigned Driver
             </label>
             <select
@@ -361,9 +361,9 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
                   type="checkbox"
                   checked={isActive}
                   onChange={(e) => setIsActive(e.target.checked)}
-                  className="w-4 h-4 rounded border-ui-border text-primary focus:ring-primary"
+                  className="w-4 h-4 rounded border-slate-200 text-teal-600 focus:ring-teal-500"
                 />
-                <span className="text-content-secondary group-hover:text-content-primary font-medium transition-colors">Bus is active</span>
+                <span className="text-slate-500 group-hover:text-slate-800 font-medium transition-colors">Bus is active</span>
               </label>
             </div>
           )}
@@ -371,7 +371,7 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
             <button type="button" onClick={onClose} className="btn-secondary h-[46px] flex-1">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="btn-coral h-[46px] flex-1">
+            <button type="submit" disabled={saving} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors h-[46px] flex-1">
               {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save'}
             </button>
           </div>

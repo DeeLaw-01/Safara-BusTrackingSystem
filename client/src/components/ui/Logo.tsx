@@ -17,7 +17,7 @@ export default function Logo({ size = 'md', showText = true, variant = 'dark' }:
       <div className={`${sizes[size].container} relative flex items-center justify-center`}>
         <svg viewBox="0 0 120 100" className="w-full h-full">
           {/* Left Wing/Laurel */}
-          <g fill="#C4A052" transform="translate(5, 15)">
+          <g fill="#0F766E" opacity="0.7" transform="translate(5, 15)">
             <path d="M25 35 Q15 25 10 40 Q5 55 15 50 Q10 45 15 35 Q20 25 25 35" />
             <path d="M20 45 Q10 38 5 52 Q0 66 12 58 Q5 53 10 42 Q15 32 20 45" />
             <path d="M22 55 Q12 50 8 63 Q4 76 15 68 Q8 62 12 52 Q17 42 22 55" />
@@ -26,7 +26,7 @@ export default function Logo({ size = 'md', showText = true, variant = 'dark' }:
           </g>
           
           {/* Right Wing/Laurel (mirrored) */}
-          <g fill="#C4A052" transform="translate(115, 15) scale(-1, 1)">
+          <g fill="#0F766E" opacity="0.7" transform="translate(115, 15) scale(-1, 1)">
             <path d="M25 35 Q15 25 10 40 Q5 55 15 50 Q10 45 15 35 Q20 25 25 35" />
             <path d="M20 45 Q10 38 5 52 Q0 66 12 58 Q5 53 10 42 Q15 32 20 45" />
             <path d="M22 55 Q12 50 8 63 Q4 76 15 68 Q8 62 12 52 Q17 42 22 55" />
@@ -35,43 +35,36 @@ export default function Logo({ size = 'md', showText = true, variant = 'dark' }:
           </g>
 
           {/* Center Shield/Emblem Background */}
-          <ellipse cx="60" cy="50" rx="28" ry="35" fill="#1E88E5" />
-          <ellipse cx="60" cy="50" rx="24" ry="31" fill="#42A5F5" />
+          <ellipse cx="60" cy="50" rx="28" ry="35" fill="#0F766E" />
+          <ellipse cx="60" cy="50" rx="24" ry="31" fill="#0D9488" />
           
           {/* Torch/Flame */}
           <g transform="translate(60, 20)">
-            {/* Flame Outer */}
-            <path d="M0 0 Q-8 15 -6 25 Q-4 35 0 40 Q4 35 6 25 Q8 15 0 0" fill="#E53935" />
-            {/* Flame Inner */}
-            <path d="M0 5 Q-4 15 -3 22 Q-2 29 0 33 Q2 29 3 22 Q4 15 0 5" fill="#FF9800" />
-            {/* Flame Core */}
-            <path d="M0 10 Q-2 18 -1 23 Q0 28 0 28 Q0 28 1 23 Q2 18 0 10" fill="#FFC107" />
+            <path d="M0 0 Q-8 15 -6 25 Q-4 35 0 40 Q4 35 6 25 Q8 15 0 0" fill="#F59E0B" />
+            <path d="M0 5 Q-4 15 -3 22 Q-2 29 0 33 Q2 29 3 22 Q4 15 0 5" fill="#FBBF24" />
+            <path d="M0 10 Q-2 18 -1 23 Q0 28 0 28 Q0 28 1 23 Q2 18 0 10" fill="#FDE68A" />
           </g>
 
           {/* Small Bus Icon at Bottom */}
           <g transform="translate(45, 55)">
-            {/* Bus Body */}
-            <rect x="0" y="4" width="30" height="14" rx="2" fill="#1565C0" />
-            {/* Windows */}
-            <rect x="3" y="6" width="5" height="5" rx="1" fill="#BBDEFB" />
-            <rect x="10" y="6" width="5" height="5" rx="1" fill="#BBDEFB" />
-            <rect x="17" y="6" width="5" height="5" rx="1" fill="#BBDEFB" />
-            <rect x="24" y="6" width="3" height="5" rx="1" fill="#BBDEFB" />
-            {/* Front */}
-            <rect x="0" y="13" width="30" height="4" fill="#0D47A1" />
-            {/* Wheels */}
-            <circle cx="7" cy="20" r="3" fill="#37474F" />
-            <circle cx="23" cy="20" r="3" fill="#37474F" />
-            <circle cx="7" cy="20" r="1.5" fill="#78909C" />
-            <circle cx="23" cy="20" r="1.5" fill="#78909C" />
+            <rect x="0" y="4" width="30" height="14" rx="2" fill="#065F5B" />
+            <rect x="3" y="6" width="5" height="5" rx="1" fill="#CCFBF1" />
+            <rect x="10" y="6" width="5" height="5" rx="1" fill="#CCFBF1" />
+            <rect x="17" y="6" width="5" height="5" rx="1" fill="#CCFBF1" />
+            <rect x="24" y="6" width="3" height="5" rx="1" fill="#CCFBF1" />
+            <rect x="0" y="13" width="30" height="4" fill="#044F4A" />
+            <circle cx="7" cy="20" r="3" fill="#334155" />
+            <circle cx="23" cy="20" r="3" fill="#334155" />
+            <circle cx="7" cy="20" r="1.5" fill="#64748B" />
+            <circle cx="23" cy="20" r="1.5" fill="#64748B" />
           </g>
         </svg>
       </div>
 
       {/* Text */}
       {showText && (
-        <div className={`${sizes[size].gap} font-bold text-center tracking-wider`}>
-          <span className={`${variant === 'light' ? 'text-white' : 'text-gray-800'} ${sizes[size].text}`}>SAFARA</span>
+        <div className={`${sizes[size].gap} font-semibold font-bold text-center tracking-wider`}>
+          <span className={`${variant === 'light' ? 'text-white' : 'text-slate-800'} ${sizes[size].text}`}>SAFARA</span>
         </div>
       )}
     </div>

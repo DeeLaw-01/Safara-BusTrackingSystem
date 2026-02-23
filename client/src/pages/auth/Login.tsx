@@ -41,12 +41,13 @@ export default function Login () {
     <div className='space-y-6'>
       {/* Header */}
       <div>
-        <h2 className='text-2xl font-bold text-content-primary'>Login</h2>
+        <h2 className='text-2xl font-semibold font-bold text-slate-800'>Login</h2>
+        <p className='text-sm text-slate-500 mt-1'>Welcome back to Safara</p>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div className='p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm'>
+        <div className='p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-medium'>
           {error}
         </div>
       )}
@@ -54,7 +55,7 @@ export default function Login () {
       <form onSubmit={handleSubmit} className='space-y-5'>
         {/* Email Field */}
         <div>
-          <label className='block text-sm font-medium text-content-secondary mb-2'>
+          <label className='block text-sm font-medium text-slate-500 mb-2'>
             Email
           </label>
           <input
@@ -69,7 +70,7 @@ export default function Login () {
 
         {/* Password Field */}
         <div>
-          <label className='block text-sm font-medium text-content-secondary mb-2'>
+          <label className='block text-sm font-medium text-slate-500 mb-2'>
             Password
           </label>
           <div className='relative'>
@@ -84,7 +85,7 @@ export default function Login () {
             <button
               type='button'
               onClick={() => setShowPassword(!showPassword)}
-              className='absolute right-4 top-1/2 -translate-y-1/2 text-content-secondary hover:text-content-primary transition-colors'
+              className='absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 transition-colors'
             >
               {showPassword ? (
                 <EyeOff className='w-5 h-5' />
@@ -99,7 +100,7 @@ export default function Login () {
         <button
           type='submit'
           disabled={isLoading}
-          className='btn-coral w-full'
+          className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full'
         >
           {isLoading ? (
             <Loader2 className='w-5 h-5 animate-spin' />
@@ -113,18 +114,18 @@ export default function Login () {
       <div className='text-center'>
         <Link 
           to='/forgot-password'
-          className='text-primary hover:text-primary-hover font-medium text-sm transition-colors'
+          className='text-teal-600 hover:text-teal-700 font-medium text-sm transition-colors'
         >
           Forgot Password?
         </Link>
       </div>
 
       {/* Sign Up Link */}
-      <p className='text-center text-content-secondary text-sm'>
+      <p className='text-center text-slate-500 text-sm'>
         Don't have an account?{' '}
         <Link
           to='/register'
-          className='text-primary hover:text-primary-hover font-semibold transition-colors'
+          className='text-teal-600 hover:text-teal-700 font-semibold transition-colors'
         >
           Sign up
         </Link>
