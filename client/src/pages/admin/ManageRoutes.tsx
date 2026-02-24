@@ -84,51 +84,65 @@ export default function ManageRoutes() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-slate-900 text-2xl">Manage Routes</h1>
-        <button
-          onClick={() => {
-            setEditingRoute(null);
-            setShowRouteModal(true);
-          }}
-          className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Route
-        </button>
+      {/* Hero Header */}
+      <div className="relative bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 rounded-2xl p-6 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+        <div className="absolute -top-10 -right-10 w-40 h-40 border border-white/5 rounded-full" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center">
+              <RouteIcon className="w-6 h-6 text-amber-400" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-white">Manage Routes</h1>
+              <p className="text-sm text-slate-400 mt-0.5">{routes.length} routes configured</p>
+            </div>
+          </div>
+          <button
+            onClick={() => { setEditingRoute(null); setShowRouteModal(true); }}
+            className="bg-teal-500 hover:bg-teal-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Add Route
+          </button>
+        </div>
       </div>
 
       {/* Routes List */}
       {routes.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 shadow-sm text-center py-12">
-          <RouteIcon className="w-12 h-12 text-slate-500/30 mx-auto mb-4" />
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm text-center py-16">
+          <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <RouteIcon className="w-7 h-7 text-slate-300" />
+          </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-2">No Routes Yet</h3>
-          <p className="text-slate-500 mb-6">Create your first route to get started</p>
+          <p className="text-sm text-slate-400 mb-6">Create your first route to get started</p>
           <button
             onClick={() => setShowRouteModal(true)}
-            className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
+            className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-2"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4" />
             Create Route
           </button>
         </div>
       ) : (
         <div className="space-y-4">
           {routes.map((route) => (
-            <div key={route._id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 shadow-sm">
+            <div key={route._id} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+              {/* Color bar */}
+              <div className={`h-1 ${route.isActive ? 'bg-gradient-to-r from-emerald-400 to-teal-500' : 'bg-slate-200'}`} />
               {/* Route Header */}
               <div
-                className="flex items-center justify-between cursor-pointer"
+                className="flex items-center justify-between cursor-pointer px-5 py-4"
                 onClick={() => setExpandedRoute(expandedRoute === route._id ? null : route._id)}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-lg ${route.isActive ? 'bg-green-50' : 'bg-slate-50'}`}>
-                    <RouteIcon className={`w-5 h-5 ${route.isActive ? 'text-green-600' : 'text-slate-500'}`} />
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${route.isActive ? 'bg-teal-50' : 'bg-slate-50'}`}>
+                    <RouteIcon className={`w-5 h-5 ${route.isActive ? 'text-teal-600' : 'text-slate-400'}`} />
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800">{route.name}</h3>
-                    <p className="text-sm text-slate-500">
-                      {route.stops?.length || 0} stops • {route.isActive ? 'Active' : 'Inactive'}
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {route.stops?.length || 0} stops · {route.isActive ? 'Active' : 'Inactive'}
                     </p>
                   </div>
                 </div>

@@ -639,20 +639,31 @@ function BusSelectView ({
 
   return (
     <div>
-      {/* Greeting */}
-      <div className='mb-5'>
-        <p className='text-slate-500 text-sm font-medium'>{greeting}, {firstName} 👋</p>
-        <h2 className='text-xl font-semibold font-bold text-slate-800 mt-0.5'>Choose a bus to track</h2>
-        <p className='text-xs text-slate-500 mt-1'>
-          {liveBuses.length > 0
-            ? `${liveBuses.length} bus${liveBuses.length > 1 ? 'es' : ''} live now across ${routes.length} routes`
-            : 'No buses are currently active'}
-        </p>
+      {/* Greeting — gradient header */}
+      <div className='bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 rounded-2xl p-5 mb-5 relative overflow-hidden'>
+        <div className='absolute inset-0 opacity-[0.04]'
+          style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
+            backgroundSize: '16px 16px'
+          }}
+        />
+        <div className='absolute -top-6 -right-6 w-24 h-24 border border-white/5 rounded-full' />
+        <div className='relative z-10'>
+          <p className='text-teal-400 text-xs font-medium'>{greeting}, {firstName} 👋</p>
+          <h2 className='text-lg font-bold text-white mt-1'>Choose a bus to track</h2>
+          <p className='text-xs text-slate-400 mt-1'>
+            {liveBuses.length > 0
+              ? `${liveBuses.length} bus${liveBuses.length > 1 ? 'es' : ''} live now across ${routes.length} routes`
+              : 'No buses are currently active'}
+          </p>
+        </div>
       </div>
 
       {liveBuses.length === 0 && inactiveBuses.length === 0 ? (
         <div className='text-center py-12'>
-          <Bus className='w-12 h-12 text-slate-200 mx-auto mb-4' />
+          <div className='w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4'>
+            <Bus className='w-7 h-7 text-slate-300' />
+          </div>
           <p className='text-slate-500 font-medium'>No buses configured</p>
           <p className='text-slate-400 text-sm mt-1'>
             Contact your administrator to set up routes.
@@ -662,8 +673,10 @@ function BusSelectView ({
         <div className='space-y-3'>
           {/* Live buses */}
           {liveBuses.length === 0 ? (
-            <div className='text-center py-8 rounded-2xl border border-dashed border-slate-200'>
-              <Bus className='w-10 h-10 text-slate-200 mx-auto mb-3' />
+            <div className='text-center py-8 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50'>
+              <div className='w-12 h-12 bg-white rounded-xl flex items-center justify-center mx-auto mb-3 shadow-sm'>
+                <Bus className='w-6 h-6 text-slate-300' />
+              </div>
               <p className='text-slate-500 font-medium text-sm'>No buses are active right now</p>
               <p className='text-slate-400 text-xs mt-1'>Try again later or check the schedule.</p>
             </div>
@@ -673,10 +686,10 @@ function BusSelectView ({
               <button
                 key={bus._id}
                 onClick={() => onSelectBus(bus)}
-                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-emerald-100 bg-emerald-50/30 hover:border-teal-600/20 hover:bg-teal-50 transition-all group'
+                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50/50 to-teal-50/50 hover:from-teal-50 hover:to-emerald-50 hover:border-teal-300 transition-all duration-200 group shadow-sm'
               >
-                <div className='w-12 h-10 bg-teal-100 rounded-xl flex items-center justify-center shrink-0'>
-                  <Bus className='w-6 h-6 text-teal-600' />
+                <div className='w-12 h-10 bg-gradient-to-br from-teal-400 to-teal-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm'>
+                  <Bus className='w-5 h-5 text-white' />
                 </div>
                 <div className='flex-1 text-left min-w-0'>
                   <div className='font-bold text-slate-800 group-hover:text-teal-600 transition-colors truncate'>
@@ -688,11 +701,11 @@ function BusSelectView ({
                   </div>
                 </div>
                 {routeName && (
-                  <span className='text-xs font-semibold text-slate-500 bg-slate-50 px-2.5 py-1 rounded-full shrink-0'>
+                  <span className='text-xs font-semibold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full shrink-0 border border-teal-100'>
                     {routeName}
                   </span>
                 )}
-                <ChevronRight className='w-4 h-4 text-slate-200 group-hover:text-teal-600 transition-colors shrink-0' />
+                <ChevronRight className='w-4 h-4 text-slate-300 group-hover:text-teal-600 transition-colors shrink-0' />
               </button>
             )
           })}

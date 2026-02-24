@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Users,
   Mail,
@@ -77,6 +77,9 @@ export default function UserManagement() {
   // Toast
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Debounce ref for search
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ─── Data Fetching ──────────────────────────────────────────────────────────
 
@@ -274,17 +277,32 @@ export default function UserManagement() {
   // ─── JSX ───────────────────────────────────────────────────────────────────
 
   return (
-    <div className='max-w-6xl mx-auto space-y-6 pb-12'>
+    <div className='max-w-6xl mx-auto space-y-4 pb-12'>
 
-      {/* ── Page Header ── */}
-      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+      {/* ── Compact Header ── */}
+      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3'>
         <div>
-          <h1 className="text-xl font-semibold text-slate-900 text-2xl">User Management</h1>
-          <p className='text-sm text-slate-500 mt-0.5'>Manage users, roles, and invitation links.</p>
+          <h1 className='text-xl font-bold text-white'>User Management</h1>
+          <div className='flex items-center gap-2 mt-1.5 flex-wrap'>
+            <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'>
+              <Users className='w-3 h-3' /> {users.filter(u => u.role === 'rider').length} Riders
+            </span>
+            <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/15 text-blue-400 border border-blue-500/20'>
+              <Bus className='w-3 h-3' /> {users.filter(u => u.role === 'driver').length} Drivers
+            </span>
+            <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-500/15 text-purple-400 border border-purple-500/20'>
+              <Settings2 className='w-3 h-3' /> {users.filter(u => u.role === 'admin').length} Admins
+            </span>
+            {pendingDrivers.length > 0 && (
+              <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/20 animate-pulse'>
+                <AlertCircle className='w-3 h-3' /> {pendingDrivers.length} Pending
+              </span>
+            )}
+          </div>
         </div>
         <button
           onClick={handleInviteUserTrigger}
-          className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-2 px-5 h-11 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all hover:-translate-y-0.5'
+          className='bg-teal-500 hover:bg-teal-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2 shrink-0'
         >
           <UserPlus className='w-4 h-4' />
           Invite New User
@@ -305,35 +323,75 @@ export default function UserManagement() {
         </div>
       )}
 
-      {/* ── Tabs ── */}
-      <div className='flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl w-fit shadow-sm'>
-        {([
-          { id: 'users', label: 'Users', icon: Users, count: users.length },
-          { id: 'invitations', label: 'Invitations', icon: Mail, count: inviteStats.pending || undefined },
-        ] as const).map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
-              activeTab === tab.id
-                ? 'bg-teal-600 text-white shadow-sm shadow-primary/30'
-                : 'text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <tab.icon className='w-4 h-4' />
-            {tab.label}
-            {tab.count !== undefined && tab.count > 0 && (
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/20' : 'bg-amber-100 text-amber-700'}`}>
-                {tab.count}
-              </span>
-            )}
-          </button>
-        ))}
+      {/* ── Unified Toolbar Card ── */}
+      <div className='bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden'>
+        {/* Tabs + Search Row */}
+        <div className='flex flex-col sm:flex-row sm:items-center gap-3 p-3'>
+          {/* Tab Switcher */}
+          <div className='flex items-center gap-1 p-1 bg-slate-800/60 rounded-xl shrink-0'>
+            {([
+              { id: 'users', label: 'Users', icon: Users, count: users.length },
+              { id: 'invitations', label: 'Invitations', icon: Mail, count: inviteStats.pending || undefined },
+            ] as const).map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-teal-600 text-white shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <tab.icon className='w-4 h-4' />
+                {tab.label}
+                {tab.count !== undefined && tab.count > 0 && (
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/20' : 'bg-amber-500/20 text-amber-400'}`}>
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Search + Filter (only visible on users tab) */}
+          {activeTab === 'users' && (
+            <div className='flex flex-1 gap-2'>
+              <div className='relative flex-1'>
+                <Search className='absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500/50' />
+                <input
+                  type='text'
+                  placeholder='Search by name or email...'
+                  value={userSearch}
+                  onChange={e => {
+                    setUserSearch(e.target.value);
+                    setUserPage(1);
+                    if (searchTimer.current) clearTimeout(searchTimer.current);
+                    searchTimer.current = setTimeout(() => loadUsers(), 400);
+                  }}
+                  className='input pl-10 h-10 w-full'
+                />
+              </div>
+              <div className='relative'>
+                <Filter className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500/50 pointer-events-none' />
+                <select
+                  value={roleFilter}
+                  onChange={e => { setRoleFilter(e.target.value); setUserPage(1); }}
+                  className='input pl-8 h-10 pr-3 min-w-[130px]'
+                >
+                  <option value=''>All Roles</option>
+                  <option value='rider'>Riders</option>
+                  <option value='driver'>Drivers</option>
+                  <option value='admin'>Admins</option>
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ══ USERS TAB ══ */}
       {activeTab === 'users' && (
-        <div className='space-y-5'>
+        <div className='space-y-4'>
 
           {/* Pending Driver Approvals Banner */}
           {pendingDrivers.length > 0 && (
@@ -375,37 +433,6 @@ export default function UserManagement() {
               </div>
             </div>
           )}
-
-          {/* Search & Filter Bar */}
-          <div className='flex flex-col sm:flex-row gap-3'>
-            <div className='relative flex-1'>
-              <Search className='absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500/50' />
-              <input
-                type='text'
-                placeholder='Search by name or email...'
-                value={userSearch}
-                onChange={e => setUserSearch(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && loadUsers()}
-                className='input pl-10 h-11 w-full'
-              />
-            </div>
-            <div className='flex gap-2'>
-              <div className='relative'>
-                <Filter className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500/50 pointer-events-none' />
-                <select
-                  value={roleFilter}
-                  onChange={e => { setRoleFilter(e.target.value); setUserPage(1); }}
-                  className='input pl-8 h-11 pr-3 min-w-[130px]'
-                >
-                  <option value=''>All Roles</option>
-                  <option value='rider'>Riders</option>
-                  <option value='driver'>Drivers</option>
-                  <option value='admin'>Admins</option>
-                </select>
-              </div>
-              <button onClick={loadUsers} className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors px-6 h-11 shrink-0'>Search</button>
-            </div>
-          </div>
 
           {/* Users Table */}
           <div className='bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden'>
