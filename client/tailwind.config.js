@@ -7,41 +7,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ─── Primary Teal Palette ───
+        // ─── Primary Brown Palette ───
         primary: {
-          DEFAULT: '#0F766E',
-          hover:   '#0D9488',
-          light:   '#CCFBF1',
-          50:      '#F0FDFA',
+          DEFAULT: '#8B5E3C',
+          hover:   '#A0714E',
+          light:   '#F5EDE4',
+          50:      '#FBF7F3',
         },
-        // ─── Accent Amber ───
+        // ─── Accent Copper ───
         accent: {
-          DEFAULT: '#F59E0B',
-          light:   '#FEF3C7',
+          DEFAULT: '#C67D4A',
+          light:   '#FAEEE3',
         },
         // ─── Danger ───
         danger: {
-          DEFAULT: '#DC2626',
-          light:   '#FEE2E2',
+          DEFAULT: '#C0392B',
+          light:   '#FDECEC',
         },
         // ─── Neutral Surfaces ───
         surface: {
-          bg:    '#F8FAFB',
+          bg:    '#FDF8F4',
           card:  '#FFFFFF',
-          hover: '#F1F5F9',
-          muted: '#F8FAFC',
+          hover: '#F5EDE4',
+          muted: '#FAF5F0',
         },
         // ─── Text Hierarchy ───
         ink: {
-          DEFAULT:   '#1E293B',
-          secondary: '#64748B',
-          muted:     '#94A3B8',
+          DEFAULT:   '#3C2A1A',
+          secondary: '#7A6555',
+          muted:     '#A89888',
           inverted:  '#FFFFFF',
         },
         // ─── Borders ───
         line: {
-          DEFAULT: '#E2E8F0',
-          strong:  '#CBD5E1',
+          DEFAULT: '#E6DDD4',
+          strong:  '#D1C4B5',
         },
       },
       fontFamily: {
@@ -49,12 +49,12 @@ export default {
         display: ['Poppins', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'spatial-sm': '0 1px 3px rgba(15,118,110,0.06), 0 1px 2px rgba(0,0,0,0.04)',
-        'spatial':    '0 4px 16px rgba(15,118,110,0.08), 0 2px 4px rgba(0,0,0,0.04)',
-        'spatial-md': '0 8px 30px rgba(15,118,110,0.10), 0 4px 8px rgba(0,0,0,0.04)',
-        'spatial-lg': '0 16px 48px rgba(15,118,110,0.12), 0 8px 16px rgba(0,0,0,0.04)',
-        'spatial-xl': '0 24px 64px rgba(15,118,110,0.14), 0 12px 24px rgba(0,0,0,0.05)',
-        'inner-glow': 'inset 0 1px 2px rgba(15,118,110,0.06)',
+        'spatial-sm': '0 1px 3px rgba(139,94,60,0.06), 0 1px 2px rgba(0,0,0,0.04)',
+        'spatial':    '0 4px 16px rgba(139,94,60,0.08), 0 2px 4px rgba(0,0,0,0.04)',
+        'spatial-md': '0 8px 30px rgba(139,94,60,0.10), 0 4px 8px rgba(0,0,0,0.04)',
+        'spatial-lg': '0 16px 48px rgba(139,94,60,0.12), 0 8px 16px rgba(0,0,0,0.04)',
+        'spatial-xl': '0 24px 64px rgba(139,94,60,0.14), 0 12px 24px rgba(0,0,0,0.05)',
+        'inner-glow': 'inset 0 1px 2px rgba(139,94,60,0.06)',
       },
       borderRadius: {
         '4xl': '2rem',

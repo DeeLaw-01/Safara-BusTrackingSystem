@@ -49,7 +49,7 @@ import type { Route, Stop } from '@/types'
 // ─── Stop marker icon factory ────────────────────────────────────────────────
 
 function createStopIcon (index: number, isFirst: boolean, isLast: boolean) {
-  const color = isFirst ? '#10b981' : isLast ? '#F59E0B' : '#0D9488'
+  const color = isFirst ? '#B8860B' : isLast ? '#C67D4A' : '#A0714E'
   return L.divIcon({
     className: 'custom-stop-marker',
     html: `
@@ -127,13 +127,13 @@ function DraggableStopMarker ({
     >
       <Popup>
         <div className='text-sm'>
-          <div className='font-semibold text-slate-800'>{stop.name}</div>
-          <div className='text-slate-500 text-xs mt-1'>
+          <div className='font-semibold text-stone-800'>{stop.name}</div>
+          <div className='text-stone-500 text-xs mt-1'>
             Stop #{index + 1}
             {draggable && ' • Drag to reposition'}
           </div>
           {stop.estimatedArrivalTime && (
-            <div className='text-xs text-slate-500'>
+            <div className='text-xs text-stone-500'>
               ETA: {stop.estimatedArrivalTime}
             </div>
           )}
@@ -201,7 +201,7 @@ function SortableStop ({
     ? 'bg-green-500'
     : isLast
     ? 'bg-red-500'
-    : 'bg-teal-600'
+    : 'bg-amber-600'
 
   return (
     <div
@@ -209,8 +209,8 @@ function SortableStop ({
       style={style}
       className={`flex items-start gap-2 p-3 rounded-lg border transition-colors ${
         isDragging
-          ? 'bg-white border-teal-600 shadow-lg'
-          : 'bg-white border-slate-200 hover:border-teal-600/30 shadow-sm'
+          ? 'bg-white border-amber-600 shadow-lg'
+          : 'bg-white border-stone-200 hover:border-amber-600/30 shadow-sm'
       }`}
     >
       {/* Drag handle */}
@@ -218,7 +218,7 @@ function SortableStop ({
         <button
           {...attributes}
           {...listeners}
-          className='mt-1 p-1 text-slate-500/40 hover:text-teal-600 cursor-grab active:cursor-grabbing'
+          className='mt-1 p-1 text-stone-500/40 hover:text-amber-600 cursor-grab active:cursor-grabbing'
           title='Drag to reorder'
         >
           <GripVertical className='w-4 h-4' />
@@ -258,7 +258,7 @@ function SortableStop ({
             </button>
             <button
               onClick={onCancelEdit}
-              className='p-1 text-slate-500 hover:text-slate-800'
+              className='p-1 text-stone-500 hover:text-stone-800'
               title='Cancel'
             >
               <X className='w-4 h-4' />
@@ -266,13 +266,13 @@ function SortableStop ({
           </div>
         ) : (
           <div className='flex items-center gap-1'>
-            <span className='text-sm font-semibold text-slate-800 truncate'>
+            <span className='text-sm font-semibold text-stone-800 truncate'>
               {stop.name}
             </span>
             {!isLocked && (
               <button
                 onClick={() => onStartEdit(stop)}
-                className='p-0.5 text-slate-500/60 hover:text-teal-600 transition-colors'
+                className='p-0.5 text-stone-500/60 hover:text-amber-600 transition-colors'
                 title='Rename stop'
               >
                 <Pencil className='w-3 h-3' />
@@ -280,13 +280,13 @@ function SortableStop ({
             )}
           </div>
         )}
-        <div className='text-xs text-slate-500/70 mt-0.5'>
+        <div className='text-xs text-stone-500/70 mt-0.5'>
           {stop.latitude.toFixed(5)}, {stop.longitude.toFixed(5)}
         </div>
 
         {/* Estimated time */}
         <div className='flex items-center gap-1 mt-1'>
-          <Clock className='w-3 h-3 text-slate-500/60' />
+          <Clock className='w-3 h-3 text-stone-500/60' />
           <label className='sr-only' htmlFor={`time-${stop._id}`}>
             Estimated arrival time
           </label>
@@ -296,7 +296,7 @@ function SortableStop ({
             value={stop.estimatedArrivalTime || ''}
             onChange={e => onTimeChange(stop._id, e.target.value)}
             disabled={isLocked}
-            className='text-xs bg-transparent text-slate-500 border-none outline-none p-0 focus:text-teal-600 transition-colors'
+            className='text-xs bg-transparent text-stone-500 border-none outline-none p-0 focus:text-amber-600 transition-colors'
             title='Estimated arrival time'
             placeholder='HH:MM'
           />
@@ -309,7 +309,7 @@ function SortableStop ({
           <button
             onClick={() => onMoveUp(index)}
             disabled={index === 0}
-            className='p-1 text-slate-500/40 hover:text-teal-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+            className='p-1 text-stone-500/40 hover:text-amber-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
             title='Move up'
           >
             <ChevronUp className='w-3.5 h-3.5' />
@@ -317,14 +317,14 @@ function SortableStop ({
           <button
             onClick={() => onMoveDown(index)}
             disabled={index === totalStops - 1}
-            className='p-1 text-slate-500/40 hover:text-teal-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+            className='p-1 text-stone-500/40 hover:text-amber-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
             title='Move down'
           >
             <ChevronDown className='w-3.5 h-3.5' />
           </button>
           <button
             onClick={() => onDelete(stop._id)}
-            className='p-1 text-slate-500/40 hover:text-red-500 transition-colors'
+            className='p-1 text-stone-500/40 hover:text-red-500 transition-colors'
             title='Delete stop'
           >
             <Trash2 className='w-3.5 h-3.5' />
@@ -689,7 +689,7 @@ export default function RouteBuilder () {
   if (loading) {
     return (
       <div className='flex items-center justify-center min-h-[60vh]'>
-        <Loader2 className='w-8 h-8 text-teal-600 animate-spin' />
+        <Loader2 className='w-8 h-8 text-amber-600 animate-spin' />
       </div>
     )
   }
@@ -697,8 +697,8 @@ export default function RouteBuilder () {
   if (!route) {
     return (
       <div className='text-center py-20'>
-        <RouteIcon className='w-12 h-12 text-slate-500/30 mx-auto mb-4' />
-        <h2 className='text-xl font-semibold font-bold text-slate-800 mb-2'>
+        <RouteIcon className='w-12 h-12 text-stone-500/30 mx-auto mb-4' />
+        <h2 className='text-xl font-semibold font-bold text-stone-800 mb-2'>
           Route Not Found
         </h2>
         <button
@@ -726,30 +726,30 @@ export default function RouteBuilder () {
         <div className='flex items-center gap-3'>
           <button
             onClick={() => navigate('/admin/routes')}
-            className='p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-slate-200 rounded-lg shadow-sm transition-all'
+            className='p-2 text-stone-500 hover:text-stone-800 hover:bg-stone-50 border border-stone-200 rounded-lg shadow-sm transition-all'
             title='Back to routes'
           >
             <ArrowLeft className='w-5 h-5' />
           </button>
           <div>
-            <h1 className='text-xl font-semibold text-slate-900 text-xl'>
+            <h1 className='text-xl font-semibold text-stone-900 text-xl'>
               Route Builder
             </h1>
-            <p className='text-sm text-slate-500'>{route.name}</p>
+            <p className='text-sm text-stone-500'>{route.name}</p>
           </div>
         </div>
 
         {/* Path generation button */}
         <div className='flex items-center gap-3'>
           {pathInfo && (
-            <span className='text-sm font-medium text-slate-500 bg-slate-50 px-3 py-1 rounded-full border border-slate-200'>
+            <span className='text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1 rounded-full border border-stone-200'>
               {pathInfo.distance} km • ~{pathInfo.duration} min
             </span>
           )}
           <button
             onClick={handleGeneratePath}
             disabled={stops.length < 2 || generatingPath || isLocked}
-            className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors text-sm shadow-sm'
+            className='bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors text-sm shadow-sm'
             title='Generate route path using OSRM'
           >
             {generatingPath ? (
@@ -786,31 +786,31 @@ export default function RouteBuilder () {
       {/* Main content: split layout */}
       <div className='flex-1 flex gap-4 min-h-0'>
         {/* Left panel — Stops list */}
-        <div className='w-80 flex-shrink-0 flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm'>
+        <div className='w-80 flex-shrink-0 flex flex-col bg-white border border-stone-200 rounded-xl overflow-hidden shadow-sm'>
           {/* Panel header */}
-          <div className='p-4 border-b border-slate-200 bg-slate-50/30'>
+          <div className='p-4 border-b border-stone-200 bg-stone-50/30'>
             <div className='flex items-center justify-between'>
-              <h2 className='text-sm font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wider'>
-                <MapPin className='w-4 h-4 text-teal-600' />
+              <h2 className='text-sm font-bold text-stone-800 flex items-center gap-2 uppercase tracking-wider'>
+                <MapPin className='w-4 h-4 text-amber-600' />
                 Stops ({stops.length})
               </h2>
               {savingReorder && (
-                <Loader2 className='w-4 h-4 text-teal-600 animate-spin' />
+                <Loader2 className='w-4 h-4 text-amber-600 animate-spin' />
               )}
             </div>
             {!isLocked && (
-              <p className='text-xs text-slate-500 mt-1 font-medium'>
+              <p className='text-xs text-stone-500 mt-1 font-medium'>
                 Click on the map to add stops. Drag to reorder.
               </p>
             )}
           </div>
 
           {/* Stops list */}
-          <div className='flex-1 overflow-y-auto p-3 space-y-2 bg-slate-50/10'>
+          <div className='flex-1 overflow-y-auto p-3 space-y-2 bg-stone-50/10'>
             {stops.length === 0 ? (
               <div className='text-center py-12'>
-                <MapPin className='w-10 h-10 text-slate-200 mx-auto mb-3 opacity-50' />
-                <p className='text-sm text-slate-500 font-medium px-4'>
+                <MapPin className='w-10 h-10 text-stone-200 mx-auto mb-3 opacity-50' />
+                <p className='text-sm text-stone-500 font-medium px-4'>
                   {isLocked
                     ? 'No stops on this route'
                     : 'Click on the map to add your first stop'}
@@ -852,11 +852,11 @@ export default function RouteBuilder () {
 
           {/* Panel footer */}
           {stops.length >= 2 && !isLocked && (
-            <div className='p-4 border-t border-slate-200 bg-white'>
+            <div className='p-4 border-t border-stone-200 bg-white'>
               <button
                 onClick={handleGeneratePath}
                 disabled={generatingPath}
-                className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full text-sm shadow-sm'
+                className='bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full text-sm shadow-sm'
               >
                 {generatingPath ? (
                   <Loader2 className='w-4 h-4 animate-spin' />
@@ -870,10 +870,10 @@ export default function RouteBuilder () {
         </div>
 
         {/* Right — Map */}
-        <div className='flex-1 rounded-xl overflow-hidden border border-slate-200 relative shadow-sm'>
+        <div className='flex-1 rounded-xl overflow-hidden border border-stone-200 relative shadow-sm'>
           {addingStop && (
-            <div className='absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white border border-teal-600/20 text-slate-800 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xl'>
-              <Loader2 className='w-4 h-4 animate-spin text-teal-600' />
+            <div className='absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white border border-amber-600/20 text-stone-800 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xl'>
+              <Loader2 className='w-4 h-4 animate-spin text-amber-600' />
               Adding stop...
             </div>
           )}
@@ -915,7 +915,7 @@ export default function RouteBuilder () {
               {routePath.length > 0 && (
                 <Polyline
                   positions={routePath}
-                  color='#0D9488'
+                  color='#A0714E'
                   weight={5}
                   opacity={0.8}
                 />

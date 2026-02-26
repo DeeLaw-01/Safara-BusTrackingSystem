@@ -32,27 +32,27 @@ export default function PrivacyPolicy () {
   ]
 
   return (
-    <div className='min-h-screen bg-slate-50'>
+    <div className='min-h-screen bg-stone-50'>
       {/* Header */}
       <header className='page-header'>
         <button
           title='Back'  
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
+          className='p-2 -ml-2 hover:bg-stone-100 rounded-xl transition-colors'
         >
-          <ArrowLeft className='w-5 h-5 text-slate-800' />
+          <ArrowLeft className='w-5 h-5 text-stone-800' />
         </button>
-        <h1 className='text-lg font-semibold font-bold text-slate-800'>Privacy Policy</h1>
+        <h1 className='text-lg font-semibold font-bold text-stone-800'>Privacy Policy</h1>
       </header>
 
       <div className='max-w-2xl mx-auto px-4 py-6 space-y-5'>
         {/* Introduction */}
-        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
+        <div className='bg-white rounded-2xl border border-stone-200 shadow-sm p-5'>
           <div className='flex items-center gap-3 mb-4'>
-            <Shield className='w-6 h-6 text-teal-600' />
-            <h2 className='text-xl font-semibold font-bold text-slate-800'>Privacy Policy</h2>
+            <Shield className='w-6 h-6 text-amber-600' />
+            <h2 className='text-xl font-semibold font-bold text-stone-800'>Privacy Policy</h2>
           </div>
-          <p className='text-sm text-slate-500 leading-relaxed'>
+          <p className='text-sm text-stone-500 leading-relaxed'>
             Last updated:{' '}
             {new Date().toLocaleDateString('en-US', {
               year: 'numeric',
@@ -60,7 +60,7 @@ export default function PrivacyPolicy () {
               day: 'numeric'
             })}
           </p>
-          <p className='text-sm text-slate-500 leading-relaxed mt-4'>
+          <p className='text-sm text-stone-500 leading-relaxed mt-4'>
             At Safara, we are committed to protecting your privacy. This
             Privacy Policy explains how we collect, use, and safeguard your
             personal information when you use our bus tracking application.
@@ -72,17 +72,17 @@ export default function PrivacyPolicy () {
           {sections.map((section, index) => (
             <div
               key={index}
-              className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'
+              className='bg-white rounded-2xl border border-stone-200 shadow-sm p-5'
             >
               <div className='flex items-center gap-3 mb-3'>
-                <div className='info-stat-icon bg-teal-50'>
-                  <section.icon className='w-5 h-5 text-teal-600' />
+                <div className='info-stat-icon bg-amber-50'>
+                  <section.icon className='w-5 h-5 text-amber-600' />
                 </div>
-                <h3 className='text-base font-semibold text-slate-800'>
+                <h3 className='text-base font-semibold text-stone-800'>
                   {section.title}
                 </h3>
               </div>
-              <p className='text-sm text-slate-500 leading-relaxed'>
+              <p className='text-sm text-stone-500 leading-relaxed'>
                 {section.content}
               </p>
             </div>
@@ -90,17 +90,17 @@ export default function PrivacyPolicy () {
         </div>
 
         {/* Contact */}
-        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
-          <h3 className='text-base font-semibold text-slate-800 mb-2'>
+        <div className='bg-white rounded-2xl border border-stone-200 shadow-sm p-5'>
+          <h3 className='text-base font-semibold text-stone-800 mb-2'>
             Questions About Privacy?
           </h3>
-          <p className='text-sm text-slate-500 mb-4'>
+          <p className='text-sm text-stone-500 mb-4'>
             If you have any questions about this Privacy Policy or our data
             practices, please contact us at:
           </p>
           <a
             href='mailto:privacy@safara.com'
-            className='text-sm text-teal-600 hover:text-teal-700 font-medium'
+            className='text-sm text-amber-600 hover:text-amber-700 font-medium'
           >
             privacy@safara.com
           </a>

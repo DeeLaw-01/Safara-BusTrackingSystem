@@ -8,23 +8,23 @@ export default function MyAccount () {
   const { user } = useAuthStore()
 
   return (
-    <div className='min-h-screen bg-slate-50'>
+    <div className='min-h-screen bg-stone-50'>
       {/* Header */}
       <header className='page-header'>
         <button
           title='Back'
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
+          className='p-2 -ml-2 hover:bg-stone-100 rounded-xl transition-colors'
         >
-          <ArrowLeft className='w-5 h-5 text-slate-800' />
+          <ArrowLeft className='w-5 h-5 text-stone-800' />
         </button>
-        <h1 className='text-lg font-semibold font-bold text-slate-800'>My Account</h1>
+        <h1 className='text-lg font-semibold font-bold text-stone-800'>My Account</h1>
       </header>
 
       <div className='max-w-2xl mx-auto px-4 py-6 space-y-5'>
 
         {/* ── Profile Hero ── */}
-        <div className='relative bg-gradient-to-br from-teal-500 via-teal-600 to-emerald-600 rounded-2xl p-6 pt-8 text-white overflow-hidden animated-gradient'>
+        <div className='relative bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 rounded-2xl p-6 pt-8 text-white overflow-hidden animated-gradient'>
           {/* Digital grid overlay */}
           <div className='absolute inset-0 opacity-10'
             style={{
@@ -66,19 +66,19 @@ export default function MyAccount () {
         </div>
 
         {/* ── Account Details ── */}
-        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden'>
-          <div className='px-5 py-4 border-b border-slate-100'>
-            <h3 className='text-sm font-semibold text-slate-800'>Account Details</h3>
+        <div className='bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden'>
+          <div className='px-5 py-4 border-b border-stone-100'>
+            <h3 className='text-sm font-semibold text-stone-800'>Account Details</h3>
           </div>
 
-          <div className='divide-y divide-slate-100'>
+          <div className='divide-y divide-stone-100'>
             <DetailRow icon={Mail} label='Email' value={user?.email || 'N/A'} />
             {user?.phone && <DetailRow icon={Phone} label='Phone' value={user.phone} />}
             <DetailRow
               icon={Shield}
               label='Account Status'
               value={user?.isEmailVerified ? 'Verified' : 'Unverified'}
-              valueColor={user?.isEmailVerified ? 'text-emerald-600' : 'text-amber-600'}
+              valueColor={user?.isEmailVerified ? 'text-orange-600' : 'text-amber-600'}
             />
             <DetailRow
               icon={Calendar}
@@ -94,12 +94,12 @@ export default function MyAccount () {
         </div>
 
         {/* ── Quick Actions ── */}
-        <div className='bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden'>
-          <div className='px-5 py-4 border-b border-slate-100'>
-            <h3 className='text-sm font-semibold text-slate-800'>Quick Actions</h3>
+        <div className='bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden'>
+          <div className='px-5 py-4 border-b border-stone-100'>
+            <h3 className='text-sm font-semibold text-stone-800'>Quick Actions</h3>
           </div>
 
-          <div className='divide-y divide-slate-100'>
+          <div className='divide-y divide-stone-100'>
             <ActionRow icon={Settings} label='Settings' desc='Manage your account settings'
               onClick={() => navigate('/settings')} />
             <ActionRow icon={Bell} label='Notifications' desc='Configure notification preferences'
@@ -115,12 +115,12 @@ function DetailRow ({ icon: Icon, label, value, valueColor }:
   { icon: React.ElementType; label: string; value: string; valueColor?: string }) {
   return (
     <div className='flex items-center gap-4 px-5 py-3.5'>
-      <div className='w-9 h-9 bg-slate-50 rounded-xl flex items-center justify-center shrink-0'>
-        <Icon className='w-4 h-4 text-slate-400' />
+      <div className='w-9 h-9 bg-stone-50 rounded-xl flex items-center justify-center shrink-0'>
+        <Icon className='w-4 h-4 text-stone-400' />
       </div>
       <div className='flex-1 min-w-0'>
-        <p className='text-xs text-slate-400 mb-0.5'>{label}</p>
-        <p className={`text-sm font-medium truncate ${valueColor || 'text-slate-700'}`}>{value}</p>
+        <p className='text-xs text-stone-400 mb-0.5'>{label}</p>
+        <p className={`text-sm font-medium truncate ${valueColor || 'text-stone-700'}`}>{value}</p>
       </div>
     </div>
   )
@@ -132,16 +132,16 @@ function ActionRow ({ icon: Icon, label, desc, onClick }:
     <button
       title={label}
       onClick={onClick}
-      className='w-full flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 transition-colors text-left'
+      className='w-full flex items-center gap-4 px-5 py-3.5 hover:bg-stone-50 transition-colors text-left'
     >
-      <div className='w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center shrink-0'>
-        <Icon className='w-4 h-4 text-teal-600' />
+      <div className='w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center shrink-0'>
+        <Icon className='w-4 h-4 text-amber-600' />
       </div>
       <div className='flex-1 min-w-0'>
-        <p className='text-sm font-medium text-slate-700'>{label}</p>
-        <p className='text-xs text-slate-400'>{desc}</p>
+        <p className='text-sm font-medium text-stone-700'>{label}</p>
+        <p className='text-xs text-stone-400'>{desc}</p>
       </div>
-      <ChevronRight className='w-4 h-4 text-slate-300' />
+      <ChevronRight className='w-4 h-4 text-stone-300' />
     </button>
   )
 }

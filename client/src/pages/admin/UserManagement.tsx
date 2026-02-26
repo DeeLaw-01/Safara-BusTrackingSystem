@@ -250,7 +250,7 @@ export default function UserManagement() {
     const map: Record<string, string> = {
       admin: 'bg-purple-100 text-purple-700 border-purple-200',
       driver: 'bg-blue-100 text-blue-700 border-blue-200',
-      rider: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      rider: 'bg-orange-100 text-orange-700 border-orange-200',
     };
     return (
       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wide border ${map[role] ?? map.rider}`}>
@@ -284,7 +284,7 @@ export default function UserManagement() {
         <div>
           <h1 className='text-xl font-bold text-white'>User Management</h1>
           <div className='flex items-center gap-2 mt-1.5 flex-wrap'>
-            <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'>
+            <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-500/15 text-orange-400 border border-orange-500/20'>
               <Users className='w-3 h-3' /> {users.filter(u => u.role === 'rider').length} Riders
             </span>
             <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/15 text-blue-400 border border-blue-500/20'>
@@ -302,7 +302,7 @@ export default function UserManagement() {
         </div>
         <button
           onClick={handleInviteUserTrigger}
-          className='bg-teal-500 hover:bg-teal-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2 shrink-0'
+          className='bg-amber-500 hover:bg-amber-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 shrink-0'
         >
           <UserPlus className='w-4 h-4' />
           Invite New User
@@ -328,7 +328,7 @@ export default function UserManagement() {
         {/* Tabs + Search Row */}
         <div className='flex flex-col sm:flex-row sm:items-center gap-3 p-3'>
           {/* Tab Switcher */}
-          <div className='flex items-center gap-1 p-1 bg-slate-800/60 rounded-xl shrink-0'>
+          <div className='flex items-center gap-1 p-1 bg-stone-800/60 rounded-xl shrink-0'>
             {([
               { id: 'users', label: 'Users', icon: Users, count: users.length },
               { id: 'invitations', label: 'Invitations', icon: Mail, count: inviteStats.pending || undefined },
@@ -338,8 +338,8 @@ export default function UserManagement() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                   activeTab === tab.id
-                    ? 'bg-teal-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-amber-600 text-white shadow-sm'
+                    : 'text-stone-400 hover:text-white'
                 }`}
               >
                 <tab.icon className='w-4 h-4' />
@@ -357,7 +357,7 @@ export default function UserManagement() {
           {activeTab === 'users' && (
             <div className='flex flex-1 gap-2'>
               <div className='relative flex-1'>
-                <Search className='absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500/50' />
+                <Search className='absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500/50' />
                 <input
                   type='text'
                   placeholder='Search by name or email...'
@@ -372,7 +372,7 @@ export default function UserManagement() {
                 />
               </div>
               <div className='relative'>
-                <Filter className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500/50 pointer-events-none' />
+                <Filter className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-500/50 pointer-events-none' />
                 <select
                   value={roleFilter}
                   onChange={e => { setRoleFilter(e.target.value); setUserPage(1); }}
@@ -408,8 +408,8 @@ export default function UserManagement() {
                     <div className='flex items-center gap-3 min-w-0'>
                       <UserAvatar name={driver.name} avatar={driver.avatar} size='md' />
                       <div className='min-w-0'>
-                        <div className='font-bold text-slate-800 text-sm truncate'>{driver.name}</div>
-                        <div className='text-xs text-slate-500 truncate'>{driver.email}</div>
+                        <div className='font-bold text-stone-800 text-sm truncate'>{driver.name}</div>
+                        <div className='text-xs text-stone-500 truncate'>{driver.email}</div>
                       </div>
                     </div>
                     <div className='flex gap-2 shrink-0 ml-3'>
@@ -435,13 +435,13 @@ export default function UserManagement() {
           )}
 
           {/* Users Table */}
-          <div className='bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden'>
+          <div className='bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden'>
             {loadingUsers ? (
               <div className='flex items-center justify-center py-20'>
-                <Loader2 className='w-8 h-8 animate-spin text-teal-600' />
+                <Loader2 className='w-8 h-8 animate-spin text-amber-600' />
               </div>
             ) : users.length === 0 ? (
-              <div className='flex flex-col items-center justify-center py-16 text-slate-500'>
+              <div className='flex flex-col items-center justify-center py-16 text-stone-500'>
                 <Users className='w-10 h-10 mb-3 opacity-30' />
                 <p className='font-medium'>No users found</p>
                 <p className='text-sm opacity-60 mt-1'>Try adjusting your search or filter.</p>
@@ -451,26 +451,26 @@ export default function UserManagement() {
                 <div className='overflow-x-auto'>
                   <table className='w-full'>
                     <thead>
-                      <tr className='border-b border-slate-200 bg-slate-50/60'>
-                        <th className='text-left px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>User</th>
-                        <th className='text-center px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>Role</th>
-                        <th className='text-left px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>Status</th>
-                        <th className='text-left px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell'>Joined</th>
-                        <th className='text-right px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>Actions</th>
+                      <tr className='border-b border-stone-200 bg-stone-50/60'>
+                        <th className='text-left px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>User</th>
+                        <th className='text-center px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>Role</th>
+                        <th className='text-left px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>Status</th>
+                        <th className='text-left px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider hidden md:table-cell'>Joined</th>
+                        <th className='text-right px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {users.map((user, i) => (
                         <tr
                           key={user._id}
-                          className={`group border-b border-slate-200/60 last:border-0 hover:bg-slate-50/40 transition-colors ${i % 2 === 0 ? '' : 'bg-slate-50/20'}`}
+                          className={`group border-b border-stone-200/60 last:border-0 hover:bg-stone-50/40 transition-colors ${i % 2 === 0 ? '' : 'bg-stone-50/20'}`}
                         >
                           <td className='px-5 py-4'>
                             <div className='flex items-center gap-3'>
                               <UserAvatar name={user.name} avatar={user.avatar} size='md' />
                               <div className='min-w-0'>
-                                <div className='font-semibold text-slate-800 text-sm truncate'>{user.name}</div>
-                                <div className='text-xs text-slate-500 truncate'>{user.email}</div>
+                                <div className='font-semibold text-stone-800 text-sm truncate'>{user.name}</div>
+                                <div className='text-xs text-stone-500 truncate'>{user.email}</div>
                               </div>
                             </div>
                           </td>
@@ -479,18 +479,18 @@ export default function UserManagement() {
                               <button
                                 disabled={user.role === 'admin'}
                                 onClick={() => setOpenRoleMenu(openRoleMenu === user._id ? null : user._id)}
-                                className={`flex items-center gap-1 transition-all ${user.role !== 'admin' ? 'hover:opacity-80 cursor-pointer' : 'cursor-default'} ${openRoleMenu === user._id ? 'ring-2 ring-teal-500/30 ring-offset-1 rounded-md' : ''}`}
+                                className={`flex items-center gap-1 transition-all ${user.role !== 'admin' ? 'hover:opacity-80 cursor-pointer' : 'cursor-default'} ${openRoleMenu === user._id ? 'ring-2 ring-amber-500/30 ring-offset-1 rounded-md' : ''}`}
                               >
                                 {roleBadge(user.role)}
-                                {user.role !== 'admin' && <Settings2 className='w-3 h-3 text-slate-500/40' />}
+                                {user.role !== 'admin' && <Settings2 className='w-3 h-3 text-stone-500/40' />}
                               </button>
                               {openRoleMenu === user._id && (
-                                <div className='absolute top-full left-1/2 -translate-x-1/2 mt-2 w-28 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden py-1'>
+                                <div className='absolute top-full left-1/2 -translate-x-1/2 mt-2 w-28 bg-white border border-stone-200 rounded-xl shadow-xl z-50 overflow-hidden py-1'>
                                   {['rider', 'driver'].filter(r => r !== user.role).map(role => (
                                     <button
                                       key={role}
                                       onClick={() => handleRoleChange(user._id, role)}
-                                      className='w-full text-left px-3 py-2 text-xs font-bold text-slate-500 hover:bg-slate-50 hover:text-teal-600 transition-colors capitalize'
+                                      className='w-full text-left px-3 py-2 text-xs font-bold text-stone-500 hover:bg-stone-50 hover:text-amber-600 transition-colors capitalize'
                                     >
                                       → {role}
                                     </button>
@@ -510,14 +510,14 @@ export default function UserManagement() {
                               </span>
                             )}
                           </td>
-                          <td className='px-5 py-4 text-xs text-slate-500 hidden md:table-cell'>
+                          <td className='px-5 py-4 text-xs text-stone-500 hidden md:table-cell'>
                             {new Date(user.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                           </td>
                           <td className='px-5 py-4 text-right'>
                             {user.role !== 'admin' && (
                               <button
                                 onClick={() => handleDeleteUser(user._id)}
-                                className='p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100'
+                                className='p-2 text-stone-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100'
                                 title='Delete user'
                               >
                                 <Trash2 className='w-4 h-4' />
@@ -530,9 +530,9 @@ export default function UserManagement() {
                   </table>
                 </div>
                 {totalUserPages > 1 && (
-                  <div className='flex items-center justify-between px-5 py-3.5 border-t border-slate-200 bg-slate-50/30'>
+                  <div className='flex items-center justify-between px-5 py-3.5 border-t border-stone-200 bg-stone-50/30'>
                     <button disabled={userPage === 1} onClick={() => setUserPage(p => p - 1)} className='btn-secondary px-4 py-1.5 text-sm disabled:opacity-40'>← Prev</button>
-                    <span className='text-sm text-slate-500 font-medium'>Page {userPage} / {totalUserPages}</span>
+                    <span className='text-sm text-stone-500 font-medium'>Page {userPage} / {totalUserPages}</span>
                     <button disabled={userPage === totalUserPages} onClick={() => setUserPage(p => p + 1)} className='btn-secondary px-4 py-1.5 text-sm disabled:opacity-40'>Next →</button>
                   </div>
                 )}
@@ -549,13 +549,13 @@ export default function UserManagement() {
           {/* Stat Cards */}
           <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
             {[
-              { label: 'Total', count: inviteStats.total, color: 'border-content-secondary/20', numColor: 'text-slate-800' },
+              { label: 'Total', count: inviteStats.total, color: 'border-content-secondary/20', numColor: 'text-stone-800' },
               { label: 'Pending', count: inviteStats.pending, color: 'border-amber-200 bg-amber-50/60', numColor: 'text-amber-600' },
               { label: 'Accepted', count: inviteStats.accepted, color: 'border-green-200 bg-green-50/60', numColor: 'text-green-600' },
               { label: 'Revoked', count: inviteStats.revoked, color: 'border-red-200 bg-red-50/60', numColor: 'text-red-500' },
             ].map(s => (
               <div key={s.label} className={`bg-white rounded-2xl border p-4 shadow-sm ${s.color}`}>
-                <div className='text-[10px] uppercase font-bold tracking-widest text-slate-500/60 mb-1'>{s.label}</div>
+                <div className='text-[10px] uppercase font-bold tracking-widest text-stone-500/60 mb-1'>{s.label}</div>
                 <div className={`text-3xl font-semibold font-bold ${s.numColor}`}>{s.count}</div>
               </div>
             ))}
@@ -570,8 +570,8 @@ export default function UserManagement() {
                   onClick={() => setInviteFilter(s)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                     inviteFilter === s
-                      ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
-                      : 'bg-white text-slate-500 border-slate-200 hover:border-teal-600/40 hover:text-teal-600'
+                      ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                      : 'bg-white text-stone-500 border-stone-200 hover:border-amber-600/40 hover:text-amber-600'
                   }`}
                 >
                   {s ? s.charAt(0).toUpperCase() + s.slice(1) : 'All'}
@@ -580,7 +580,7 @@ export default function UserManagement() {
             </div>
             <button
               onClick={() => setIsInviteModalOpen(true)}
-              className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-2 px-5 h-9 text-sm shrink-0'
+              className='bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-2 px-5 h-9 text-sm shrink-0'
             >
               <Plus className='w-4 h-4' />
               New Invite
@@ -588,13 +588,13 @@ export default function UserManagement() {
           </div>
 
           {/* Invitations Table */}
-          <div className='bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden'>
+          <div className='bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden'>
             {loadingInvites ? (
               <div className='flex items-center justify-center py-16'>
-                <Loader2 className='w-7 h-7 animate-spin text-teal-600' />
+                <Loader2 className='w-7 h-7 animate-spin text-amber-600' />
               </div>
             ) : invitations.length === 0 ? (
-              <div className='flex flex-col items-center justify-center py-16 text-slate-500'>
+              <div className='flex flex-col items-center justify-center py-16 text-stone-500'>
                 <Mail className='w-10 h-10 mb-3 opacity-30' />
                 <p className='font-medium'>No invitations yet</p>
                 <p className='text-sm opacity-60 mt-1'>Press "New Invite" to start onboarding users.</p>
@@ -603,35 +603,35 @@ export default function UserManagement() {
               <div className='overflow-x-auto'>
                 <table className='w-full'>
                   <thead>
-                    <tr className='border-b border-slate-200 bg-slate-50/60'>
-                      <th className='text-left px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>Recipient</th>
-                      <th className='text-center px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>Invited As</th>
-                      <th className='text-left px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>Status</th>
-                      <th className='text-left px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell'>Expires</th>
-                      <th className='text-right px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider'>Actions</th>
+                    <tr className='border-b border-stone-200 bg-stone-50/60'>
+                      <th className='text-left px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>Recipient</th>
+                      <th className='text-center px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>Invited As</th>
+                      <th className='text-left px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>Status</th>
+                      <th className='text-left px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider hidden md:table-cell'>Expires</th>
+                      <th className='text-right px-5 py-3.5 text-[11px] font-bold text-stone-500 uppercase tracking-wider'>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {invitations.map((inv, i) => (
                       <tr
                         key={inv._id}
-                        className={`group border-b border-slate-200/60 last:border-0 transition-colors ${
-                          inv.status === 'revoked' ? 'bg-red-50/30 opacity-70' : i % 2 === 0 ? 'hover:bg-slate-50/40' : 'bg-slate-50/20 hover:bg-slate-50/40'
+                        className={`group border-b border-stone-200/60 last:border-0 transition-colors ${
+                          inv.status === 'revoked' ? 'bg-red-50/30 opacity-70' : i % 2 === 0 ? 'hover:bg-stone-50/40' : 'bg-stone-50/20 hover:bg-stone-50/40'
                         }`}
                       >
                         <td className='px-5 py-4'>
                           <div className='flex items-center gap-3'>
-                            <div className='w-8 h-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0'>
-                              <Mail className='w-3.5 h-3.5 text-slate-500/50' />
+                            <div className='w-8 h-8 rounded-full bg-stone-50 border border-stone-200 flex items-center justify-center shrink-0'>
+                              <Mail className='w-3.5 h-3.5 text-stone-500/50' />
                             </div>
-                            <span className='text-sm font-semibold text-slate-800'>{inv.email}</span>
+                            <span className='text-sm font-semibold text-stone-800'>{inv.email}</span>
                           </div>
                         </td>
                         <td className='px-5 py-4 text-center'>
                           {roleBadge(inv.role || 'rider')}
                         </td>
                         <td className='px-5 py-4'>{statusBadge(inv.status)}</td>
-                        <td className='px-5 py-4 text-xs text-slate-500 hidden md:table-cell'>
+                        <td className='px-5 py-4 text-xs text-stone-500 hidden md:table-cell'>
                           {new Date(inv.expiresAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                         </td>
                         <td className='px-5 py-4 text-right'>
@@ -639,14 +639,14 @@ export default function UserManagement() {
                             <div className='flex justify-end gap-1'>
                               <button
                                 onClick={() => handleResendInvite(inv._id, inv.email)}
-                                className='p-2 text-slate-500 hover:text-teal-600 hover:bg-teal-600/5 rounded-lg transition-all'
+                                className='p-2 text-stone-500 hover:text-amber-600 hover:bg-amber-600/5 rounded-lg transition-all'
                                 title='Resend'
                               >
                                 {resendingId === inv._id ? <Loader2 className='w-3.5 h-3.5 animate-spin' /> : <RefreshCw className='w-3.5 h-3.5' />}
                               </button>
                               <button
                                 onClick={() => handleRevokeInvite(inv._id)}
-                                className='p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all'
+                                className='p-2 text-stone-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all'
                                 title='Revoke'
                               >
                                 {revokingId === inv._id ? <Loader2 className='w-3.5 h-3.5 animate-spin' /> : <XCircle className='w-3.5 h-3.5' />}
@@ -669,14 +669,14 @@ export default function UserManagement() {
         <div className='fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm'>
           <div className='bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden'>
             {/* Modal header */}
-            <div className='flex items-center justify-between px-6 py-5 border-b border-slate-200'>
+            <div className='flex items-center justify-between px-6 py-5 border-b border-stone-200'>
               <div>
-                <h3 className='text-lg font-bold text-slate-800'>Invite Users</h3>
-                <p className='text-xs text-slate-500 mt-0.5'>Send registration links to one or many users.</p>
+                <h3 className='text-lg font-bold text-stone-800'>Invite Users</h3>
+                <p className='text-xs text-stone-500 mt-0.5'>Send registration links to one or many users.</p>
               </div>
               <button
                 onClick={() => setIsInviteModalOpen(false)}
-                className='p-2 hover:bg-slate-50 rounded-xl transition-colors text-slate-500'
+                className='p-2 hover:bg-stone-50 rounded-xl transition-colors text-stone-500'
               >
                 <X className='w-5 h-5' />
               </button>
@@ -685,7 +685,7 @@ export default function UserManagement() {
             <form onSubmit={handleSendInvitation} className='p-6 space-y-5'>
               {/* Email textarea */}
               <div>
-                <label className='block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2'>
+                <label className='block text-xs font-bold text-stone-500 uppercase tracking-wider mb-2'>
                   Email Addresses
                 </label>
                 <div className='relative'>
@@ -697,7 +697,7 @@ export default function UserManagement() {
                     className='input min-h-[110px] pt-3 resize-none leading-relaxed text-sm'
                     autoFocus
                   />
-                  <div className='absolute bottom-2 right-3 text-[10px] text-slate-500/40 font-medium'>
+                  <div className='absolute bottom-2 right-3 text-[10px] text-stone-500/40 font-medium'>
                     comma or newline separated
                   </div>
                 </div>
@@ -705,7 +705,7 @@ export default function UserManagement() {
 
               {/* Role selector */}
               <div>
-                <label className='block text-xs font-bold text-slate-500 uppercase tracking-wider mb-3'>
+                <label className='block text-xs font-bold text-stone-500 uppercase tracking-wider mb-3'>
                   Invite As
                 </label>
                 <div className='grid grid-cols-2 gap-3'>
@@ -719,8 +719,8 @@ export default function UserManagement() {
                       onClick={() => setInviteRole(opt.value)}
                       className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 text-left transition-all ${
                         inviteRole === opt.value
-                          ? 'border-teal-600 bg-teal-600/5 text-teal-600'
-                          : 'border-slate-200 text-slate-500 hover:border-teal-600/40 hover:text-slate-800'
+                          ? 'border-amber-600 bg-amber-600/5 text-amber-600'
+                          : 'border-stone-200 text-stone-500 hover:border-amber-600/40 hover:text-stone-800'
                       }`}
                     >
                       <opt.icon className='w-6 h-6' />
@@ -737,7 +737,7 @@ export default function UserManagement() {
               <button
                 type='submit'
                 disabled={isSendingInvite || !inviteEmails.trim()}
-                className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full h-12 text-sm font-bold shadow-md shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                className='bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full h-12 text-sm font-bold shadow-md shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
               >
                 {isSendingInvite ? (
                   <><Loader2 className='w-4 h-4 animate-spin' /> Sending...</>
@@ -757,9 +757,9 @@ export default function UserManagement() {
               <div className='p-2 bg-amber-100 rounded-lg'>
                 <AlertCircle className='w-6 h-6 text-amber-600' />
               </div>
-              <h3 className='text-lg font-bold text-slate-800'>{confirmModal.title}</h3>
+              <h3 className='text-lg font-bold text-stone-800'>{confirmModal.title}</h3>
             </div>
-            <p className='text-sm text-slate-500 mb-6 leading-relaxed'>
+            <p className='text-sm text-stone-500 mb-6 leading-relaxed'>
               {confirmModal.message}
             </p>
             <div className='flex gap-3'>
@@ -774,7 +774,7 @@ export default function UserManagement() {
                   confirmModal.onConfirm();
                   closeConfirmModal();
                 }}
-                className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex-1 !bg-red-600 !hover:bg-red-700'
+                className='bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex-1 !bg-red-600 !hover:bg-red-700'
               >
                 {confirmModal.confirmLabel}
               </button>

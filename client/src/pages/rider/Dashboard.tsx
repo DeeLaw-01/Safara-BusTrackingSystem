@@ -50,7 +50,7 @@ function createBusIcon (label: string, isActive = false) {
       <div style="position:relative;width:48px;height:56px;">
         <div style="
           width:48px;height:48px;
-          background:${isActive ? '#0F766E' : '#0D9488'};
+          background:${isActive ? '#8B5E3C' : '#A0714E'};
           border-radius:14px;
           display:flex;align-items:center;justify-content:center;
           box-shadow:0 4px 16px rgba(15,118,110,0.25);
@@ -63,7 +63,7 @@ function createBusIcon (label: string, isActive = false) {
         <div style="
           position:absolute;top:-8px;right:-8px;
           width:24px;height:24px;
-          background:#F59E0B;border:2px solid white;
+          background:#C67D4A;border:2px solid white;
           border-radius:50%;display:flex;align-items:center;justify-content:center;
           font-size:11px;font-weight:700;color:white;
           box-shadow:0 2px 6px rgba(0,0,0,0.15);
@@ -80,7 +80,7 @@ const stopIcon = L.divIcon({
   html: `
     <div style="
       width:14px;height:14px;
-      background:#0F766E;
+      background:#8B5E3C;
       border-radius:50%;
       border:3px solid white;
       box-shadow:0 2px 6px rgba(15,118,110,0.3);
@@ -96,7 +96,7 @@ const userIcon = L.divIcon({
     <div style="position:relative;width:20px;height:20px;">
       <div style="
         width:20px;height:20px;
-        background:#0F766E;
+        background:#8B5E3C;
         border-radius:50%;
         border:3px solid white;
         box-shadow:0 2px 8px rgba(15,118,110,0.4);
@@ -337,8 +337,8 @@ export default function RiderDashboard () {
   // ─── Loading state ─────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className='flex items-center justify-center h-screen bg-slate-50'>
-        <Loader2 className='w-8 h-8 text-teal-600 animate-spin' />
+      <div className='flex items-center justify-center h-screen bg-stone-50'>
+        <Loader2 className='w-8 h-8 text-amber-600 animate-spin' />
       </div>
     )
   }
@@ -370,8 +370,8 @@ export default function RiderDashboard () {
             center={userLocation}
             radius={100}
             pathOptions={{
-              color: '#0F766E',
-              fillColor: '#0F766E',
+              color: '#8B5E3C',
+              fillColor: '#8B5E3C',
               fillOpacity: 0.1,
               weight: 1
             }}
@@ -390,7 +390,7 @@ export default function RiderDashboard () {
         (selectedRoute.path && selectedRoute.path.length > 1 ? (
           <Polyline
             positions={selectedRoute.path}
-            color='#0D9488'
+            color='#A0714E'
             weight={5}
             opacity={0.9}
           />
@@ -399,7 +399,7 @@ export default function RiderDashboard () {
             positions={selectedRoute.stops.map(
               s => [s.latitude, s.longitude] as [number, number]
             )}
-            color='#0D9488'
+            color='#A0714E'
             weight={5}
             opacity={0.9}
           />
@@ -415,10 +415,10 @@ export default function RiderDashboard () {
           >
             <Popup>
               <div className='text-sm'>
-                <div className='font-semibold text-slate-800'>
+                <div className='font-semibold text-stone-800'>
                   {stop.name}
                 </div>
-                <div className='text-slate-500'>
+                <div className='text-stone-500'>
                   Stop #{stop.sequence + 1}
                 </div>
               </div>
@@ -440,8 +440,8 @@ export default function RiderDashboard () {
             >
               <Popup>
                 <div className='text-sm'>
-                  <div className='font-bold text-slate-800'>{bus.name}</div>
-                  <div className='text-slate-500'>{getRouteName(bus)}</div>
+                  <div className='font-bold text-stone-800'>{bus.name}</div>
+                  <div className='text-stone-500'>{getRouteName(bus)}</div>
                 </div>
               </Popup>
             </Marker>
@@ -462,11 +462,11 @@ export default function RiderDashboard () {
             >
               <Popup>
                 <div className='text-sm'>
-                  <div className='font-bold text-slate-800'>
+                  <div className='font-bold text-stone-800'>
                     {selectedBus.name}
                   </div>
                   {live.speed && (
-                    <div className='text-slate-500'>
+                    <div className='text-stone-500'>
                       {Math.round(live.speed)} km/h
                     </div>
                   )}
@@ -513,7 +513,7 @@ export default function RiderDashboard () {
 
   return (
     <div
-      className={`h-screen flex flex-col bg-slate-50 relative overflow-hidden ${
+      className={`h-screen flex flex-col bg-stone-50 relative overflow-hidden ${
         sidebarOpen ? 'sidebar-open' : ''
       }`}
     >
@@ -526,29 +526,29 @@ export default function RiderDashboard () {
       />
 
       {/* ─── Header ─────────────────────────────────────────────────── */}
-      <header className='bg-white/90 backdrop-blur-xl border-b border-slate-200 px-4 lg:px-6 h-14 flex items-center gap-3 z-[120] shrink-0 relative shadow-sm'>
+      <header className='bg-white/90 backdrop-blur-xl border-b border-stone-200 px-4 lg:px-6 h-14 flex items-center gap-3 z-[120] shrink-0 relative shadow-sm'>
         {view !== 'select' ? (
           <button
             title='Back'
             onClick={handleBack}
-            className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
+            className='p-2 -ml-2 hover:bg-stone-100 rounded-xl transition-colors'
           >
-            <ArrowLeft className='w-5 h-5 text-slate-800' />
+            <ArrowLeft className='w-5 h-5 text-stone-800' />
           </button>
         ) : (
           <button
             title='Open Sidebar'
             onClick={() => setSidebarOpen(true)}
-            className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
+            className='p-2 -ml-2 hover:bg-stone-100 rounded-xl transition-colors'
           >
-            <Menu className='w-5 h-5 text-slate-800' />
+            <Menu className='w-5 h-5 text-stone-800' />
           </button>
         )}
         <div className='flex items-center gap-2 flex-1'>
-          <div className='p-1.5 bg-teal-600 rounded-xl'>
+          <div className='p-1.5 bg-amber-600 rounded-xl'>
             <Bus className='w-4 h-4 text-white' />
           </div>
-          <h1 className='text-lg font-semibold font-bold text-slate-800 tracking-tight'>
+          <h1 className='text-lg font-semibold font-bold text-stone-800 tracking-tight'>
             Safara
           </h1>
         </div>
@@ -565,7 +565,7 @@ export default function RiderDashboard () {
            ═══════════════════════════════════════════════════════════════ */}
       <div className='hidden lg:flex flex-1 min-h-0'>
         {/* Left Panel */}
-        <aside className='w-[400px] xl:w-[420px] shrink-0 bg-white border-r border-slate-200 flex flex-col overflow-hidden'>
+        <aside className='w-[400px] xl:w-[420px] shrink-0 bg-white border-r border-stone-200 flex flex-col overflow-hidden'>
           <div className='flex-1 overflow-y-auto p-5'>
             {panelContent}
           </div>
@@ -592,14 +592,14 @@ export default function RiderDashboard () {
 
         {/* ─── Bottom Sheet ───────────────────────────────────────── */}
         <div
-          className='flex-1 bg-white rounded-t-3xl -mt-4 relative z-10 shadow-lg flex flex-col overflow-hidden border-t border-slate-200'
+          className='flex-1 bg-white rounded-t-3xl -mt-4 relative z-10 shadow-lg flex flex-col overflow-hidden border-t border-stone-200'
         >
           {/* Drag handle */}
           <div
             className='flex justify-center pt-3 pb-2 cursor-pointer'
             onClick={() => setSheetExpanded(!sheetExpanded)}
           >
-            <div className='w-10 h-1 bg-slate-300 rounded-full' />
+            <div className='w-10 h-1 bg-stone-300 rounded-full' />
           </div>
 
           {/* Sheet content */}
@@ -640,7 +640,7 @@ function BusSelectView ({
   return (
     <div>
       {/* Greeting — gradient header */}
-      <div className='bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 rounded-2xl p-5 mb-5 relative overflow-hidden'>
+      <div className='bg-gradient-to-br from-stone-800 via-stone-700 to-stone-800 rounded-2xl p-5 mb-5 relative overflow-hidden'>
         <div className='absolute inset-0 opacity-[0.04]'
           style={{
             backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
@@ -649,9 +649,9 @@ function BusSelectView ({
         />
         <div className='absolute -top-6 -right-6 w-24 h-24 border border-white/5 rounded-full' />
         <div className='relative z-10'>
-          <p className='text-teal-400 text-xs font-medium'>{greeting}, {firstName} 👋</p>
+          <p className='text-amber-400 text-xs font-medium'>{greeting}, {firstName} 👋</p>
           <h2 className='text-lg font-bold text-white mt-1'>Choose a bus to track</h2>
-          <p className='text-xs text-slate-400 mt-1'>
+          <p className='text-xs text-stone-400 mt-1'>
             {liveBuses.length > 0
               ? `${liveBuses.length} bus${liveBuses.length > 1 ? 'es' : ''} live now across ${routes.length} routes`
               : 'No buses are currently active'}
@@ -661,11 +661,11 @@ function BusSelectView ({
 
       {liveBuses.length === 0 && inactiveBuses.length === 0 ? (
         <div className='text-center py-12'>
-          <div className='w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4'>
-            <Bus className='w-7 h-7 text-slate-300' />
+          <div className='w-14 h-14 bg-stone-50 rounded-2xl flex items-center justify-center mx-auto mb-4'>
+            <Bus className='w-7 h-7 text-stone-300' />
           </div>
-          <p className='text-slate-500 font-medium'>No buses configured</p>
-          <p className='text-slate-400 text-sm mt-1'>
+          <p className='text-stone-500 font-medium'>No buses configured</p>
+          <p className='text-stone-400 text-sm mt-1'>
             Contact your administrator to set up routes.
           </p>
         </div>
@@ -673,12 +673,12 @@ function BusSelectView ({
         <div className='space-y-3'>
           {/* Live buses */}
           {liveBuses.length === 0 ? (
-            <div className='text-center py-8 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50'>
+            <div className='text-center py-8 rounded-2xl border border-dashed border-stone-200 bg-stone-50/50'>
               <div className='w-12 h-12 bg-white rounded-xl flex items-center justify-center mx-auto mb-3 shadow-sm'>
-                <Bus className='w-6 h-6 text-slate-300' />
+                <Bus className='w-6 h-6 text-stone-300' />
               </div>
-              <p className='text-slate-500 font-medium text-sm'>No buses are active right now</p>
-              <p className='text-slate-400 text-xs mt-1'>Try again later or check the schedule.</p>
+              <p className='text-stone-500 font-medium text-sm'>No buses are active right now</p>
+              <p className='text-stone-400 text-xs mt-1'>Try again later or check the schedule.</p>
             </div>
           ) : liveBuses.map(bus => {
             const routeName = getRouteName(bus)
@@ -686,26 +686,26 @@ function BusSelectView ({
               <button
                 key={bus._id}
                 onClick={() => onSelectBus(bus)}
-                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50/50 to-teal-50/50 hover:from-teal-50 hover:to-emerald-50 hover:border-teal-300 transition-all duration-200 group shadow-sm'
+                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-orange-100 bg-gradient-to-r from-orange-50/50 to-amber-50/50 hover:from-amber-50 hover:to-orange-50 hover:border-amber-300 transition-all duration-200 group shadow-sm'
               >
-                <div className='w-12 h-10 bg-gradient-to-br from-teal-400 to-teal-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm'>
+                <div className='w-12 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm'>
                   <Bus className='w-5 h-5 text-white' />
                 </div>
                 <div className='flex-1 text-left min-w-0'>
-                  <div className='font-bold text-slate-800 group-hover:text-teal-600 transition-colors truncate'>
+                  <div className='font-bold text-stone-800 group-hover:text-amber-600 transition-colors truncate'>
                     {bus.name}
                   </div>
-                  <div className='text-xs text-emerald-600 font-semibold mt-0.5 flex items-center gap-1'>
-                    <span className='w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse inline-block' />
+                  <div className='text-xs text-orange-600 font-semibold mt-0.5 flex items-center gap-1'>
+                    <span className='w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse inline-block' />
                     Live on route
                   </div>
                 </div>
                 {routeName && (
-                  <span className='text-xs font-semibold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full shrink-0 border border-teal-100'>
+                  <span className='text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full shrink-0 border border-amber-100'>
                     {routeName}
                   </span>
                 )}
-                <ChevronRight className='w-4 h-4 text-slate-300 group-hover:text-teal-600 transition-colors shrink-0' />
+                <ChevronRight className='w-4 h-4 text-stone-300 group-hover:text-amber-600 transition-colors shrink-0' />
               </button>
             )
           })}
@@ -715,7 +715,7 @@ function BusSelectView ({
             <div>
               <button
                 onClick={() => setShowInactive(v => !v)}
-                className='w-full flex items-center justify-between px-1 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider hover:text-slate-500 transition-colors'
+                className='w-full flex items-center justify-between px-1 py-2 text-xs font-bold text-stone-400 uppercase tracking-wider hover:text-stone-500 transition-colors'
               >
                 <span>Offline buses ({inactiveBuses.length})</span>
                 <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showInactive ? 'rotate-90' : ''}`} />
@@ -727,17 +727,17 @@ function BusSelectView ({
                     return (
                       <div
                         key={bus._id}
-                        className='w-full flex items-center gap-3 p-3 rounded-xl border border-slate-200 opacity-50'
+                        className='w-full flex items-center gap-3 p-3 rounded-xl border border-stone-200 opacity-50'
                       >
-                        <div className='w-10 h-9 bg-slate-100 rounded-lg flex items-center justify-center shrink-0'>
-                          <Bus className='w-5 h-5 text-slate-400' />
+                        <div className='w-10 h-9 bg-stone-100 rounded-lg flex items-center justify-center shrink-0'>
+                          <Bus className='w-5 h-5 text-stone-400' />
                         </div>
                         <div className='flex-1 text-left min-w-0'>
-                          <div className='font-semibold text-slate-500 text-sm truncate'>{bus.name}</div>
-                          <div className='text-xs text-slate-400'>Not active</div>
+                          <div className='font-semibold text-stone-500 text-sm truncate'>{bus.name}</div>
+                          <div className='text-xs text-stone-400'>Not active</div>
                         </div>
                         {routeName && (
-                          <span className='text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full shrink-0'>
+                          <span className='text-[10px] font-semibold text-stone-400 bg-stone-100 px-2 py-0.5 rounded-full shrink-0'>
                             {routeName}
                           </span>
                         )}
@@ -772,11 +772,11 @@ function RoutePreviewView ({
     <div className='flex flex-col h-full'>
       {/* Route header */}
       <div className='mb-4'>
-        <div className='text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5'>Route Preview</div>
-        <h2 className='text-xl font-semibold font-bold text-slate-800'>
+        <div className='text-xs font-bold text-stone-400 uppercase tracking-wider mb-0.5'>Route Preview</div>
+        <h2 className='text-xl font-semibold font-bold text-stone-800'>
           {stops.length >= 2 ? `${stops[0].name} → ${stops[last].name}` : bus.name}
         </h2>
-        <p className='text-xs text-slate-500 mt-1'>{stops.length} stops · {bus.name}</p>
+        <p className='text-xs text-stone-500 mt-1'>{stops.length} stops · {bus.name}</p>
       </div>
 
       {/* Timeline */}
@@ -785,7 +785,7 @@ function RoutePreviewView ({
           {/* Connector line */}
           {stops.length > 1 && (
             <div
-              className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-teal-600/20'
+              className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-amber-600/20'
               style={{ zIndex: 0 }}
             />
           )}
@@ -799,19 +799,19 @@ function RoutePreviewView ({
               <div
                 className={`absolute left-[-17px] top-1 w-4 h-4 rounded-full border-2 z-10 ${
                   index === first
-                    ? 'bg-emerald-500 border-emerald-500 ring-4 ring-emerald-100'
+                    ? 'bg-orange-500 border-orange-500 ring-4 ring-orange-100'
                     : index === last
                     ? 'bg-accent border-accent ring-4 ring-accent-light'
-                    : 'bg-slate-200 border-slate-200'
+                    : 'bg-stone-200 border-stone-200'
                 }`}
               />
 
               {/* Stop info */}
               <div className='flex-1 min-w-0'>
                 <div className={`font-semibold ${
-                  index === first ? 'text-emerald-700' : index === last ? 'text-amber-700' : 'text-slate-800'
+                  index === first ? 'text-orange-700' : index === last ? 'text-amber-700' : 'text-stone-800'
                 }`}>{stop.name}</div>
-                <div className='text-xs text-slate-500 mt-0.5'>
+                <div className='text-xs text-stone-500 mt-0.5'>
                   {index === first ? 'Origin' : index === last ? 'Destination' : `Stop ${stop.sequence + 1}`}
                 </div>
               </div>
@@ -823,7 +823,7 @@ function RoutePreviewView ({
       {/* Track Live CTA */}
       <button
         onClick={onViewStops}
-        className='bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full mt-4 py-4 text-base rounded-2xl flex items-center justify-center gap-2'
+        className='bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors w-full mt-4 py-4 text-base rounded-2xl flex items-center justify-center gap-2'
       >
         <Bus className='w-5 h-5' />
         Track Live
@@ -958,34 +958,34 @@ function ActiveTrackingView ({
   return (
     <div className='flex flex-col h-full'>
       {/* Driver Info Card */}
-      <div className='flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-5'>
+      <div className='flex items-center gap-3 p-4 rounded-2xl bg-stone-50 border border-stone-200 mb-5'>
         <UserAvatar name={driver?.name || 'Driver'} size='md' />
         <div className='flex-1 min-w-0'>
-          <div className='font-bold text-slate-800 text-sm'>
+          <div className='font-bold text-stone-800 text-sm'>
             {driver?.name || 'Unknown Driver'}
           </div>
           {driver?.phone ? (
-            <a href={`tel:${driver.phone}`} className='text-xs text-teal-600 flex items-center gap-1 mt-0.5 hover:underline'>
+            <a href={`tel:${driver.phone}`} className='text-xs text-amber-600 flex items-center gap-1 mt-0.5 hover:underline'>
               <Phone className='w-3 h-3' />
               {driver.phone}
             </a>
           ) : (
-            <div className='text-xs text-slate-400 mt-0.5'>No contact info</div>
+            <div className='text-xs text-stone-400 mt-0.5'>No contact info</div>
           )}
         </div>
         <div className='text-right shrink-0'>
-          <div className='text-[10px] text-slate-400 font-bold uppercase tracking-wider'>ETA</div>
-          <div className='text-2xl font-bold text-teal-600 tabular-nums leading-none mt-0.5'>
+          <div className='text-[10px] text-stone-400 font-bold uppercase tracking-wider'>ETA</div>
+          <div className='text-2xl font-bold text-amber-600 tabular-nums leading-none mt-0.5'>
             {etaMinutes === 0 ? 'Now' : `${etaMinutes} min`}
           </div>
-          <div className='text-[10px] text-slate-500 mt-0.5'>{remainingStops} stop{remainingStops !== 1 ? 's' : ''} left</div>
+          <div className='text-[10px] text-stone-500 mt-0.5'>{remainingStops} stop{remainingStops !== 1 ? 's' : ''} left</div>
         </div>
       </div>
 
       {/* Route Timeline Header */}
       <div className='mb-3'>
-        <div className='text-xs font-bold text-slate-400 uppercase tracking-wider'>Live Route</div>
-        <h3 className='text-base font-semibold font-bold text-slate-800 mt-0.5'>
+        <div className='text-xs font-bold text-stone-400 uppercase tracking-wider'>Live Route</div>
+        <h3 className='text-base font-semibold font-bold text-stone-800 mt-0.5'>
           {stops.length >= 2 ? `${stops[0].name} → ${stops[stops.length - 1].name}` : bus.name}
         </h3>
       </div>
@@ -997,7 +997,7 @@ function ActiveTrackingView ({
             <>
               {/* Completed portion (teal) */}
               <div
-                className='absolute left-[11px] top-2 w-0.5 bg-teal-600'
+                className='absolute left-[11px] top-2 w-0.5 bg-amber-600'
                 style={{
                   height: `${
                     (currentStopIndex / Math.max(stops.length - 1, 1)) * 100
@@ -1007,7 +1007,7 @@ function ActiveTrackingView ({
               />
               {/* Remaining portion (gray) */}
               <div
-                className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-200'
+                className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-stone-200'
                 style={{ zIndex: 0 }}
               />
             </>
@@ -1028,10 +1028,10 @@ function ActiveTrackingView ({
                 <div
                   className={`absolute left-[-17px] top-1 w-4 h-4 rounded-full border-2 z-10 ${
                     isCurrent
-                      ? 'bg-white border-teal-600 ring-4 ring-teal-500/10'
+                      ? 'bg-white border-amber-600 ring-4 ring-amber-500/10'
                       : isPassed
-                      ? 'bg-teal-600 border-teal-600'
-                      : 'bg-slate-200 border-slate-200'
+                      ? 'bg-amber-600 border-amber-600'
+                      : 'bg-stone-200 border-stone-200'
                   }`}
                 />
 
@@ -1040,10 +1040,10 @@ function ActiveTrackingView ({
                   <div
                     className={`font-semibold ${
                       isCurrent
-                        ? 'text-slate-800 text-base'
+                        ? 'text-stone-800 text-base'
                         : isPassed
-                        ? 'text-slate-500'
-                        : 'text-slate-800/80'
+                        ? 'text-stone-500'
+                        : 'text-stone-800/80'
                     }`}
                   >
                     {stop.name}
@@ -1054,7 +1054,7 @@ function ActiveTrackingView ({
                     </div>
                   )}
                   {stop.estimatedArrivalTime && (
-                    <div className='text-xs text-slate-400 mt-0.5'>
+                    <div className='text-xs text-stone-400 mt-0.5'>
                       ETA: {stop.estimatedArrivalTime}
                     </div>
                   )}
@@ -1067,7 +1067,7 @@ function ActiveTrackingView ({
                       className={`p-1.5 rounded-lg transition-colors ${
                         hasReminder
                           ? 'bg-amber-50 text-amber-600 hover:bg-amber-200'
-                          : 'text-slate-200 hover:bg-slate-100 hover:text-slate-500'
+                          : 'text-stone-200 hover:bg-stone-100 hover:text-stone-500'
                       }`}
                       title={hasReminder ? 'Edit reminder' : 'Set reminder'}
                       onClick={() => {
@@ -1084,14 +1084,14 @@ function ActiveTrackingView ({
 
                     {/* Reminder popup */}
                     {reminderPopup === stop._id && (
-                      <div className='absolute right-0 left-auto top-10 z-30 bg-white rounded-xl shadow-lg border border-slate-200 p-3 w-56 max-w-[calc(100vw-2rem)]'>
-                        <div className='text-sm font-semibold text-slate-800 mb-2'>
+                      <div className='absolute right-0 left-auto top-10 z-30 bg-white rounded-xl shadow-lg border border-stone-200 p-3 w-56 max-w-[calc(100vw-2rem)]'>
+                        <div className='text-sm font-semibold text-stone-800 mb-2'>
                           Set Alert
                         </div>
-                        <p className='text-xs text-slate-500 mb-3'>
+                        <p className='text-xs text-stone-500 mb-3'>
                           Get notified when the bus is approaching this stop.
                         </p>
-                        <label className='block text-xs text-slate-500 mb-1'>
+                        <label className='block text-xs text-stone-500 mb-1'>
                           Minutes before arrival
                         </label>
                         <div className='flex gap-1 mb-3'>
@@ -1101,8 +1101,8 @@ function ActiveTrackingView ({
                               onClick={() => setReminderMinutes(m)}
                               className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                                 reminderMinutes === m
-                                  ? 'bg-teal-600 text-white'
-                                  : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
+                                  ? 'bg-amber-600 text-white'
+                                  : 'bg-stone-50 text-stone-500 hover:bg-stone-100'
                               }`}
                             >
                               {m} min
@@ -1115,7 +1115,7 @@ function ActiveTrackingView ({
                               handleSetReminder(stop._id, reminderMinutes)
                             }
                             disabled={savingReminder}
-                            className='flex-1 py-2 text-xs font-medium bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 transition-colors'
+                            className='flex-1 py-2 text-xs font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 transition-colors'
                           >
                             {savingReminder
                               ? 'Saving...'
@@ -1181,7 +1181,7 @@ function SidebarDrawer ({
         }`}
       >
         {/* Header / Profile area */}
-        <div className='bg-teal-600 px-5 pt-12 pb-6 relative'>
+        <div className='bg-amber-600 px-5 pt-12 pb-6 relative'>
           <button
             title='Close Sidebar'
             onClick={onClose}
@@ -1216,19 +1216,19 @@ function SidebarDrawer ({
                 navigate(path)
                 onClose()
               }}
-              className='w-full flex items-center gap-4 px-5 py-3.5 text-left hover:bg-slate-100 transition-colors group'
+              className='w-full flex items-center gap-4 px-5 py-3.5 text-left hover:bg-stone-100 transition-colors group'
             >
-              <Icon className='w-5 h-5 text-slate-400 group-hover:text-teal-600 transition-colors' />
-              <span className='flex-1 text-sm font-medium text-slate-800/80 group-hover:text-slate-800 transition-colors'>
+              <Icon className='w-5 h-5 text-stone-400 group-hover:text-amber-600 transition-colors' />
+              <span className='flex-1 text-sm font-medium text-stone-800/80 group-hover:text-stone-800 transition-colors'>
                 {label}
               </span>
-              <ChevronRight className='w-4 h-4 text-slate-200 group-hover:text-slate-500 transition-colors' />
+              <ChevronRight className='w-4 h-4 text-stone-200 group-hover:text-stone-500 transition-colors' />
             </button>
           ))}
         </nav>
 
         {/* Logout */}
-        <div className='border-t border-slate-200 p-4'>
+        <div className='border-t border-stone-200 p-4'>
           <button
             title='Logout'
             onClick={() => {
@@ -1244,7 +1244,7 @@ function SidebarDrawer ({
 
         {/* App version */}
         <div className='px-5 pb-4 text-center'>
-          <span className='text-xs text-slate-400 font-medium'>Safara v1.0.0</span>
+          <span className='text-xs text-stone-400 font-medium'>Safara v1.0.0</span>
         </div>
       </div>
     </>

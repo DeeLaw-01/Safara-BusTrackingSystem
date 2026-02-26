@@ -62,7 +62,7 @@ export default function Notifications () {
       disabled={disabled}
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out shrink-0 ${
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      } ${checked ? 'bg-teal-600' : 'bg-slate-200'}`}
+      } ${checked ? 'bg-amber-600' : 'bg-stone-200'}`}
     >
       <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out ${
         checked ? 'translate-x-[22px]' : 'translate-x-[3px]'
@@ -71,68 +71,68 @@ export default function Notifications () {
   )
 
   return (
-    <div className='min-h-screen bg-slate-50'>
+    <div className='min-h-screen bg-stone-50'>
       {/* Header */}
       <header className='page-header'>
         <button
           title='Back'
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-slate-100 rounded-xl transition-colors'
+          className='p-2 -ml-2 hover:bg-stone-100 rounded-xl transition-colors'
         >
-          <ArrowLeft className='w-5 h-5 text-slate-800' />
+          <ArrowLeft className='w-5 h-5 text-stone-800' />
         </button>
-        <h1 className='text-lg font-semibold font-bold text-slate-800'>Notifications</h1>
+        <h1 className='text-lg font-semibold font-bold text-stone-800'>Notifications</h1>
       </header>
 
       <div className='max-w-2xl mx-auto px-4 py-6'>
         <form onSubmit={handleSubmit} className='space-y-5'>
           {/* Push Notifications */}
-          <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
+          <div className='bg-white rounded-2xl border border-stone-200 shadow-sm p-5'>
             <div className='flex items-center gap-3 mb-4'>
-              <div className='info-stat-icon bg-teal-50'>
-                <Smartphone className='w-5 h-5 text-teal-600' />
+              <div className='info-stat-icon bg-amber-50'>
+                <Smartphone className='w-5 h-5 text-amber-600' />
               </div>
               <div>
-                <h3 className='text-base font-semibold text-slate-800'>
+                <h3 className='text-base font-semibold text-stone-800'>
                   Push Notifications
                 </h3>
-                <p className='text-sm text-slate-500'>
+                <p className='text-sm text-stone-500'>
                   Receive notifications on your device
                 </p>
               </div>
             </div>
 
             <div className='space-y-3'>
-              <div className='flex items-center justify-between p-3 bg-slate-50 rounded-xl'>
+              <div className='flex items-center justify-between p-3 bg-stone-50 rounded-xl'>
                 <div>
-                  <p className='text-sm font-medium text-slate-800'>
+                  <p className='text-sm font-medium text-stone-800'>
                     Enable Push Notifications
                   </p>
-                  <p className='text-xs text-slate-500'>
+                  <p className='text-xs text-stone-500'>
                     Receive real-time updates on your device
                   </p>
                 </div>
                 <Toggle checked={settings.pushNotifications} onChange={() => toggleSetting('pushNotifications')} />
               </div>
 
-              <div className='flex items-center justify-between p-3 bg-slate-50 rounded-xl'>
+              <div className='flex items-center justify-between p-3 bg-stone-50 rounded-xl'>
                 <div>
-                  <p className='text-sm font-medium text-slate-800'>
+                  <p className='text-sm font-medium text-stone-800'>
                     Bus Approaching
                   </p>
-                  <p className='text-xs text-slate-500'>
+                  <p className='text-xs text-stone-500'>
                     Get notified when your bus is nearby
                   </p>
                 </div>
                 <Toggle checked={settings.busApproaching} onChange={() => toggleSetting('busApproaching')} disabled={!settings.pushNotifications} />
               </div>
 
-              <div className='flex items-center justify-between p-3 bg-slate-50 rounded-xl'>
+              <div className='flex items-center justify-between p-3 bg-stone-50 rounded-xl'>
                 <div>
-                  <p className='text-sm font-medium text-slate-800'>
+                  <p className='text-sm font-medium text-stone-800'>
                     Route Updates
                   </p>
-                  <p className='text-xs text-slate-500'>
+                  <p className='text-xs text-stone-500'>
                     Notifications about route changes or delays
                   </p>
                 </div>
@@ -142,40 +142,40 @@ export default function Notifications () {
           </div>
 
           {/* Email Notifications */}
-          <div className='bg-white rounded-2xl border border-slate-200 shadow-sm p-5'>
+          <div className='bg-white rounded-2xl border border-stone-200 shadow-sm p-5'>
             <div className='flex items-center gap-3 mb-4'>
-              <div className='info-stat-icon bg-teal-50'>
-                <Mail className='w-5 h-5 text-teal-600' />
+              <div className='info-stat-icon bg-amber-50'>
+                <Mail className='w-5 h-5 text-amber-600' />
               </div>
               <div>
-                <h3 className='text-base font-semibold text-slate-800'>
+                <h3 className='text-base font-semibold text-stone-800'>
                   Email Notifications
                 </h3>
-                <p className='text-sm text-slate-500'>
+                <p className='text-sm text-stone-500'>
                   Receive updates via email
                 </p>
               </div>
             </div>
 
             <div className='space-y-3'>
-              <div className='flex items-center justify-between p-3 bg-slate-50 rounded-xl'>
+              <div className='flex items-center justify-between p-3 bg-stone-50 rounded-xl'>
                 <div>
-                  <p className='text-sm font-medium text-slate-800'>
+                  <p className='text-sm font-medium text-stone-800'>
                     Enable Email Notifications
                   </p>
-                  <p className='text-xs text-slate-500'>
+                  <p className='text-xs text-stone-500'>
                     Receive updates in your inbox
                   </p>
                 </div>
                 <Toggle checked={settings.emailNotifications} onChange={() => toggleSetting('emailNotifications')} />
               </div>
 
-              <div className='flex items-center justify-between p-3 bg-slate-50 rounded-xl'>
+              <div className='flex items-center justify-between p-3 bg-stone-50 rounded-xl'>
                 <div>
-                  <p className='text-sm font-medium text-slate-800'>
+                  <p className='text-sm font-medium text-stone-800'>
                     System Announcements
                   </p>
-                  <p className='text-xs text-slate-500'>
+                  <p className='text-xs text-stone-500'>
                     Important updates and announcements
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export default function Notifications () {
 
           {/* Success Message */}
           {success && (
-            <div className='flex items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700'>
+            <div className='flex items-center gap-2 p-4 bg-orange-50 border border-orange-200 rounded-xl text-orange-700'>
               <Check className='w-5 h-5' />
               <span className='text-sm font-medium'>
                 Notification preferences saved!

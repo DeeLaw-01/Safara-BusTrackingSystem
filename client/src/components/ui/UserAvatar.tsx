@@ -22,7 +22,7 @@ export default function UserAvatar({ name, avatar, size = 'md', className = '' }
 
   return (
     <div
-      className={`${wrapper} rounded-full bg-teal-600 flex items-center justify-center overflow-hidden shrink-0 shadow-sm ${className}`}
+      className={`${wrapper} rounded-full bg-amber-700 flex items-center justify-center overflow-hidden shrink-0 shadow-sm ${className}`}
     >
       {avatar ? (
         // referrerPolicy="no-referrer" is required for Google profile pictures —
