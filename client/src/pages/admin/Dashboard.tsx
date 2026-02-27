@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { adminApi } from '@/services/api'
 import type { DashboardStats, Trip, BusLocation } from '@/types'
-import 'leaflet/dist/leaflet.css';
+
 
 // Custom bus icon
 const busIcon = L.divIcon({
@@ -56,16 +56,16 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      <div className="">
+        <Loader2 className="" />
       </div>
     );
   }
 
   if (!stats) {
     return (
-      <div className="text-center py-12">
-        <p className="text-content-secondary">Failed to load dashboard</p>
+      <div className="">
+        <p className="">Failed to load dashboard</p>
       </div>
     );
   }
@@ -76,11 +76,11 @@ export default function AdminDashboard() {
     : [31.5204, 74.3587]; // Default to Lahore
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-display font-bold text-content-primary">Dashboard</h1>
+    <div className="">
+      <h1 className="">Dashboard</h1>
 
       {/* Stats Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="">
         <StatCard
           icon={Users}
           label="Total Users"
@@ -113,24 +113,24 @@ export default function AdminDashboard() {
       </div>
 
       {/* Live Map & Recent Trips */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="">
         {/* Live Map */}
-        <div className="card shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-content-primary flex items-center gap-2">
-              <Navigation className="w-5 h-5 text-primary" />
+        <div className="">
+          <div className="">
+            <h2 className="">
+              <Navigation className="" />
               Live Buses
             </h2>
-            <span className="text-sm text-content-secondary">
+            <span className="">
               {liveLocations.length} active
             </span>
           </div>
 
-          <div className="h-64 rounded-lg overflow-hidden">
+          <div className="">
             <MapContainer
               center={mapCenter}
               zoom={12}
-              className="h-full w-full"
+              className=""
               zoomControl={false}
             >
               <TileLayer
@@ -144,8 +144,8 @@ export default function AdminDashboard() {
                   icon={busIcon}
                 >
                   <Popup>
-                    <div className="text-sm">
-                      <div className="font-semibold">Bus {bus.busId.slice(-6)}</div>
+                    <div className="">
+                      <div className="">Bus {bus.busId.slice(-6)}</div>
                       {bus.speed && <div>{Math.round(bus.speed)} km/h</div>}
                     </div>
                   </Popup>
@@ -156,37 +156,37 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Trips */}
-        <div className="card shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-content-primary flex items-center gap-2">
-              <Clock className="w-5 h-5 text-primary" />
+        <div className="">
+          <div className="">
+            <h2 className="">
+              <Clock className="" />
               Recent Trips
             </h2>
-            <span className="text-sm text-content-secondary">
+            <span className="">
               {stats.trips.today} today
             </span>
           </div>
 
           {recentTrips.length === 0 ? (
-            <p className="text-slate-400 text-center py-8">No recent trips</p>
+            <p className="">No recent trips</p>
           ) : (
-            <div className="space-y-3">
+            <div className="">
               {recentTrips.map((trip) => (
                 <div
                   key={trip._id}
-                  className="flex items-center justify-between p-3 bg-app-bg/50 border border-ui-border rounded-lg"
+                  className=""
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="">
                     <div className={`w-2 h-2 rounded-full ${
                       trip.status === 'ongoing' ? 'bg-green-500' : 'bg-content-secondary'
                     }`} />
                     <div>
-                      <div className="text-sm font-medium text-content-primary">
+                      <div className="">
                         {typeof trip.routeId === 'object'
                           ? (trip.routeId as { name: string }).name
                           : 'Unknown Route'}
                       </div>
-                      <div className="text-xs text-content-secondary">
+                      <div className="">
                         {typeof trip.driverId === 'object'
                           ? (trip.driverId as { name: string }).name
                           : 'Unknown Driver'}
@@ -208,38 +208,38 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Links */}
-      <div className="grid sm:grid-cols-3 gap-4">
-        <Link to="/admin/users" className="card shadow-sm hover:border-primary/30 transition-all group">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                <Users className="w-5 h-5 text-primary" />
+      <div className="">
+        <Link to="/admin/users" className="">
+          <div className="">
+            <div className="">
+              <div className="">
+                <Users className="" />
               </div>
-              <span className="font-semibold text-content-primary">Manage Users</span>
+              <span className="">Manage Users</span>
             </div>
-            <ChevronRight className="w-5 h-5 text-content-secondary/40 group-hover:text-primary transition-colors" />
+            <ChevronRight className="" />
           </div>
         </Link>
-        <Link to="/admin/routes" className="card shadow-sm hover:border-primary/30 transition-all group">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                <RouteIcon className="w-5 h-5 text-primary" />
+        <Link to="/admin/routes" className="">
+          <div className="">
+            <div className="">
+              <div className="">
+                <RouteIcon className="" />
               </div>
-              <span className="font-semibold text-content-primary">Manage Routes</span>
+              <span className="">Manage Routes</span>
             </div>
-            <ChevronRight className="w-5 h-5 text-content-secondary/40 group-hover:text-primary transition-colors" />
+            <ChevronRight className="" />
           </div>
         </Link>
-        <Link to="/admin/buses" className="card shadow-sm hover:border-primary/30 transition-all group">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                <Bus className="w-5 h-5 text-primary" />
+        <Link to="/admin/buses" className="">
+          <div className="">
+            <div className="">
+              <div className="">
+                <Bus className="" />
               </div>
-              <span className="font-semibold text-content-primary">Manage Buses</span>
+              <span className="">Manage Buses</span>
             </div>
-            <ChevronRight className="w-5 h-5 text-content-secondary/40 group-hover:text-primary transition-colors" />
+            <ChevronRight className="" />
           </div>
         </Link>
       </div>
@@ -266,15 +266,15 @@ function StatCard({ icon: Icon, label, value, subValue, color, link }: StatCardP
 
   const content = (
     <div className={`card shadow-sm ${link ? 'hover:border-primary/30 transition-all' : ''}`}>
-      <div className="flex items-start justify-between mb-4">
+      <div className="">
         <div className={`p-2 rounded-lg ${colors[color]}`}>
-          <Icon className="w-5 h-5" />
+          <Icon className="" />
         </div>
-        {link && <ChevronRight className="w-5 h-5 text-content-secondary/40" />}
+        {link && <ChevronRight className="" />}
       </div>
-      <div className="text-3xl font-bold text-content-primary mb-1">{value}</div>
-      <div className="text-sm font-semibold text-content-secondary">{label}</div>
-      {subValue && <div className="text-xs text-content-secondary/70 mt-1">{subValue}</div>}
+      <div className="">{value}</div>
+      <div className="">{label}</div>
+      {subValue && <div className="">{subValue}</div>}
     </div>
   );
 
@@ -283,3 +283,4 @@ function StatCard({ icon: Icon, label, value, subValue, color, link }: StatCardP
   }
   return content;
 }
+

@@ -7,8 +7,8 @@ export default function AuthLayout () {
 
   if (isLoading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-app-splash'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white'></div>
+      <div className="">
+        <div className=""></div>
       </div>
     )
   }
@@ -21,21 +21,21 @@ export default function AuthLayout () {
   }
 
   return (
-    <div className='min-h-screen auth-bg-pattern flex flex-col bg-app-splash'>
+    <div className="">
       {/* Top Section with Logo */}
-      <div className='flex-shrink-0 pt-8 pb-4'>
-        <div className='flex justify-center animate-fade-in'>
+      <div className="">
+        <div className="">
           {/* White card for logo */}
-          <div className='bg-white rounded-2xl px-12 py-8 shadow-xl'>
+          <div className="">
             <Logo size='md' showText={true} />
           </div>
         </div>
       </div>
 
       {/* Bottom Section with Form */}
-      <div className='flex-1 flex flex-col mt-6'>
-        <div className='auth-card flex-1 animate-slide-up'>
-          <div className='px-8 py-10 max-w-md mx-auto w-full'>
+      <div className="">
+        <div className="">
+          <div className="">
             <Outlet />
           </div>
         </div>
@@ -43,3 +43,4 @@ export default function AuthLayout () {
     </div>
   )
 }
+

@@ -38,30 +38,30 @@ export default function Login () {
   }
 
   return (
-    <div className='space-y-6'>
+    <div className="">
       {/* Header */}
       <div>
-        <h2 className='text-2xl font-bold text-content-primary'>Login</h2>
+        <h2 className="">Login</h2>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div className='p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm'>
+        <div className="">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className='space-y-5'>
+      <form onSubmit={handleSubmit} className="">
         {/* Email Field */}
         <div>
-          <label className='block text-sm font-medium text-content-secondary mb-2'>
+          <label className="">
             Email
           </label>
           <input
             type='email'
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className='input-auth'
+            className=""
             placeholder='Enter your email'
             required
           />
@@ -69,27 +69,27 @@ export default function Login () {
 
         {/* Password Field */}
         <div>
-          <label className='block text-sm font-medium text-content-secondary mb-2'>
+          <label className="">
             Password
           </label>
-          <div className='relative'>
+          <div className="">
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className='input-auth pr-12'
+              className=""
               placeholder='Enter your password'
               required
             />
             <button
               type='button'
               onClick={() => setShowPassword(!showPassword)}
-              className='absolute right-4 top-1/2 -translate-y-1/2 text-content-secondary hover:text-content-primary transition-colors'
+              className=""
             >
               {showPassword ? (
-                <EyeOff className='w-5 h-5' />
+                <EyeOff className="" />
               ) : (
-                <Eye className='w-5 h-5' />
+                <Eye className="" />
               )}
             </button>
           </div>
@@ -99,10 +99,10 @@ export default function Login () {
         <button
           type='submit'
           disabled={isLoading}
-          className='btn-coral w-full'
+          className=""
         >
           {isLoading ? (
-            <Loader2 className='w-5 h-5 animate-spin' />
+            <Loader2 className="" />
           ) : (
             'Login'
           )}
@@ -110,21 +110,21 @@ export default function Login () {
       </form>
 
       {/* Forgot Password Link */}
-      <div className='text-center'>
+      <div className="">
         <Link 
           to='/forgot-password'
-          className='text-primary hover:text-primary-hover font-medium text-sm transition-colors'
+          className=""
         >
           Forgot Password?
         </Link>
       </div>
 
       {/* Sign Up Link */}
-      <p className='text-center text-content-secondary text-sm'>
+      <p className="">
         Don't have an account?{' '}
         <Link
           to='/register'
-          className='text-primary hover:text-primary-hover font-semibold transition-colors'
+          className=""
         >
           Sign up
         </Link>
@@ -132,3 +132,4 @@ export default function Login () {
     </div>
   )
 }
+

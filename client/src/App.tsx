@@ -48,8 +48,8 @@ function ProtectedRoute ({
 
   if (isLoading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-white'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary'></div>
+      <div className="">
+        <div className=""></div>
       </div>
     )
   }
@@ -67,16 +67,16 @@ function ProtectedRoute ({
   // Check if driver is approved
   if (user?.role === 'driver' && !user.isApproved) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-slate-950'>
-        <div className='card max-w-md text-center'>
-          <h2 className='text-2xl font-bold mb-4'>Account Pending Approval</h2>
-          <p className='text-content-secondary mb-6'>
+      <div className="">
+        <div className="">
+          <h2 className="">Account Pending Approval</h2>
+          <p className="">
             Your driver account is pending admin approval. Please wait for
             verification.
           </p>
           <button
             onClick={() => useAuthStore.getState().logout()}
-            className='btn-secondary'
+            className=""
           >
             Logout
           </button>
@@ -196,3 +196,4 @@ function HomeDispatcher () {
 
   return <RiderDashboard />
 }
+

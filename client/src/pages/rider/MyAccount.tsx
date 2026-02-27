@@ -8,33 +8,33 @@ export default function MyAccount () {
   const { user } = useAuthStore()
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className="">
       {/* Header */}
-      <header className='bg-white border-b border-ui-border px-4 h-14 flex items-center gap-3 sticky top-0 z-50'>
+      <header className="">
         <button
           title='Back'
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+          className=""
         >
-          <ArrowLeft className='w-5 h-5 text-content-primary' />
+          <ArrowLeft className="" />
         </button>
-        <h1 className='text-lg font-bold text-content-primary'>My Account</h1>
+        <h1 className="">My Account</h1>
       </header>
 
-      <div className='max-w-2xl mx-auto px-4 py-6'>
+      <div className="">
         {/* Profile Card */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 mb-6 shadow-sm'>
-          <div className='flex items-center gap-4 mb-6'>
+        <div className="">
+          <div className="">
             <UserAvatar
               name={user?.name}
               avatar={user?.avatar}
               size='xl'
-              className='ring-4 ring-primary/10'
+              className=""
             />
             <div>
-              <h2 className='text-xl font-bold text-content-primary'>{user?.name}</h2>
-              <p className='text-sm text-content-secondary'>{user?.email}</p>
-              <span className='inline-block mt-2 text-xs font-medium text-white bg-primary px-2.5 py-0.5 rounded-full capitalize'>
+              <h2 className="">{user?.name}</h2>
+              <p className="">{user?.email}</p>
+              <span className="">
                 {user?.role}
               </span>
             </div>
@@ -43,60 +43,60 @@ export default function MyAccount () {
           <button
             title='Edit Profile'
             onClick={() => navigate('/settings')}
-            className='w-full btn btn-coral'
+            className=""
           >
             Edit Profile
           </button>
         </div>
 
         {/* Account Details */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 mb-6 shadow-sm'>
-          <h3 className='text-lg font-semibold text-content-primary mb-4'>
+        <div className="">
+          <h3 className="">
             Account Details
           </h3>
 
-          <div className='space-y-4'>
-            <div className='flex items-center gap-4 p-3 bg-app-bg rounded-lg border border-ui-border/50'>
-              <Mail className='w-5 h-5 text-content-secondary/60' />
-              <div className='flex-1'>
-                <p className='text-xs text-content-secondary mb-0.5'>Email</p>
-                <p className='text-sm font-medium text-content-primary'>
+          <div className="">
+            <div className="">
+              <Mail className="" />
+              <div className="">
+                <p className="">Email</p>
+                <p className="">
                   {user?.email}
                 </p>
               </div>
             </div>
 
             {user?.phone && (
-              <div className='flex items-center gap-4 p-3 bg-app-bg rounded-lg border border-ui-border/50'>
-                <Phone className='w-5 h-5 text-content-secondary/60' />
-                <div className='flex-1'>
-                  <p className='text-xs text-content-secondary mb-0.5'>Phone</p>
-                  <p className='text-sm font-medium text-content-primary'>
+              <div className="">
+                <Phone className="" />
+                <div className="">
+                  <p className="">Phone</p>
+                  <p className="">
                     {user.phone}
                   </p>
                 </div>
               </div>
             )}
 
-            <div className='flex items-center gap-4 p-3 bg-app-bg rounded-lg border border-ui-border/50'>
-              <Shield className='w-5 h-5 text-content-secondary/60' />
-              <div className='flex-1'>
-                <p className='text-xs text-content-secondary mb-0.5'>Account Status</p>
-                <p className='text-sm font-medium text-content-primary'>
+            <div className="">
+              <Shield className="" />
+              <div className="">
+                <p className="">Account Status</p>
+                <p className="">
                   {user?.isEmailVerified ? (
-                    <span className='text-green-600'>Verified</span>
+                    <span className="">Verified</span>
                   ) : (
-                    <span className='text-amber-600 font-semibold'>Unverified</span>
+                    <span className="">Unverified</span>
                   )}
                 </p>
               </div>
             </div>
 
-            <div className='flex items-center gap-4 p-3 bg-app-bg rounded-lg border border-ui-border/50'>
-              <Calendar className='w-5 h-5 text-content-secondary/60' />
-              <div className='flex-1'>
-                <p className='text-xs text-content-secondary mb-0.5'>Member Since</p>
-                <p className='text-sm font-medium text-content-primary'>
+            <div className="">
+              <Calendar className="" />
+              <div className="">
+                <p className="">Member Since</p>
+                <p className="">
                   {user?.createdAt
                     ? new Date(user.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -111,19 +111,19 @@ export default function MyAccount () {
         </div>
 
         {/* Quick Actions */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 shadow-sm'>
-          <h3 className='text-lg font-semibold text-content-primary mb-4'>
+        <div className="">
+          <h3 className="">
             Quick Actions
           </h3>
 
-          <div className='space-y-2'>
+          <div className="">
             <button
               title='Settings'
               onClick={() => navigate('/settings')}
-              className='w-full text-left p-3 rounded-lg hover:bg-app-bg transition-colors'
+              className=""
             >
-              <p className='text-sm font-medium text-content-primary'>Settings</p>
-              <p className='text-xs text-content-secondary'>
+              <p className="">Settings</p>
+              <p className="">
                 Manage your account settings
               </p>
             </button>
@@ -131,10 +131,10 @@ export default function MyAccount () {
             <button
               title='Notifications'
               onClick={() => navigate('/notifications')}
-              className='w-full text-left p-3 rounded-lg hover:bg-app-bg transition-colors'
+              className=""
             >
-              <p className='text-sm font-medium text-content-primary'>Notifications</p>
-              <p className='text-xs text-content-secondary'>
+              <p className="">Notifications</p>
+              <p className="">
                 Configure notification preferences
               </p>
             </button>
@@ -144,3 +144,4 @@ export default function MyAccount () {
     </div>
   )
 }
+

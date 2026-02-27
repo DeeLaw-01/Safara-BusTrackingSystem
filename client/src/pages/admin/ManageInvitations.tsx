@@ -125,11 +125,11 @@ export default function ManageInvitations () {
   const statusIcon = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Clock className='w-4 h-4 text-amber-600' />
+        return <Clock className="" />
       case 'accepted':
-        return <CheckCircle className='w-4 h-4 text-green-600' />
+        return <CheckCircle className="" />
       case 'revoked':
-        return <XCircle className='w-4 h-4 text-red-600' />
+        return <XCircle className="" />
       default:
         return null
     }
@@ -154,58 +154,58 @@ export default function ManageInvitations () {
   const isExpired = (expiresAt: string) => new Date(expiresAt) < new Date()
 
   return (
-    <div className='space-y-6'>
+    <div className="">
       <div>
-        <h1 className='text-2xl font-display font-bold text-content-primary'>
+        <h1 className="">
           Manage Invitations
         </h1>
-        <p className='text-content-secondary text-sm mt-1'>
+        <p className="">
           Send invitation links to allow new users to register
         </p>
       </div>
 
       {/* Toast Notifications */}
       {success && (
-        <div className='fixed top-20 right-4 z-50 animate-in slide-in-from-right'>
-          <div className='bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3 shadow-lg min-w-[300px]'>
-            <CheckCircle className='w-5 h-5 text-green-600 flex-shrink-0' />
-            <p className='text-green-800 text-sm flex-1 font-medium'>{success}</p>
+        <div className="">
+          <div className="">
+            <CheckCircle className="" />
+            <p className="">{success}</p>
             <button
               onClick={() => setSuccess('')}
-              className='text-green-600 hover:text-green-800 transition-colors'
+              className=""
             >
-              <X className='w-4 h-4' />
+              <X className="" />
             </button>
           </div>
         </div>
       )}
 
       {error && (
-        <div className='fixed top-20 right-4 z-50 animate-in slide-in-from-right'>
-          <div className='bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3 shadow-lg min-w-[300px]'>
-            <XCircle className='w-5 h-5 text-red-600 flex-shrink-0' />
-            <p className='text-red-800 text-sm flex-1 font-medium'>{error}</p>
+        <div className="">
+          <div className="">
+            <XCircle className="" />
+            <p className="">{error}</p>
             <button
               onClick={() => setError('')}
-              className='text-red-600 hover:text-red-800 transition-colors'
+              className=""
             >
-              <X className='w-4 h-4' />
+              <X className="" />
             </button>
           </div>
         </div>
       )}
 
       {/* Send Invitation Form */}
-      <div className='card shadow-sm'>
-        <h2 className='text-lg font-semibold text-content-primary mb-4'>Invite a User</h2>
+      <div className="">
+        <h2 className="">Invite a User</h2>
 
-        <form onSubmit={handleSendInvitation} className='flex gap-3 items-end'>
-          <div className='flex-1'>
-            <label className='block text-sm font-semibold text-content-primary mb-1.5'>
+        <form onSubmit={handleSendInvitation} className="">
+          <div className="">
+            <label className="">
               Email Address
             </label>
-            <div className='relative'>
-              <Mail className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-content-secondary/60' />
+            <div className="">
+              <Mail className="" />
               <input
                 type='email'
                 value={email}
@@ -215,7 +215,7 @@ export default function ManageInvitations () {
                   setSuccess('')
                 }}
                 placeholder='user@example.com'
-                className='input pl-10 h-[46px]'
+                className=""
                 required
               />
             </div>
@@ -223,12 +223,12 @@ export default function ManageInvitations () {
           <button
             type='submit'
             disabled={isSending || !email.trim()}
-            className='btn-coral flex items-center justify-center gap-2 px-6 h-[46px]'
+            className=""
           >
             {isSending ? (
-              <Loader2 className='w-4 h-4 animate-spin' />
+              <Loader2 className="" />
             ) : (
-              <Send className='w-4 h-4' />
+              <Send className="" />
             )}
             Send Invite
           </button>
@@ -236,7 +236,7 @@ export default function ManageInvitations () {
       </div>
 
       {/* Filter Tabs */}
-      <div className='flex gap-2 flex-wrap'>
+      <div className="">
         {['', 'pending', 'accepted', 'revoked'].map(status => (
           <button
             key={status}
@@ -254,89 +254,87 @@ export default function ManageInvitations () {
       </div>
 
       {/* Invitations Table */}
-      <div className='card overflow-hidden p-0 shadow-sm'>
+      <div className="">
         {isLoading ? (
-          <div className='flex items-center justify-center py-12'>
-            <Loader2 className='w-6 h-6 animate-spin text-primary' />
+          <div className="">
+            <Loader2 className="" />
           </div>
         ) : invitations.length === 0 ? (
-          <div className='text-center py-12 text-content-secondary'>
-            <Mail className='w-10 h-10 mx-auto mb-3 text-ui-border' />
-            <p className='text-sm'>No invitations found</p>
+          <div className="">
+            <Mail className="" />
+            <p className="">No invitations found</p>
           </div>
         ) : (
-          <div className='overflow-x-auto'>
-            <table className='w-full'>
+          <div className="">
+            <table className="">
               <thead>
-                <tr className='border-b border-ui-border bg-app-bg/50'>
-                  <th className='text-left text-xs font-bold text-content-secondary uppercase tracking-wider px-6 py-4'>
+                <tr className="">
+                  <th className="">
                     Email
                   </th>
-                  <th className='text-left text-xs font-bold text-content-secondary uppercase tracking-wider px-6 py-4'>
+                  <th className="">
                     Status
                   </th>
-                  <th className='text-left text-xs font-bold text-content-secondary uppercase tracking-wider px-6 py-4'>
+                  <th className="">
                     Invited By
                   </th>
-                  <th className='text-left text-xs font-bold text-content-secondary uppercase tracking-wider px-6 py-4'>
+                  <th className="">
                     Sent
                   </th>
-                  <th className='text-left text-xs font-bold text-content-secondary uppercase tracking-wider px-6 py-4'>
+                  <th className="">
                     Expires
                   </th>
-                  <th className='text-right text-xs font-bold text-content-secondary uppercase tracking-wider px-6 py-4'>
+                  <th className="">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className='divide-y divide-ui-border'>
+              <tbody className="">
                 {invitations.map(inv => (
-                  <tr key={inv._id} className='hover:bg-app-bg/50 transition-colors'>
-                    <td className='px-6 py-4 text-sm font-semibold text-content-primary'>
+                  <tr key={inv._id} className="">
+                    <td className="">
                       {inv.email}
                     </td>
-                    <td className='px-6 py-4'>
+                    <td className="">
                       {statusBadge(inv.status)}
                       {inv.status === 'pending' && isExpired(inv.expiresAt) && (
-                        <span className='ml-2 text-xs text-primary font-bold'>(expired)</span>
+                        <span className="">(expired)</span>
                       )}
                     </td>
-                    <td className='px-6 py-4 text-sm text-content-secondary'>
+                    <td className="">
                       {inv.invitedBy?.name || 'N/A'}
                     </td>
-                    <td className='px-6 py-4 text-sm text-content-secondary'>
+                    <td className="">
                       {new Date(inv.createdAt).toLocaleDateString()}
                     </td>
-                    <td className='px-6 py-4 text-sm text-content-secondary'>
+                    <td className="">
                       {new Date(inv.expiresAt).toLocaleDateString()}
                     </td>
-                    <td className='px-6 py-4 text-right'>
+                    <td className="">
                       {inv.status === 'pending' && (
-                        <div className='flex items-center justify-end gap-2'>
+                        <div className="">
                           <button
                             onClick={() => handleResend(inv._id, inv.email)}
                             disabled={resendingId === inv._id || revokingId === inv._id}
-                            className='p-2 rounded-lg text-content-secondary hover:text-primary hover:bg-primary/10 
-                                       transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                            className=""
                             title='Resend invitation'
                           >
                             {resendingId === inv._id ? (
-                              <Loader2 className='w-4 h-4 animate-spin' />
+                              <Loader2 className="" />
                             ) : (
-                              <RefreshCw className='w-4 h-4' />
+                              <RefreshCw className="" />
                             )}
                           </button>
                           <button
                             onClick={() => handleRevoke(inv._id)}
                             disabled={resendingId === inv._id || revokingId === inv._id}
-                            className='p-2 rounded-lg text-content-secondary hover:text-red-500 hover:bg-red-50
-                                       transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                            className=""
                             title='Revoke invitation'
                           >
                             {revokingId === inv._id ? (
-                              <Loader2 className='w-4 h-4 animate-spin' />
+                              <Loader2 className="" />
                             ) : (
-                              <Trash2 className='w-4 h-4' />
+                              <Trash2 className="" />
                             )}
                           </button>
                         </div>
@@ -352,3 +350,4 @@ export default function ManageInvitations () {
     </div>
   )
 }
+

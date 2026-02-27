@@ -52,89 +52,89 @@ export default function ManageBuses() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      <div className="">
+        <Loader2 className="" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-display font-bold text-content-primary">Manage Buses</h1>
+    <div className="">
+      <div className="">
+        <h1 className="">Manage Buses</h1>
         <button
           onClick={() => {
             setEditingBus(null);
             setShowModal(true);
           }}
-          className="btn-coral flex items-center gap-2"
+          className=""
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="" />
           Add Bus
         </button>
       </div>
 
       {/* Buses Grid */}
       {buses.length === 0 ? (
-        <div className="card shadow-sm text-center py-12">
-          <Bus className="w-12 h-12 text-content-secondary/30 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-content-primary mb-2">No Buses Yet</h3>
-          <p className="text-content-secondary mb-6">Add your first bus to get started</p>
+        <div className="">
+          <Bus className="" />
+          <h3 className="">No Buses Yet</h3>
+          <p className="">Add your first bus to get started</p>
           <button
             onClick={() => setShowModal(true)}
-            className="btn-coral"
+            className=""
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="" />
             Add Bus
           </button>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="">
           {buses.map((bus) => {
             const route = typeof bus.routeId === 'object' ? bus.routeId as Route : null;
             const driver = typeof bus.driverId === 'object' ? bus.driverId as UserType : null;
 
             return (
-              <div key={bus._id} className="card shadow-sm">
-                <div className="flex items-start justify-between mb-4">
+              <div key={bus._id} className="">
+                <div className="">
                   <div className={`p-2 rounded-lg ${bus.isActive ? 'bg-green-50' : 'bg-app-bg'}`}>
                     <Bus className={`w-5 h-5 ${bus.isActive ? 'text-green-600' : 'text-content-secondary'}`} />
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="">
                     <button
                       onClick={() => {
                         setEditingBus(bus);
                         setShowModal(true);
                       }}
-                      className="p-2 text-content-secondary hover:text-content-primary hover:bg-app-bg rounded-lg transition-colors"
+                      className=""
                     >
-                      <Edit className="w-4 h-4" />
+                      <Edit className="" />
                     </button>
                     <button
                       onClick={() => handleDeleteBus(bus._id)}
-                      className="p-2 text-content-secondary hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className=""
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="" />
                     </button>
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-content-primary mb-1">{bus.name}</h3>
-                <p className="text-sm text-content-secondary mb-4">{bus.plateNumber}</p>
+                <h3 className="">{bus.name}</h3>
+                <p className="">{bus.plateNumber}</p>
 
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-content-secondary">
-                    <RouteIcon className="w-4 h-4 opacity-70" />
-                    <span className="font-medium">{route?.name || 'No route assigned'}</span>
+                <div className="">
+                  <div className="">
+                    <RouteIcon className="" />
+                    <span className="">{route?.name || 'No route assigned'}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-content-secondary">
-                    <User className="w-4 h-4 opacity-70" />
-                    <span className="font-medium">{driver?.name || 'No driver assigned'}</span>
+                  <div className="">
+                    <User className="" />
+                    <span className="">{driver?.name || 'No driver assigned'}</span>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-ui-border flex items-center justify-between text-sm">
-                  <span className="text-content-secondary/60 font-medium">Capacity: {bus.capacity}</span>
+                <div className="">
+                  <span className="">Capacity: {bus.capacity}</span>
                   <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                     bus.isActive
                       ? 'bg-green-50 text-green-600 border border-green-100'
@@ -238,40 +238,40 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="card max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-        <h2 className="text-xl font-display font-bold text-content-primary mb-6">
+    <div className="">
+      <div className="">
+        <h2 className="">
           {bus ? 'Edit Bus' : 'Add Bus'}
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="">
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="">
               Bus Name
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="input"
+              className=""
               placeholder="e.g., Bus 01"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="">
               Plate Number
             </label>
             <input
               type="text"
               value={plateNumber}
               onChange={(e) => setPlateNumber(e.target.value)}
-              className="input"
+              className=""
               placeholder="e.g., LEA-1234"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="">
               Capacity
             </label>
             <input
@@ -279,18 +279,18 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
               min="1"
               value={capacity}
               onChange={(e) => setCapacity(e.target.value)}
-              className="input"
+              className=""
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="">
               Assigned Route
             </label>
             <select
               value={routeId}
               onChange={(e) => setRouteId(e.target.value)}
-              className="input"
+              className=""
             >
               <option value="">No route assigned</option>
               {routes.map((route) => (
@@ -301,13 +301,13 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
             </select>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-content-primary mb-2">
+            <label className="">
               Assigned Driver
             </label>
             <select
               value={driverId}
               onChange={(e) => setDriverId(e.target.value)}
-              className="input"
+              className=""
             >
               <option value="">No driver assigned</option>
               {availableDrivers.map((driver) => (
@@ -319,23 +319,23 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
           </div>
           {bus && (
             <div>
-              <label className="flex items-center gap-3 cursor-pointer group">
+              <label className="">
                 <input
                   type="checkbox"
                   checked={isActive}
                   onChange={(e) => setIsActive(e.target.checked)}
-                  className="w-4 h-4 rounded border-ui-border text-primary focus:ring-primary"
+                  className=""
                 />
-                <span className="text-content-secondary group-hover:text-content-primary font-medium transition-colors">Bus is active</span>
+                <span className="">Bus is active</span>
               </label>
             </div>
           )}
-          <div className="flex gap-3 pt-4">
-            <button type="button" onClick={onClose} className="btn-secondary h-[46px] flex-1">
+          <div className="">
+            <button type="button" onClick={onClose} className="">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="btn-coral h-[46px] flex-1">
-              {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save'}
+            <button type="submit" disabled={saving} className="">
+              {saving ? <Loader2 className="" /> : 'Save'}
             </button>
           </div>
         </form>
@@ -343,3 +343,4 @@ function BusModal({ bus, routes, drivers, assignedDriverIds, onClose, onSuccess 
     </div>
   );
 }
+

@@ -41,3 +41,4 @@ export default function UserAvatar({ name, avatar, size = 'md', className = '' }
     </div>
   );
 }
+

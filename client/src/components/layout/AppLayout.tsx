@@ -13,43 +13,43 @@ export default function AppLayout () {
   ]
 
   return (
-    <div className='min-h-screen bg-app-bg flex flex-col'>
+    <div className="">
       {/* Header */}
-      <header className='bg-white/80 backdrop-blur-md border-b border-ui-border sticky top-0 z-50'>
-        <div className='max-w-7xl mx-auto px-4 h-16 flex items-center justify-between'>
-          <Link to='/driver' className='flex items-center gap-2'>
-            <div className='p-2 bg-primary rounded-lg'>
-              <Bus className='w-5 h-5 text-white' />
+      <header className="">
+        <div className="">
+          <Link to='/driver' className="">
+            <div className="">
+              <Bus className="" />
             </div>
-            <span className='text-xl font-display font-bold text-content-primary'>
+            <span className="">
               BusTrack
             </span>
           </Link>
 
-          <div className='flex items-center gap-4'>
-            <div className='hidden sm:flex items-center gap-2 text-sm'>
+          <div className="">
+            <div className="">
               <UserAvatar name={user?.name} size='sm' />
-              <span className='text-content-secondary font-medium'>{user?.name}</span>
+              <span className="">{user?.name}</span>
             </div>
             <button
               onClick={logout}
-              className='p-2 text-content-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-colors'
+              className=""
               title='Logout'
             >
-              <LogOut className='w-5 h-5' />
+              <LogOut className="" />
             </button>
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className='flex-1 pb-20 lg:pb-0'>
+      <main className="">
         <Outlet />
       </main>
 
       {/* Bottom Navigation (Mobile) */}
-      <nav className='lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-ui-border z-50'>
-        <div className='flex justify-around py-2'>
+      <nav className="">
+        <div className="">
           {navItems.map(({ to, icon: Icon, label }) => {
             const isActive = location.pathname === to
             return (
@@ -62,20 +62,21 @@ export default function AppLayout () {
                     : 'text-content-secondary hover:text-primary'
                 }`}
               >
-                <Icon className='w-6 h-6' />
-                <span className='text-xs font-medium'>{label}</span>
+                <Icon className="" />
+                <span className="">{label}</span>
               </Link>
             )
           })}
           <button
             onClick={logout}
-            className='flex flex-col items-center gap-1 px-4 py-2 text-content-secondary hover:text-primary transition-colors'
+            className=""
           >
-            <LogOut className='w-6 h-6' />
-            <span className='text-xs font-medium'>Logout</span>
+            <LogOut className="" />
+            <span className="">Logout</span>
           </button>
         </div>
       </nav>
     </div>
   )
 }
+

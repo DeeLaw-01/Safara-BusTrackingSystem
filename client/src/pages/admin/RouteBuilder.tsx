@@ -126,14 +126,14 @@ function DraggableStopMarker ({
       eventHandlers={eventHandlers}
     >
       <Popup>
-        <div className='text-sm'>
-          <div className='font-semibold text-content-primary'>{stop.name}</div>
-          <div className='text-content-secondary text-xs mt-1'>
+        <div className="">
+          <div className="">{stop.name}</div>
+          <div className="">
             Stop #{index + 1}
             {draggable && ' • Drag to reposition'}
           </div>
           {stop.estimatedArrivalTime && (
-            <div className='text-xs text-content-secondary'>
+            <div className="">
               ETA: {stop.estimatedArrivalTime}
             </div>
           )}
@@ -218,10 +218,10 @@ function SortableStop ({
         <button
           {...attributes}
           {...listeners}
-          className='mt-1 p-1 text-content-secondary/40 hover:text-primary cursor-grab active:cursor-grabbing'
+          className=""
           title='Drag to reorder'
         >
-          <GripVertical className='w-4 h-4' />
+          <GripVertical className="" />
         </button>
       )}
 
@@ -233,14 +233,14 @@ function SortableStop ({
       </div>
 
       {/* Stop info */}
-      <div className='flex-1 min-w-0'>
+      <div className="">
         {isEditing ? (
-          <div className='flex items-center gap-1'>
+          <div className="">
             <input
               type='text'
               value={editingStopName}
               onChange={e => onEditNameChange(e.target.value)}
-              className='input text-sm py-1 px-2'
+              className=""
               autoFocus
               title='Stop name'
               placeholder='Enter stop name'
@@ -251,43 +251,43 @@ function SortableStop ({
             />
             <button
               onClick={() => onSaveEdit(stop._id)}
-              className='p-1 text-green-600 hover:text-green-700'
+              className=""
               title='Save'
             >
-              <Check className='w-4 h-4' />
+              <Check className="" />
             </button>
             <button
               onClick={onCancelEdit}
-              className='p-1 text-content-secondary hover:text-content-primary'
+              className=""
               title='Cancel'
             >
-              <X className='w-4 h-4' />
+              <X className="" />
             </button>
           </div>
         ) : (
-          <div className='flex items-center gap-1'>
-            <span className='text-sm font-semibold text-content-primary truncate'>
+          <div className="">
+            <span className="">
               {stop.name}
             </span>
             {!isLocked && (
               <button
                 onClick={() => onStartEdit(stop)}
-                className='p-0.5 text-content-secondary/60 hover:text-primary transition-colors'
+                className=""
                 title='Rename stop'
               >
-                <Pencil className='w-3 h-3' />
+                <Pencil className="" />
               </button>
             )}
           </div>
         )}
-        <div className='text-xs text-content-secondary/70 mt-0.5'>
+        <div className="">
           {stop.latitude.toFixed(5)}, {stop.longitude.toFixed(5)}
         </div>
 
         {/* Estimated time */}
-        <div className='flex items-center gap-1 mt-1'>
-          <Clock className='w-3 h-3 text-content-secondary/60' />
-          <label className='sr-only' htmlFor={`time-${stop._id}`}>
+        <div className="">
+          <Clock className="" />
+          <label className="" htmlFor={`time-${stop._id}`}>
             Estimated arrival time
           </label>
           <input
@@ -296,7 +296,7 @@ function SortableStop ({
             value={stop.estimatedArrivalTime || ''}
             onChange={e => onTimeChange(stop._id, e.target.value)}
             disabled={isLocked}
-            className='text-xs bg-transparent text-content-secondary border-none outline-none p-0 focus:text-primary transition-colors'
+            className=""
             title='Estimated arrival time'
             placeholder='HH:MM'
           />
@@ -305,29 +305,29 @@ function SortableStop ({
 
       {/* Actions */}
       {!isLocked && (
-        <div className='flex flex-col gap-0.5'>
+        <div className="">
           <button
             onClick={() => onMoveUp(index)}
             disabled={index === 0}
-            className='p-1 text-content-secondary/40 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+            className=""
             title='Move up'
           >
-            <ChevronUp className='w-3.5 h-3.5' />
+            <ChevronUp className="" />
           </button>
           <button
             onClick={() => onMoveDown(index)}
             disabled={index === totalStops - 1}
-            className='p-1 text-content-secondary/40 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+            className=""
             title='Move down'
           >
-            <ChevronDown className='w-3.5 h-3.5' />
+            <ChevronDown className="" />
           </button>
           <button
             onClick={() => onDelete(stop._id)}
-            className='p-1 text-content-secondary/40 hover:text-red-500 transition-colors'
+            className=""
             title='Delete stop'
           >
-            <Trash2 className='w-3.5 h-3.5' />
+            <Trash2 className="" />
           </button>
         </div>
       )}
@@ -688,24 +688,24 @@ export default function RouteBuilder () {
 
   if (loading) {
     return (
-      <div className='flex items-center justify-center min-h-[60vh]'>
-        <Loader2 className='w-8 h-8 text-primary animate-spin' />
+      <div className="">
+        <Loader2 className="" />
       </div>
     )
   }
 
   if (!route) {
     return (
-      <div className='text-center py-20'>
-        <RouteIcon className='w-12 h-12 text-content-secondary/30 mx-auto mb-4' />
-        <h2 className='text-xl font-display font-bold text-content-primary mb-2'>
+      <div className="">
+        <RouteIcon className="" />
+        <h2 className="">
           Route Not Found
         </h2>
         <button
           onClick={() => navigate('/admin/routes')}
-          className='btn-secondary mt-4 group'
+          className=""
         >
-          <ArrowLeft className='w-4 h-4 transition-transform group-hover:-translate-x-1' />
+          <ArrowLeft className="" />
           Back to Routes
         </button>
       </div>
@@ -720,42 +720,42 @@ export default function RouteBuilder () {
   ])
 
   return (
-    <div className='h-[calc(100vh-8rem)] flex flex-col'>
+    <div className="">
       {/* Header */}
-      <div className='flex items-center justify-between mb-4 flex-shrink-0'>
-        <div className='flex items-center gap-3'>
+      <div className="">
+        <div className="">
           <button
             onClick={() => navigate('/admin/routes')}
-            className='p-2 text-content-secondary hover:text-content-primary hover:bg-white border border-ui-border rounded-lg shadow-sm transition-all'
+            className=""
             title='Back to routes'
           >
-            <ArrowLeft className='w-5 h-5' />
+            <ArrowLeft className="" />
           </button>
           <div>
-            <h1 className='text-xl font-display font-bold text-content-primary'>
+            <h1 className="">
               Route Builder
             </h1>
-            <p className='text-sm text-content-secondary'>{route.name}</p>
+            <p className="">{route.name}</p>
           </div>
         </div>
 
         {/* Path generation button */}
-        <div className='flex items-center gap-3'>
+        <div className="">
           {pathInfo && (
-            <span className='text-sm font-medium text-content-secondary bg-app-bg px-3 py-1 rounded-full border border-ui-border'>
+            <span className="">
               {pathInfo.distance} km • ~{pathInfo.duration} min
             </span>
           )}
           <button
             onClick={handleGeneratePath}
             disabled={stops.length < 2 || generatingPath || isLocked}
-            className='btn-coral text-sm shadow-sm'
+            className=""
             title='Generate route path using OSRM'
           >
             {generatingPath ? (
-              <Loader2 className='w-4 h-4 animate-spin' />
+              <Loader2 className="" />
             ) : (
-              <Navigation className='w-4 h-4' />
+              <Navigation className="" />
             )}
             Generate Path
           </button>
@@ -764,9 +764,9 @@ export default function RouteBuilder () {
 
       {/* Lock banner */}
       {isLocked && (
-        <div className='flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-lg mb-4 flex-shrink-0 shadow-sm'>
-          <Lock className='w-5 h-5 flex-shrink-0 text-amber-600' />
-          <span className='text-sm font-bold'>{lockMessage}</span>
+        <div className="">
+          <Lock className="" />
+          <span className="">{lockMessage}</span>
         </div>
       )}
 
@@ -784,33 +784,33 @@ export default function RouteBuilder () {
       )}
 
       {/* Main content: split layout */}
-      <div className='flex-1 flex gap-4 min-h-0'>
+      <div className="">
         {/* Left panel — Stops list */}
-        <div className='w-80 flex-shrink-0 flex flex-col bg-white border border-ui-border rounded-xl overflow-hidden shadow-sm'>
+        <div className="">
           {/* Panel header */}
-          <div className='p-4 border-b border-ui-border bg-app-bg/30'>
-            <div className='flex items-center justify-between'>
-              <h2 className='text-sm font-bold text-content-primary flex items-center gap-2 uppercase tracking-wider'>
-                <MapPin className='w-4 h-4 text-primary' />
+          <div className="">
+            <div className="">
+              <h2 className="">
+                <MapPin className="" />
                 Stops ({stops.length})
               </h2>
               {savingReorder && (
-                <Loader2 className='w-4 h-4 text-primary animate-spin' />
+                <Loader2 className="" />
               )}
             </div>
             {!isLocked && (
-              <p className='text-xs text-content-secondary mt-1 font-medium'>
+              <p className="">
                 Click on the map to add stops. Drag to reorder.
               </p>
             )}
           </div>
 
           {/* Stops list */}
-          <div className='flex-1 overflow-y-auto p-3 space-y-2 bg-app-bg/10'>
+          <div className="">
             {stops.length === 0 ? (
-              <div className='text-center py-12'>
-                <MapPin className='w-10 h-10 text-ui-border mx-auto mb-3 opacity-50' />
-                <p className='text-sm text-content-secondary font-medium px-4'>
+              <div className="">
+                <MapPin className="" />
+                <p className="">
                   {isLocked
                     ? 'No stops on this route'
                     : 'Click on the map to add your first stop'}
@@ -852,16 +852,16 @@ export default function RouteBuilder () {
 
           {/* Panel footer */}
           {stops.length >= 2 && !isLocked && (
-            <div className='p-4 border-t border-ui-border bg-white'>
+            <div className="">
               <button
                 onClick={handleGeneratePath}
                 disabled={generatingPath}
-                className='btn-coral w-full text-sm shadow-sm'
+                className=""
               >
                 {generatingPath ? (
-                  <Loader2 className='w-4 h-4 animate-spin' />
+                  <Loader2 className="" />
                 ) : (
-                  <Navigation className='w-4 h-4' />
+                  <Navigation className="" />
                 )}
                 Generate Route Path
               </button>
@@ -870,15 +870,15 @@ export default function RouteBuilder () {
         </div>
 
         {/* Right — Map */}
-        <div className='flex-1 rounded-xl overflow-hidden border border-ui-border relative shadow-sm'>
+        <div className="">
           {addingStop && (
-            <div className='absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white border border-primary/20 text-content-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xl'>
-              <Loader2 className='w-4 h-4 animate-spin text-primary' />
+            <div className="">
+              <Loader2 className="" />
               Adding stop...
             </div>
           )}
 
-          <div className='h-full'>
+          <div className="">
             <MapContainer
               center={
                 stops.length > 0
@@ -886,7 +886,7 @@ export default function RouteBuilder () {
                   : [31.5204, 74.3587] // Default: Lahore
               }
               zoom={13}
-              className='h-full w-full'
+              className=""
               ref={mapRef}
             >
               <TileLayer
@@ -938,3 +938,4 @@ export default function RouteBuilder () {
     </div>
   )
 }
+

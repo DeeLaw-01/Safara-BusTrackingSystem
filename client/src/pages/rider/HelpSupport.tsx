@@ -40,101 +40,101 @@ export default function HelpSupport () {
   ]
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className="">
       {/* Header */}
-      <header className='bg-white border-b border-gray-100 px-4 h-14 flex items-center gap-3 sticky top-0 z-50'>
+      <header className="">
         <button
           title='Back'
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors'
+          className=""
         >
-          <ArrowLeft className='w-5 h-5 text-gray-700' />
+          <ArrowLeft className="" />
         </button>
-        <h1 className='text-lg font-bold text-gray-900'>Help & Support</h1>
+        <h1 className="">Help & Support</h1>
       </header>
 
-      <div className='max-w-2xl mx-auto px-4 py-6'>
+      <div className="">
         {/* Contact Options */}
-        <div className='bg-white rounded-2xl border border-gray-100 p-6 mb-6'>
-          <h2 className='text-lg font-semibold text-gray-900 mb-4'>
+        <div className="">
+          <h2 className="">
             Get in Touch
           </h2>
 
-          <div className='space-y-3'>
+          <div className="">
             <a
               href='mailto:support@bustrack.com'
-              className='flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors'
+              className=""
             >
-              <div className='p-2 bg-coral-100 rounded-lg'>
-                <Mail className='w-5 h-5 text-coral-600' />
+              <div className="">
+                <Mail className="" />
               </div>
-              <div className='flex-1'>
-                <p className='text-sm font-medium text-gray-900'>
+              <div className="">
+                <p className="">
                   Email Support
                 </p>
-                <p className='text-xs text-gray-500'>support@bustrack.com</p>
+                <p className="">support@bustrack.com</p>
               </div>
-              <ChevronRight className='w-5 h-5 text-gray-400' />
+              <ChevronRight className="" />
             </a>
 
-            <button className='w-full flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors'>
-              <div className='p-2 bg-primary-100 rounded-lg'>
-                <MessageCircle className='w-5 h-5 text-primary-600' />
+            <button className="">
+              <div className="">
+                <MessageCircle className="" />
               </div>
-              <div className='flex-1 text-left'>
-                <p className='text-sm font-medium text-gray-900'>Live Chat</p>
-                <p className='text-xs text-gray-500'>Available 24/7</p>
+              <div className="">
+                <p className="">Live Chat</p>
+                <p className="">Available 24/7</p>
               </div>
-              <ChevronRight className='w-5 h-5 text-gray-400' />
+              <ChevronRight className="" />
             </button>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className='bg-white rounded-2xl border border-gray-100 p-6 mb-6'>
-          <div className='flex items-center gap-3 mb-4'>
-            <HelpCircle className='w-5 h-5 text-coral-500' />
-            <h2 className='text-lg font-semibold text-gray-900'>
+        <div className="">
+          <div className="">
+            <HelpCircle className="" />
+            <h2 className="">
               Frequently Asked Questions
             </h2>
           </div>
 
-          <div className='space-y-4'>
+          <div className="">
             {faqs.map((faq, index) => (
               <details
                 key={index}
-                className='group border-b border-gray-100 last:border-0 pb-4 last:pb-0'
+                className=""
               >
-                <summary className='cursor-pointer list-none'>
-                  <div className='flex items-center justify-between'>
-                    <p className='text-sm font-medium text-gray-900 group-open:text-coral-600 transition-colors'>
+                <summary className="">
+                  <div className="">
+                    <p className="">
                       {faq.question}
                     </p>
-                    <ChevronRight className='w-4 h-4 text-gray-400 group-open:rotate-90 transition-transform' />
+                    <ChevronRight className="" />
                   </div>
                 </summary>
-                <p className='text-sm text-gray-600 mt-2 pl-4'>{faq.answer}</p>
+                <p className="">{faq.answer}</p>
               </details>
             ))}
           </div>
         </div>
 
         {/* Quick Links */}
-        <div className='bg-white rounded-2xl border border-gray-100 p-6'>
-          <h2 className='text-lg font-semibold text-gray-900 mb-4'>
+        <div className="">
+          <h2 className="">
             Quick Links
           </h2>
 
-          <div className='space-y-2'>
+          <div className="">
             <button
               onClick={() => navigate('/privacy')}
-              className='w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-left'
+              className=""
             >
-              <FileText className='w-5 h-5 text-gray-400' />
-              <span className='text-sm font-medium text-gray-900'>
+              <FileText className="" />
+              <span className="">
                 Privacy Policy
               </span>
-              <ChevronRight className='w-4 h-4 text-gray-400 ml-auto' />
+              <ChevronRight className="" />
             </button>
           </div>
         </div>
@@ -142,3 +142,4 @@ export default function HelpSupport () {
     </div>
   )
 }
+

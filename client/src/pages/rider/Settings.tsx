@@ -103,38 +103,38 @@ export default function Settings () {
   }
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className="">
       {/* Header */}
-      <header className='bg-white border-b border-ui-border px-4 h-14 flex items-center gap-3 sticky top-0 z-50'>
+      <header className="">
         <button
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+          className=""
           aria-label='Go back'
         >
-          <ArrowLeft className='w-5 h-5 text-content-primary' />
+          <ArrowLeft className="" />
         </button>
-        <h1 className='text-lg font-bold text-content-primary'>Settings</h1>
+        <h1 className="">Settings</h1>
       </header>
 
-      <div className='max-w-2xl mx-auto px-4 py-6'>
+      <div className="">
         {/* Profile Picture Section */}
-        <div className='bg-white rounded-2xl border border-ui-border p-6 mb-6 shadow-sm'>
-          <h2 className='text-lg font-semibold text-content-primary mb-4'>
+        <div className="">
+          <h2 className="">
             Profile Picture
           </h2>
 
-          <div className='flex items-center gap-6 mb-6'>
+          <div className="">
             <UserAvatar
               name={formData.name}
               avatar={formData.avatar}
               size='xl'
-              className='ring-4 ring-primary/10'
+              className=""
             />
-            <div className='flex-1'>
-              <p className='text-sm text-content-secondary mb-2'>
+            <div className="">
+              <p className="">
                 Upload a new profile picture or enter an image URL
               </p>
-              <div className='flex gap-2 flex-wrap'>
+              <div className="">
                 <label
                   className={`btn btn-secondary cursor-pointer text-sm ${
                     uploading ? 'opacity-50 cursor-not-allowed' : ''
@@ -143,19 +143,19 @@ export default function Settings () {
                 >
                   {uploading ? (
                     <>
-                      <Loader2 className='w-4 h-4 animate-spin' />
+                      <Loader2 className="" />
                       Uploading...
                     </>
                   ) : (
                     <>
-                      <Camera className='w-4 h-4' />
+                      <Camera className="" />
                       Upload
                     </>
                   )}
                   <input
                     type='file'
                     accept='image/*'
-                    className='hidden'
+                    className=""
                     disabled={uploading}
                     aria-label='Select profile picture file'
                     onChange={e => {
@@ -172,7 +172,7 @@ export default function Settings () {
                     if (url) handleAvatarUrlChange(url)
                   }}
                   disabled={uploading}
-                  className='btn btn-secondary text-sm disabled:opacity-50'
+                  className=""
                 >
                   From URL
                 </button>
@@ -180,9 +180,9 @@ export default function Settings () {
                   <button
                     onClick={() => handleAvatarUrlChange('')}
                     disabled={uploading}
-                    className='btn-secondary text-sm !text-red-500 hover:!bg-red-50 disabled:opacity-50'
+                    className=""
                   >
-                    <X className='w-4 h-4' />
+                    <X className="" />
                     Remove
                   </button>
                 )}
@@ -190,14 +190,14 @@ export default function Settings () {
 
               {/* Upload Progress */}
               {uploading && (
-                <div className='mt-3'>
-                  <div className='flex items-center justify-between text-xs text-content-secondary mb-1'>
+                <div className="">
+                  <div className="">
                     <span>Uploading...</span>
                     <span>{Math.round(uploadProgress)}%</span>
                   </div>
-                  <div className='w-full bg-app-bg rounded-full h-2 overflow-hidden'>
+                  <div className="">
                     <div
-                      className='bg-primary h-2 rounded-full transition-all duration-300'
+                      className=""
                       style={{ width: `${uploadProgress}%` }}
                       role='progressbar'
                       aria-label={`Upload progress: ${Math.round(
@@ -211,11 +211,11 @@ export default function Settings () {
           </div>
 
           {formData.avatar && !formData.avatar.startsWith('data:') && (
-            <div className='mt-4 p-3 bg-app-bg rounded-lg border border-ui-border/50'>
-              <p className='text-xs text-content-secondary mb-1'>
+            <div className="">
+              <p className="">
                 Image hosted on Cloudinary
               </p>
-              <p className='text-xs text-content-primary font-mono break-all'>
+              <p className="">
                 {formData.avatar.length > 60
                   ? `${formData.avatar.substring(0, 60)}...`
                   : formData.avatar}
@@ -225,27 +225,27 @@ export default function Settings () {
         </div>
 
         {/* Account Information Form */}
-        <form onSubmit={handleSubmit} className='space-y-6'>
-          <div className='bg-white rounded-2xl border border-ui-border p-6 shadow-sm'>
-            <h2 className='text-lg font-semibold text-content-primary mb-4'>
+        <form onSubmit={handleSubmit} className="">
+          <div className="">
+            <h2 className="">
               Account Information
             </h2>
 
-            <div className='space-y-4'>
+            <div className="">
               {/* Name */}
               <div>
-                <label className='block text-sm font-medium text-content-primary mb-2'>
+                <label className="">
                   Full Name
                 </label>
-                <div className='relative'>
-                  <User className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-content-secondary/60' />
+                <div className="">
+                  <User className="" />
                   <input
                     type='text'
                     value={formData.name}
                     onChange={e =>
                       setFormData(prev => ({ ...prev, name: e.target.value }))
                     }
-                    className='input-auth pl-10'
+                    className=""
                     placeholder='Enter your full name'
                     required
                   />
@@ -254,38 +254,38 @@ export default function Settings () {
 
               {/* Email (read-only) */}
               <div>
-                <label className='block text-sm font-medium text-content-primary mb-2'>
+                <label className="">
                   Email Address
                 </label>
-                <div className='relative'>
-                  <Mail className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-content-secondary/60' />
+                <div className="">
+                  <Mail className="" />
                   <input
                     type='email'
                     value={formData.email}
                     disabled
                     aria-label='Email address (read-only)'
-                    className='input-auth pl-10 bg-app-bg text-content-secondary cursor-not-allowed border-ui-border'
+                    className=""
                   />
                 </div>
-                <p className='text-xs text-content-secondary mt-1'>
+                <p className="">
                   Email cannot be changed
                 </p>
               </div>
 
               {/* Phone */}
               <div>
-                <label className='block text-sm font-medium text-content-primary mb-2'>
+                <label className="">
                   Phone Number
                 </label>
-                <div className='relative'>
-                  <Phone className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-content-secondary/60' />
+                <div className="">
+                  <Phone className="" />
                   <input
                     type='tel'
                     value={formData.phone}
                     onChange={e =>
                       setFormData(prev => ({ ...prev, phone: e.target.value }))
                     }
-                    className='input-auth pl-10'
+                    className=""
                     placeholder='Enter your phone number'
                   />
                 </div>
@@ -295,43 +295,43 @@ export default function Settings () {
 
           {/* Success/Error Messages */}
           {success && (
-            <div className='flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700'>
-              <Check className='w-5 h-5' />
-              <span className='text-sm font-medium'>
+            <div className="">
+              <Check className="" />
+              <span className="">
                 Profile updated successfully!
               </span>
             </div>
           )}
 
           {error && (
-            <div className='flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700'>
-              <X className='w-5 h-5' />
-              <span className='text-sm font-medium'>{error}</span>
+            <div className="">
+              <X className="" />
+              <span className="">{error}</span>
             </div>
           )}
 
           {/* Submit Button */}
-          <div className='flex gap-3'>
+          <div className="">
             <button
               type='button'
               onClick={() => navigate(-1)}
-              className='btn btn-secondary flex-1'
+              className=""
             >
               Cancel
             </button>
             <button
               type='submit'
               disabled={loading}
-              className='btn btn-coral flex-1'
+              className=""
             >
               {loading ? (
                 <>
-                  <Loader2 className='w-5 h-5 animate-spin' />
+                  <Loader2 className="" />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Save className='w-5 h-5' />
+                  <Save className="" />
                   Save Changes
                 </>
               )}
@@ -342,3 +342,4 @@ export default function Settings () {
     </div>
   )
 }
+

@@ -22,7 +22,7 @@ import {
 import { tripsApi, routesApi } from '@/services/api'
 import { socketService } from '@/services/socket'
 import type { Bus, Route, Stop } from '@/types'
-import 'leaflet/dist/leaflet.css'
+
 
 // ─── Custom Icons ────────────────────────────────────────────────────────────
 
@@ -447,20 +447,20 @@ export default function ActiveTrip() {
 
   if (loading) {
     return (
-      <div className='flex items-center justify-center min-h-[60vh] bg-white'>
-        <Loader2 className='w-8 h-8 text-primary animate-spin' />
+      <div className="">
+        <Loader2 className="" />
       </div>
     )
   }
 
   if (!bus) {
     return (
-      <div className='max-w-md mx-auto p-8 text-center bg-white rounded-2xl shadow-sm mt-8'>
-        <AlertCircle className='w-12 h-12 text-amber-500 mx-auto mb-4' />
-        <h2 className='text-xl font-semibold text-content-primary mb-2'>
+      <div className="">
+        <AlertCircle className="" />
+        <h2 className="">
           No Bus Assigned
         </h2>
-        <p className='text-content-secondary'>
+        <p className="">
           You need a bus assigned to start a trip.
         </p>
       </div>
@@ -473,28 +473,28 @@ export default function ActiveTrip() {
       : [31.5204, 74.3587])
 
   return (
-    <div className='h-[calc(100vh-4rem)] flex flex-col'>
+    <div className="">
       {/* ─── Navigation Header (Google Maps style) ─────────────────── */}
       {tripActive && nextStop && (
-        <div className='bg-green-600 text-white px-4 py-3 flex items-center gap-3 shrink-0 z-10'>
-          <div className='p-2 bg-white/20 rounded-lg'>
-            <Navigation className='w-5 h-5' />
+        <div className="">
+          <div className="">
+            <Navigation className="" />
           </div>
-          <div className='flex-1 min-w-0'>
-            <div className='text-sm opacity-80'>Next stop</div>
-            <div className='font-bold text-lg truncate'>{nextStop.name}</div>
+          <div className="">
+            <div className="">Next stop</div>
+            <div className="">{nextStop.name}</div>
           </div>
-          <div className='text-right shrink-0'>
+          <div className="">
             {distToNextStop !== null && (
-              <div className='text-2xl font-bold tabular-nums'>
+              <div className="">
                 {distToNextStop > 1000
                   ? `${(distToNextStop / 1000).toFixed(1)} km`
                   : `${distToNextStop} m`}
               </div>
             )}
             {speed > 0 && (
-              <div className='text-xs opacity-80 flex items-center gap-1 justify-end'>
-                <Gauge className='w-3 h-3' />
+              <div className="">
+                <Gauge className="" />
                 {Math.round(speed)} km/h
               </div>
             )}
@@ -504,10 +504,10 @@ export default function ActiveTrip() {
 
       {/* ─── Pre-trip header ──────────────────────────────────────── */}
       {!tripActive && (
-        <div className='bg-white border-b border-ui-border p-4 flex items-center justify-between shrink-0'>
+        <div className="">
           <div>
-            <div className='font-semibold text-lg text-content-primary'>{bus.name}</div>
-            <div className='text-content-secondary text-sm'>
+            <div className="">{bus.name}</div>
+            <div className="">
               {bus.plateNumber} •{' '}
               {route ? `${stops.length} stops` : 'No route assigned'}
             </div>
@@ -515,12 +515,12 @@ export default function ActiveTrip() {
           <button
             onClick={handleStartTrip}
             disabled={starting || !route}
-            className='btn-coral px-6 py-2 h-auto'
+            className=""
           >
             {starting ? (
-              <Loader2 className='w-5 h-5 animate-spin' />
+              <Loader2 className="" />
             ) : (
-              <Navigation className='w-5 h-5' />
+              <Navigation className="" />
             )}
             Start Trip
           </button>
@@ -528,25 +528,25 @@ export default function ActiveTrip() {
       )}
 
       {error && (
-        <div className='bg-red-500/10 border-b border-red-500/20 p-3'>
-          <p className='text-red-400 text-sm text-center'>{error}</p>
+        <div className="">
+          <p className="">{error}</p>
         </div>
       )}
 
       {locationError && tripActive && (
-        <div className='bg-amber-500/10 border-b border-amber-500/20 p-3'>
-          <p className='text-amber-400 text-sm text-center'>
+        <div className="">
+          <p className="">
             Location error: {locationError}
           </p>
         </div>
       )}
 
       {/* ─── Map ──────────────────────────────────────────────────── */}
-      <div className='flex-1 relative'>
+      <div className="">
         <MapContainer
           center={center}
           zoom={16}
-          className='h-full w-full'
+          className=""
           zoomControl={false}
         >
           <TileLayer
@@ -603,9 +603,9 @@ export default function ActiveTrip() {
               }
             >
               <Popup>
-                <div className='text-sm'>
-                  <div className='font-semibold text-gray-900'>{stop.name}</div>
-                  <div className='text-gray-500'>
+                <div className="">
+                  <div className="">{stop.name}</div>
+                  <div className="">
                     Stop #{index + 1}
                     {tripActive && index === nextStopIdx && ' — Next'}
                     {tripActive && index < nextStopIdx && ' — Passed'}
@@ -619,10 +619,10 @@ export default function ActiveTrip() {
           {position && (
             <Marker position={position} icon={driverIcon}>
               <Popup>
-                <div className='text-sm'>
-                  <div className='font-semibold text-gray-900'>You are here</div>
+                <div className="">
+                  <div className="">You are here</div>
                   {speed > 0 && (
-                    <div className='text-gray-500'>
+                    <div className="">
                       {Math.round(speed)} km/h
                     </div>
                   )}
@@ -645,33 +645,33 @@ export default function ActiveTrip() {
             }`}
             title='Re-center on your location'
           >
-            <Locate className='w-5 h-5' />
+            <Locate className="" />
           </button>
         )}
 
         {/* Stop list bar (bottom of map when trip active) */}
         {tripActive && (
-          <div className='absolute bottom-0 left-0 right-0 z-[1000]'>
-            <div className='bg-white/95 backdrop-blur-md rounded-t-2xl px-4 py-4 border-t border-ui-border shadow-2xl'>
-              <div className='flex items-center justify-between mb-4'>
-                <span className='text-xs font-bold text-content-secondary uppercase tracking-wider'>
+          <div className="">
+            <div className="">
+              <div className="">
+                <span className="">
                   Upcoming stops
                 </span>
                 <button
                   onClick={handleEndTrip}
                   disabled={ending}
-                  className='flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-sm transition-colors'
+                  className=""
                 >
                   {ending ? (
-                    <Loader2 className='w-3.5 h-3.5 animate-spin' />
+                    <Loader2 className="" />
                   ) : (
-                    <Square className='w-3.5 h-3.5' />
+                    <Square className="" />
                   )}
                   End Trip
                 </button>
               </div>
 
-              <div className='flex gap-3 overflow-x-auto pb-1 scrollbar-hide'>
+              <div className="">
                 {stops.slice(nextStopIdx).map((stop, i) => (
                   <div
                     key={stop._id}
@@ -694,7 +694,7 @@ export default function ActiveTrip() {
                       {stop.name}
                     </span>
                     {i < stops.slice(nextStopIdx).length - 1 && (
-                      <ChevronRight className='w-3.5 h-3.5 text-ui-border shrink-0' />
+                      <ChevronRight className="" />
                     )}
                   </div>
                 ))}
@@ -706,3 +706,4 @@ export default function ActiveTrip() {
     </div>
   )
 }
+

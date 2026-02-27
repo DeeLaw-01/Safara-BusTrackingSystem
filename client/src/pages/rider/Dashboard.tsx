@@ -32,7 +32,7 @@ import { useBusStore } from '@/store/busStore'
 import { useAuthStore } from '@/store/authStore'
 import UserAvatar from '@/components/ui/UserAvatar'
 import type { Route, Stop, BusLocation } from '@/types'
-import 'leaflet/dist/leaflet.css'
+
 
 // ─── Leaflet Icon Fix ────────────────────────────────────────────────────────
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: () => void })
@@ -335,8 +335,8 @@ export default function RiderDashboard () {
   // ─── Loading state ─────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className='flex items-center justify-center h-screen bg-white'>
-        <Loader2 className='w-8 h-8 text-coral-500 animate-spin' />
+      <div className="">
+        <Loader2 className="" />
       </div>
     )
   }
@@ -359,29 +359,29 @@ export default function RiderDashboard () {
       />
 
       {/* ─── Header ─────────────────────────────────────────────────── */}
-      <header className='bg-white border-b border-ui-border px-4 h-14 flex items-center gap-3 z-[120] shrink-0 relative'>
+      <header className="">
         {view !== 'select' ? (
           <button
             title='Back'
             onClick={handleBack}
-            className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+            className=""
           >
-            <ArrowLeft className='w-5 h-5 text-content-primary' />
+            <ArrowLeft className="" />
           </button>
         ) : (
           <button
             title='Open Sidebar'
             onClick={() => setSidebarOpen(true)}
-            className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+            className=""
           >
-            <Menu className='w-5 h-5 text-content-primary' />
+            <Menu className="" />
           </button>
         )}
-        <div className='flex items-center gap-2'>
-          <div className='p-1.5 bg-primary rounded-lg'>
-            <Bus className='w-4 h-4 text-white' />
+        <div className="">
+          <div className="">
+            <Bus className="" />
           </div>
-          <h1 className='text-lg font-bold text-content-primary tracking-tight'>
+          <h1 className="">
             BUS SMART SYSTEM
           </h1>
         </div>
@@ -396,9 +396,9 @@ export default function RiderDashboard () {
         <MapContainer
           center={mapCenter}
           zoom={13}
-          className='h-full w-full'
+          className=""
           zoomControl={false}
-          style={{ background: '#f8f9fa' }}
+         
         >
           <TileLayer
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
@@ -423,7 +423,7 @@ export default function RiderDashboard () {
               />
               <Marker position={userLocation} icon={userIcon}>
                 <Popup>
-                  <span className='text-sm font-medium'>Your location</span>
+                  <span className="">Your location</span>
                 </Popup>
               </Marker>
             </>
@@ -459,11 +459,11 @@ export default function RiderDashboard () {
                 icon={stopIcon}
               >
                 <Popup>
-                  <div className='text-sm'>
-                    <div className='font-semibold text-gray-900'>
+                  <div className="">
+                    <div className="">
                       {stop.name}
                     </div>
-                    <div className='text-gray-500'>
+                    <div className="">
                       Stop #{stop.sequence + 1}
                     </div>
                   </div>
@@ -484,9 +484,9 @@ export default function RiderDashboard () {
                   eventHandlers={{ click: () => handleSelectBus(bus) }}
                 >
                   <Popup>
-                    <div className='text-sm'>
-                      <div className='font-bold text-gray-900'>{bus.name}</div>
-                      <div className='text-gray-500'>{getRouteName(bus)}</div>
+                    <div className="">
+                      <div className="">{bus.name}</div>
+                      <div className="">{getRouteName(bus)}</div>
                     </div>
                   </Popup>
                 </Marker>
@@ -506,12 +506,12 @@ export default function RiderDashboard () {
                   icon={createBusIcon(getBusLabel(idx >= 0 ? idx : 0), true)}
                 >
                   <Popup>
-                    <div className='text-sm'>
-                      <div className='font-bold text-gray-900'>
+                    <div className="">
+                      <div className="">
                         {selectedBus.name}
                       </div>
                       {live.speed && (
-                        <div className='text-gray-500'>
+                        <div className="">
                           {Math.round(live.speed)} km/h
                         </div>
                       )}
@@ -529,14 +529,14 @@ export default function RiderDashboard () {
       >
         {/* Drag handle */}
         <div
-          className='flex justify-center pt-3 pb-2 cursor-pointer'
+          className=""
           onClick={() => setSheetExpanded(!sheetExpanded)}
         >
-          <div className='w-10 h-1 bg-ui-border rounded-full' />
+          <div className="" />
         </div>
 
         {/* Sheet content */}
-        <div className='flex-1 overflow-y-auto px-4 pb-4'>
+        <div className="">
           {view === 'select' && (
             <BusSelectView
               buses={buses}
@@ -586,23 +586,23 @@ function BusSelectView ({
 
   return (
     <div>
-      <div className='flex items-center gap-2 mb-4'>
-        <h2 className='text-xl font-bold text-content-primary'>Select bus</h2>
-        <button className='p-1' title='Information'>
-          <Info className='w-4 h-4 text-content-secondary' />
+      <div className="">
+        <h2 className="">Select bus</h2>
+        <button className="" title='Information'>
+          <Info className="" />
         </button>
       </div>
 
       {buses.length === 0 ? (
-        <div className='text-center py-12'>
-          <Bus className='w-12 h-12 text-ui-border mx-auto mb-4' />
-          <p className='text-content-secondary font-medium'>No buses available</p>
-          <p className='text-content-secondary/70 text-sm mt-1'>
+        <div className="">
+          <Bus className="" />
+          <p className="">No buses available</p>
+          <p className="">
             Check back later for available routes
           </p>
         </div>
       ) : (
-        <div className='space-y-3'>
+        <div className="">
           {/* Live buses first */}
           {liveBuses.map(bus => {
             const routeName = getRouteName(bus)
@@ -610,25 +610,25 @@ function BusSelectView ({
               <button
                 key={bus._id}
                 onClick={() => onSelectBus(bus)}
-                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-green-100 bg-green-50/30 hover:border-primary/20 hover:bg-primary/5 transition-all group'
+                className=""
               >
-                <div className='w-12 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0 relative'>
-                  <Bus className='w-6 h-6 text-amber-600' />
+                <div className="">
+                  <Bus className="" />
                 </div>
-                <div className='flex-1 text-left'>
-                  <div className='font-semibold text-content-primary group-hover:text-primary transition-colors'>
+                <div className="">
+                  <div className="">
                     {bus.name}
                   </div>
-                  <div className='text-xs text-green-600 font-medium'>
+                  <div className="">
                     Live — On route
                   </div>
                 </div>
                 {routeName && (
-                  <span className='text-xs font-medium text-content-secondary bg-app-bg px-3 py-1 rounded-full uppercase tracking-wide'>
+                  <span className="">
                     {routeName}
                   </span>
                 )}
-                <span className='w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shrink-0' />
+                <span className="" />
               </button>
             )
           })}
@@ -640,21 +640,21 @@ function BusSelectView ({
               <button
                 key={bus._id}
                 onClick={() => onSelectBus(bus)}
-                className='w-full flex items-center gap-4 p-4 rounded-2xl border border-ui-border hover:border-primary/20 hover:bg-primary/5 transition-all group opacity-60'
+                className=""
               >
-                <div className='w-12 h-10 bg-app-bg rounded-lg flex items-center justify-center shrink-0'>
-                  <Bus className='w-6 h-6 text-content-secondary/50' />
+                <div className="">
+                  <Bus className="" />
                 </div>
-                <div className='flex-1 text-left'>
-                  <div className='font-semibold text-content-secondary group-hover:text-primary transition-colors'>
+                <div className="">
+                  <div className="">
                     {bus.name}
                   </div>
-                  <div className='text-xs text-content-secondary/70'>
+                  <div className="">
                     Not currently active
                   </div>
                 </div>
                 {routeName && (
-                  <span className='text-xs font-medium text-content-secondary bg-app-bg px-3 py-1 rounded-full uppercase tracking-wide'>
+                  <span className="">
                     {routeName}
                   </span>
                 )}
@@ -680,26 +680,26 @@ function RoutePreviewView ({
   const stops = route.stops || []
 
   return (
-    <div className='flex flex-col h-full'>
-      <h2 className='text-xl font-bold text-content-primary mb-4'>
+    <div className="">
+      <h2 className="">
         {bus.name} - Route
       </h2>
 
       {/* Timeline */}
-      <div className='flex-1 overflow-y-auto'>
-        <div className='relative pl-6'>
+      <div className="">
+        <div className="">
           {/* Red vertical line */}
           {stops.length > 1 && (
             <div
-              className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-primary/40'
-              style={{ zIndex: 0 }}
+              className=""
+             
             />
           )}
 
           {stops.map((stop, index) => (
             <div
               key={stop._id}
-              className='relative flex items-start gap-4 mb-6 last:mb-0'
+              className=""
             >
               {/* Dot */}
               <div
@@ -711,9 +711,9 @@ function RoutePreviewView ({
               />
 
               {/* Stop info */}
-              <div className='flex-1 min-w-0'>
-                <div className='font-semibold text-content-primary'>{stop.name}</div>
-                <div className='text-sm text-content-secondary'>
+              <div className="">
+                <div className="">{stop.name}</div>
+                <div className="">
                   More information about the station
                 </div>
               </div>
@@ -725,7 +725,7 @@ function RoutePreviewView ({
       {/* View Stops Button */}
       <button
         onClick={onViewStops}
-        className='btn-coral w-full mt-4 py-4 text-base rounded-2xl'
+        className=""
       >
         View Stops
       </button>
@@ -855,53 +855,53 @@ function ActiveTrackingView ({
   )
 
   return (
-    <div className='flex flex-col h-full'>
+    <div className="">
       {/* Driver Info Card */}
-      <div className='flex items-center gap-4 mb-6'>
-        <div className='w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center shrink-0'>
+      <div className="">
+        <div className="">
           <svg
-            className='w-8 h-8 text-gray-400'
+            className=""
             fill='currentColor'
             viewBox='0 0 24 24'
           >
             <path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' />
           </svg>
         </div>
-        <div className='flex-1 min-w-0'>
-          <div className='font-semibold text-content-primary text-base'>
+        <div className="">
+          <div className="">
             {driver?.name || 'Driver'}
           </div>
           {driver?.phone && (
-            <div className='text-sm text-content-secondary flex items-center gap-1'>
-              <Phone className='w-3 h-3' />
+            <div className="">
+              <Phone className="" />
               {driver.phone}
             </div>
           )}
-          <span className='inline-block mt-1 text-xs font-medium text-white bg-primary px-2 py-0.5 rounded-full'>
+          <span className="">
             {bus.name}
           </span>
         </div>
-        <div className='text-right'>
-          <div className='text-xs text-content-secondary font-medium'>Next stop in</div>
-          <div className='text-3xl font-bold text-primary tabular-nums'>
+        <div className="">
+          <div className="">Next stop in</div>
+          <div className="">
             {formatETA(etaMinutes)}
           </div>
         </div>
       </div>
 
       {/* Route Timeline */}
-      <h3 className='text-lg font-bold text-content-primary mb-4'>
+      <h3 className="">
         {bus.name} - Route
       </h3>
 
-      <div className='flex-1 overflow-y-auto'>
-        <div className='relative pl-6'>
+      <div className="">
+        <div className="">
           {/* Progress line */}
           {stops.length > 1 && (
             <>
               {/* Completed portion (red) */}
               <div
-                className='absolute left-[11px] top-2 w-0.5 bg-primary'
+                className=""
                 style={{
                   height: `${
                     (currentStopIndex / Math.max(stops.length - 1, 1)) * 100
@@ -911,8 +911,8 @@ function ActiveTrackingView ({
               />
               {/* Remaining portion (gray) */}
               <div
-                className='absolute left-[11px] top-2 bottom-2 w-0.5 bg-ui-border'
-                style={{ zIndex: 0 }}
+                className=""
+               
               />
             </>
           )}
@@ -926,7 +926,7 @@ function ActiveTrackingView ({
             return (
               <div
                 key={stop._id}
-                className='relative flex items-start gap-4 mb-6 last:mb-0'
+                className=""
               >
                 {/* Dot */}
                 <div
@@ -940,7 +940,7 @@ function ActiveTrackingView ({
                 />
 
                 {/* Stop info */}
-                <div className='flex-1 min-w-0'>
+                <div className="">
                   <div
                     className={`font-semibold ${
                       isCurrent
@@ -953,12 +953,12 @@ function ActiveTrackingView ({
                     {stop.name}
                   </div>
                   {hasReminder && (
-                    <div className='text-xs text-amber-600 font-medium mt-0.5'>
+                    <div className="">
                       🔔 Alert {reminderData?.minutesBefore} min before
                     </div>
                   )}
                   {stop.estimatedArrivalTime && (
-                    <div className='text-xs text-gray-400 mt-0.5'>
+                    <div className="">
                       ETA: {stop.estimatedArrivalTime}
                     </div>
                   )}
@@ -966,7 +966,7 @@ function ActiveTrackingView ({
 
                 {/* Reminder bell button */}
                 {!isPassed && (
-                  <div className='relative shrink-0'>
+                  <div className="">
                     <button
                       className={`p-1.5 rounded-lg transition-colors ${
                         hasReminder
@@ -983,22 +983,22 @@ function ActiveTrackingView ({
                         }
                       }}
                     >
-                      <BellIcon className='w-4 h-4' />
+                      <BellIcon className="" />
                     </button>
 
                     {/* Reminder popup */}
                     {reminderPopup === stop._id && (
-                      <div className='absolute right-0 top-10 z-30 bg-white rounded-xl shadow-xl border border-ui-border p-3 w-56'>
-                        <div className='text-sm font-semibold text-content-primary mb-2'>
+                      <div className="">
+                        <div className="">
                           Set Alert
                         </div>
-                        <p className='text-xs text-content-secondary mb-3'>
+                        <p className="">
                           Get notified when the bus is approaching this stop.
                         </p>
-                        <label className='block text-xs text-content-secondary mb-1'>
+                        <label className="">
                           Minutes before arrival
                         </label>
-                        <div className='flex gap-1 mb-3'>
+                        <div className="">
                           {[2, 5, 10, 15].map(m => (
                             <button
                               key={m}
@@ -1013,13 +1013,13 @@ function ActiveTrackingView ({
                             </button>
                           ))}
                         </div>
-                        <div className='flex gap-2'>
+                        <div className="">
                           <button
                             onClick={() =>
                               handleSetReminder(stop._id, reminderMinutes)
                             }
                             disabled={savingReminder}
-                            className='flex-1 py-2 text-xs font-medium bg-primary text-white rounded-lg hover:bg-primary-hover disabled:opacity-50 transition-colors'
+                            className=""
                           >
                             {savingReminder
                               ? 'Saving...'
@@ -1030,7 +1030,7 @@ function ActiveTrackingView ({
                           {hasReminder && (
                             <button
                               onClick={() => handleRemoveReminder(stop._id)}
-                              className='px-3 py-2 text-xs font-medium text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition-colors'
+                              className=""
                             >
                               Remove
                             </button>
@@ -1088,34 +1088,34 @@ function SidebarDrawer ({
         }`}
       >
         {/* Header / Profile area */}
-        <div className='bg-app-splash px-5 pt-12 pb-6'>
+        <div className="">
           <button
             title='Close Sidebar'
             onClick={onClose}
-            className='absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/20 transition-colors'
+            className=""
           >
-            <X className='w-5 h-5 text-white' />
+            <X className="" />
           </button>
 
           <UserAvatar
             name={user?.name}
             avatar={user?.avatar}
             size='lg'
-            className='ring-3 ring-white/30 mb-3'
+            className=""
           />
-          <div className='text-white font-semibold text-lg leading-tight'>
+          <div className="">
             {user?.name || 'User'}
           </div>
-          <div className='text-white/70 text-sm mt-0.5'>{user?.email}</div>
-          <div className='mt-2'>
-            <span className='inline-block text-xs font-medium text-white/90 bg-white/20 px-2.5 py-0.5 rounded-full capitalize'>
+          <div className="">{user?.email}</div>
+          <div className="">
+            <span className="">
               {user?.role || 'Rider'}
             </span>
           </div>
         </div>
 
         {/* Menu items */}
-        <nav className='flex-1 py-3 overflow-y-auto'>
+        <nav className="">
           {menuItems.map(({ icon: Icon, label, path }) => (
             <button
               key={path}
@@ -1123,35 +1123,35 @@ function SidebarDrawer ({
                 navigate(path)
                 onClose()
               }}
-              className='w-full flex items-center gap-4 px-5 py-3.5 text-left hover:bg-app-bg transition-colors group'
+              className=""
             >
-              <Icon className='w-5 h-5 text-content-secondary/60 group-hover:text-primary transition-colors' />
-              <span className='flex-1 text-sm font-medium text-content-primary/80 group-hover:text-content-primary transition-colors'>
+              <Icon className="" />
+              <span className="">
                 {label}
               </span>
-              <ChevronRight className='w-4 h-4 text-ui-border group-hover:text-content-secondary transition-colors' />
+              <ChevronRight className="" />
             </button>
           ))}
         </nav>
 
         {/* Logout */}
-        <div className='border-t border-gray-100 p-4'>
+        <div className="">
           <button
             title='Logout'
             onClick={() => {
               onLogout()
               onClose()
             }}
-            className='w-full flex items-center gap-3 px-3 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors group'
+            className=""
           >
-            <LogOut className='w-5 h-5' />
-            <span className='text-sm font-medium'>Log out</span>
+            <LogOut className="" />
+            <span className="">Log out</span>
           </button>
         </div>
 
         {/* App version */}
-        <div className='px-5 pb-4 text-center'>
-          <span className='text-xs text-ui-border font-medium'>BusTrack v1.0.0</span>
+        <div className="">
+          <span className="">BusTrack v1.0.0</span>
         </div>
       </div>
     </>
@@ -1274,3 +1274,4 @@ function formatETA (minutes: number): string {
   const mins = minutes % 60
   return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}`
 }
+

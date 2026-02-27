@@ -11,10 +11,10 @@ export default function Logo({ size = 'md', showText = true }: LogoProps) {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="">
       {/* Logo Container with Wings and Center Emblem */}
       <div className={`${sizes[size].container} relative flex items-center justify-center`}>
-        <svg viewBox="0 0 120 100" className="w-full h-full">
+        <svg viewBox="0 0 120 100" className="">
           {/* Left Wing/Laurel */}
           <g fill="#C4A052" transform="translate(5, 15)">
             <path d="M25 35 Q15 25 10 40 Q5 55 15 50 Q10 45 15 35 Q20 25 25 35" />
@@ -76,3 +76,4 @@ export default function Logo({ size = 'md', showText = true }: LogoProps) {
     </div>
   );
 }
+

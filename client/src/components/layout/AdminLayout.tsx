@@ -28,35 +28,35 @@ export default function AdminLayout () {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className='min-h-screen bg-app-bg flex'>
+    <div className="">
       {/* Sidebar */}
       <aside
         className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-ui-border shadow-sm transform transition-transform duration-300 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className='h-full flex flex-col'>
+        <div className="">
           {/* Logo */}
-          <div className='h-16 flex items-center justify-between px-4 border-b border-ui-border'>
-            <Link to='/admin' className='flex items-center gap-2'>
-              <div className='p-2 bg-primary rounded-lg'>
-                <Bus className='w-5 h-5 text-white' />
+          <div className="">
+            <Link to='/admin' className="">
+              <div className="">
+                <Bus className="" />
               </div>
-              <span className='text-xl font-display font-bold text-content-primary'>
+              <span className="">
                 BusTrack
               </span>
             </Link>
             <button
               title='Close Sidebar'
               onClick={() => setSidebarOpen(false)}
-              className='lg:hidden p-2 text-content-secondary hover:text-content-primary'
+              className=""
             >
-              <X className='w-5 h-5' />
+              <X className="" />
             </button>
           </div>
 
           {/* Nav */}
-          <nav className='flex-1 p-4 space-y-1'>
+          <nav className="">
             {navItems.map(({ to, icon: Icon, label }) => {
               const isActive = location.pathname === to
               return (
@@ -70,7 +70,7 @@ export default function AdminLayout () {
                       : 'text-content-secondary hover:bg-app-bg hover:text-content-primary'
                   }`}
                 >
-                  <Icon className='w-5 h-5' />
+                  <Icon className="" />
                   <span>{label}</span>
                 </Link>
               )
@@ -78,25 +78,25 @@ export default function AdminLayout () {
           </nav>
 
           {/* User */}
-          <div className='p-4 border-t border-ui-border'>
-            <div className='flex items-center gap-3 mb-4'>
-              <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center'>
-                <span className='text-primary font-bold'>
+          <div className="">
+            <div className="">
+              <div className="">
+                <span className="">
                   {user?.name?.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div>
-                <div className='text-sm font-semibold text-content-primary'>
+                <div className="">
                   {user?.name}
                 </div>
-                <div className='text-xs text-content-secondary'>Administrator</div>
+                <div className="">Administrator</div>
               </div>
             </div>
             <button
               onClick={logout}
-              className='w-full flex items-center justify-center gap-2 px-4 py-2 text-content-secondary hover:text-primary hover:bg-red-50 rounded-lg transition-colors'
+              className=""
             >
-              <LogOut className='w-4 h-4' />
+              <LogOut className="" />
               <span>Logout</span>
             </button>
           </div>
@@ -106,32 +106,33 @@ export default function AdminLayout () {
       {/* Overlay */}
       {sidebarOpen && (
         <div
-          className='fixed inset-0 bg-black/50 z-40 lg:hidden'
+          className=""
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Main */}
-      <div className='flex-1 flex flex-col min-h-screen'>
+      <div className="">
         {/* Header */}
-        <header className='h-16 bg-white/80 backdrop-blur-md border-b border-ui-border flex items-center px-4 lg:px-8 sticky top-0 z-30'>
+        <header className="">
           <button
             title='Open Sidebar'
             onClick={() => setSidebarOpen(true)}
-            className='lg:hidden p-2 text-content-secondary hover:text-content-primary mr-4'
+            className=""
           >
-            <Menu className='w-6 h-6' />
+            <Menu className="" />
           </button>
-          <h1 className='text-xl font-display font-semibold text-content-primary'>
+          <h1 className="">
             Admin Panel
           </h1>
         </header>
 
         {/* Content */}
-        <main className='flex-1 p-4 lg:p-8'>
+        <main className="">
           <Outlet />
         </main>
       </div>
     </div>
   )
 }
+

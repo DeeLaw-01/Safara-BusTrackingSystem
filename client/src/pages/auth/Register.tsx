@@ -238,9 +238,9 @@ export default function Register () {
 
   if (inviteLoading) {
     return (
-      <div className='flex flex-col items-center justify-center py-12'>
-        <Loader2 className='w-8 h-8 animate-spin text-gray-400 mb-4' />
-        <p className='text-gray-500 text-sm'>Validating invitation...</p>
+      <div className="">
+        <Loader2 className="" />
+        <p className="">Validating invitation...</p>
       </div>
     )
   }
@@ -249,25 +249,25 @@ export default function Register () {
 
   if (!hasInvite) {
     return (
-      <div className='space-y-6'>
-        <div className='text-center'>
-          <div className='w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4'>
-            <AlertTriangle className='w-7 h-7 text-amber-500' />
+      <div className="">
+        <div className="">
+          <div className="">
+            <AlertTriangle className="" />
           </div>
-          <h2 className='text-2xl font-bold text-content-primary'>
+          <h2 className="">
             Invitation Required
           </h2>
-          <p className='text-content-secondary text-sm mt-2'>
+          <p className="">
             You need an invitation from your organization's administrator to
             create an account. Please check your email for an invitation link.
           </p>
         </div>
 
-        <p className='text-center text-content-secondary text-sm'>
+        <p className="">
           Already have an account?{' '}
           <Link
             to='/login'
-            className='text-primary hover:text-primary-hover font-semibold transition-colors'
+            className=""
           >
             Sign in
           </Link>
@@ -280,7 +280,7 @@ export default function Register () {
 
   if (step === 'otp') {
     return (
-      <div className='space-y-6'>
+      <div className="">
         {!pendingEmail && (
           <button
             onClick={() => {
@@ -289,34 +289,34 @@ export default function Register () {
               setLocalError('')
               setOtp(['', '', '', '', '', ''])
             }}
-            className='flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors'
+            className=""
           >
-            <ArrowLeft className='w-4 h-4' /> Back
+            <ArrowLeft className="" /> Back
           </button>
         )}
 
-        <div className='text-center'>
-          <div className='w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4'>
-            <Mail className='w-7 h-7 text-red-500' />
+        <div className="">
+          <div className="">
+            <Mail className="" />
           </div>
-          <h2 className='text-2xl font-bold text-content-primary'>Check your email</h2>
-          <p className='text-content-secondary text-sm mt-2'>
+          <h2 className="">Check your email</h2>
+          <p className="">
             We sent a 6-digit code to
             <br />
-            <span className='font-semibold text-content-primary'>
+            <span className="">
               {formData.email}
             </span>
           </p>
         </div>
 
         {displayError && (
-          <div className='p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm text-center'>
+          <div className="">
             {displayError}
           </div>
         )}
 
-        <form onSubmit={handleVerify} className='space-y-6'>
-          <div className='flex justify-center gap-3'>
+        <form onSubmit={handleVerify} className="">
+          <div className="">
             {otp.map((digit, i) => (
               <input
                 key={i}
@@ -331,10 +331,7 @@ export default function Register () {
                 onChange={e => handleOtpChange(i, e.target.value)}
                 onKeyDown={e => handleOtpKeyDown(i, e)}
                 onPaste={i === 0 ? handleOtpPaste : undefined}
-                className='w-12 h-14 text-center text-xl font-bold text-content-primary
-                           bg-gray-50 border-2 border-ui-border rounded-xl
-                           focus:outline-none focus:border-content-primary/20 focus:bg-white
-                           transition-all duration-200'
+                className=""
               />
             ))}
           </div>
@@ -342,23 +339,22 @@ export default function Register () {
           <button
             type='submit'
             disabled={isSubmitting}
-            className='btn-coral w-full'
+            className=""
           >
             {isSubmitting ? (
-              <Loader2 className='w-5 h-5 animate-spin' />
+              <Loader2 className="" />
             ) : (
               'Verify & Create Account'
             )}
           </button>
         </form>
 
-        <p className='text-center text-sm text-content-secondary'>
+        <p className="">
           Didn't receive it?{' '}
           <button
             onClick={handleResend}
             disabled={resendCooldown > 0 || isSubmitting}
-            className='font-semibold text-primary hover:text-primary-hover disabled:text-content-secondary/50
-                       disabled:cursor-not-allowed transition-colors'
+            className=""
           >
             {resendCooldown > 0
               ? `Resend in ${resendCooldown}s`
@@ -367,10 +363,10 @@ export default function Register () {
         </p>
 
         {pendingEmail && (
-          <p className='text-center text-gray-600 text-sm'>
+          <p className="">
             <Link
               to='/login'
-              className='text-primary hover:text-primary-hover font-semibold transition-colors'
+              className=""
             >
               Back to Login
             </Link>
@@ -383,23 +379,23 @@ export default function Register () {
   // ── Render: Form step ───────────────────────────────────────────────────────
 
   return (
-    <div className='space-y-5'>
+    <div className="">
       <div>
-        <h2 className='text-2xl font-bold text-content-primary'>Create Account</h2>
-        <p className='text-content-secondary text-sm mt-1'>
+        <h2 className="">Create Account</h2>
+        <p className="">
           Complete your registration to join BusTrack
         </p>
       </div>
 
       {displayError && (
-        <div className='p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm'>
+        <div className="">
           {displayError}
         </div>
       )}
 
-      <form onSubmit={handleFormSubmit} className='space-y-4'>
+      <form onSubmit={handleFormSubmit} className="">
         <div>
-          <label className='block text-sm font-medium text-content-primary mb-2'>
+          <label className="">
             Full Name
           </label>
           <input
@@ -407,14 +403,14 @@ export default function Register () {
             name='name'
             value={formData.name}
             onChange={handleChange}
-            className='input-auth'
+            className=""
             placeholder='Enter your full name'
             required
           />
         </div>
 
         <div>
-          <label className='block text-sm font-medium text-content-primary mb-2'>
+          <label className="">
             Email Address
           </label>
           <input
@@ -422,63 +418,63 @@ export default function Register () {
             name='email'
             value={formData.email}
             onChange={handleChange}
-            className='input-auth read-only:bg-gray-100 read-only:cursor-not-allowed'
+            className=""
             placeholder='Enter your email'
             required
             readOnly={!!inviteToken}
           />
           {inviteToken && (
-            <p className='mt-1 text-xs text-content-secondary'>
+            <p className="">
               Email is set by your invitation and cannot be changed.
             </p>
           )}
         </div>
 
         <div>
-          <label className='block text-sm font-medium text-content-primary mb-2'>
+          <label className="">
             Phone Number{' '}
-            <span className='text-content-secondary font-normal'>(Optional)</span>
+            <span className="">(Optional)</span>
           </label>
           <input
             type='tel'
             name='phone'
             value={formData.phone}
             onChange={handleChange}
-            className='input-auth'
+            className=""
             placeholder='Enter your phone number'
           />
         </div>
 
         <div>
-          <label className='block text-sm font-medium text-content-primary mb-2'>
+          <label className="">
             Password
           </label>
-          <div className='relative'>
+          <div className="">
             <input
               type={showPassword ? 'text' : 'password'}
               name='password'
               value={formData.password}
               onChange={handleChange}
-              className='input-auth pr-12'
+              className=""
               placeholder='Create a password'
               required
             />
             <button
               type='button'
               onClick={() => setShowPassword(!showPassword)}
-              className='absolute right-4 top-1/2 -translate-y-1/2 text-content-secondary hover:text-content-primary transition-colors'
+              className=""
             >
               {showPassword ? (
-                <EyeOff className='w-5 h-5' />
+                <EyeOff className="" />
               ) : (
-                <Eye className='w-5 h-5' />
+                <Eye className="" />
               )}
             </button>
           </div>
         </div>
 
         <div>
-          <label className='block text-sm font-medium text-content-primary mb-2'>
+          <label className="">
             Confirm Password
           </label>
           <input
@@ -486,7 +482,7 @@ export default function Register () {
             name='confirmPassword'
             value={formData.confirmPassword}
             onChange={handleChange}
-            className='input-auth'
+            className=""
             placeholder='Confirm your password'
             required
           />
@@ -495,21 +491,21 @@ export default function Register () {
         <button
           type='submit'
           disabled={isSubmitting}
-          className='btn-coral w-full mt-2'
+          className=""
         >
           {isSubmitting ? (
-            <Loader2 className='w-5 h-5 animate-spin' />
+            <Loader2 className="" />
           ) : (
             'Continue'
           )}
         </button>
       </form>
 
-      <p className='text-center text-content-secondary text-sm'>
+      <p className="">
         Already have an account?{' '}
         <Link
           to='/login'
-          className='text-primary hover:text-primary-hover font-semibold transition-colors'
+          className=""
         >
           Sign in
         </Link>
@@ -517,3 +513,4 @@ export default function Register () {
     </div>
   )
 }
+

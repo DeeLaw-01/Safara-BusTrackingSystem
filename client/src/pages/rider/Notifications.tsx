@@ -41,44 +41,44 @@ export default function Notifications () {
   }
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className="">
       {/* Header */}
-      <header className='bg-white border-b border-ui-border px-4 h-14 flex items-center gap-3 sticky top-0 z-50'>
+      <header className="">
         <button
           title='Back'
           onClick={() => navigate(-1)}
-          className='p-2 -ml-2 hover:bg-app-bg rounded-lg transition-colors'
+          className=""
         >
-          <ArrowLeft className='w-5 h-5 text-content-primary' />
+          <ArrowLeft className="" />
         </button>
-        <h1 className='text-lg font-bold text-content-primary'>Notifications</h1>
+        <h1 className="">Notifications</h1>
       </header>
 
-      <div className='max-w-2xl mx-auto px-4 py-6'>
-        <form onSubmit={handleSubmit} className='space-y-6'>
+      <div className="">
+        <form onSubmit={handleSubmit} className="">
           {/* Push Notifications */}
-          <div className='bg-white rounded-2xl border border-ui-border p-6 shadow-sm'>
-            <div className='flex items-center gap-3 mb-4'>
-              <div className='p-2 bg-primary/10 rounded-lg'>
-                <Smartphone className='w-5 h-5 text-primary' />
+          <div className="">
+            <div className="">
+              <div className="">
+                <Smartphone className="" />
               </div>
               <div>
-                <h3 className='text-lg font-semibold text-content-primary'>
+                <h3 className="">
                   Push Notifications
                 </h3>
-                <p className='text-sm text-content-secondary'>
+                <p className="">
                   Receive notifications on your device
                 </p>
               </div>
             </div>
 
-            <div className='space-y-3'>
-              <label className='flex items-center justify-between p-3 bg-app-bg rounded-lg cursor-pointer hover:bg-ui-border/30 transition-colors border border-ui-border/50'>
+            <div className="">
+              <label className="">
                 <div>
-                  <p className='text-sm font-medium text-content-primary'>
+                  <p className="">
                     Enable Push Notifications
                   </p>
-                  <p className='text-xs text-content-secondary'>
+                  <p className="">
                     Receive real-time updates on your device
                   </p>
                 </div>
@@ -86,16 +86,16 @@ export default function Notifications () {
                   type='checkbox'
                   checked={settings.pushNotifications}
                   onChange={() => toggleSetting('pushNotifications')}
-                  className='w-5 h-5 text-primary rounded focus:ring-primary'
+                  className=""
                 />
               </label>
 
-              <label className='flex items-center justify-between p-3 bg-app-bg rounded-lg cursor-pointer hover:bg-ui-border/30 transition-colors border border-ui-border/50'>
+              <label className="">
                 <div>
-                  <p className='text-sm font-medium text-content-primary'>
+                  <p className="">
                     Bus Approaching
                   </p>
-                  <p className='text-xs text-content-secondary'>
+                  <p className="">
                     Get notified when your bus is nearby
                   </p>
                 </div>
@@ -104,16 +104,16 @@ export default function Notifications () {
                   checked={settings.busApproaching}
                   onChange={() => toggleSetting('busApproaching')}
                   disabled={!settings.pushNotifications}
-                  className='w-5 h-5 text-primary rounded focus:ring-primary disabled:opacity-50'
+                  className=""
                 />
               </label>
 
-              <label className='flex items-center justify-between p-3 bg-app-bg rounded-lg cursor-pointer hover:bg-ui-border/30 transition-colors border border-ui-border/50'>
+              <label className="">
                 <div>
-                  <p className='text-sm font-medium text-content-primary'>
+                  <p className="">
                     Route Updates
                   </p>
-                  <p className='text-xs text-content-secondary'>
+                  <p className="">
                     Notifications about route changes or delays
                   </p>
                 </div>
@@ -122,35 +122,35 @@ export default function Notifications () {
                   checked={settings.routeUpdates}
                   onChange={() => toggleSetting('routeUpdates')}
                   disabled={!settings.pushNotifications}
-                  className='w-5 h-5 text-primary rounded focus:ring-primary disabled:opacity-50'
+                  className=""
                 />
               </label>
             </div>
           </div>
 
           {/* Email Notifications */}
-          <div className='bg-white rounded-2xl border border-ui-border p-6 shadow-sm'>
-            <div className='flex items-center gap-3 mb-4'>
-              <div className='p-2 bg-primary/10 rounded-lg'>
-                <Mail className='w-5 h-5 text-primary' />
+          <div className="">
+            <div className="">
+              <div className="">
+                <Mail className="" />
               </div>
               <div>
-                <h3 className='text-lg font-semibold text-content-primary'>
+                <h3 className="">
                   Email Notifications
                 </h3>
-                <p className='text-sm text-content-secondary'>
+                <p className="">
                   Receive updates via email
                 </p>
               </div>
             </div>
 
-            <div className='space-y-3'>
-              <label className='flex items-center justify-between p-3 bg-app-bg rounded-lg cursor-pointer hover:bg-ui-border/30 transition-colors border border-ui-border/50'>
+            <div className="">
+              <label className="">
                 <div>
-                  <p className='text-sm font-medium text-content-primary'>
+                  <p className="">
                     Enable Email Notifications
                   </p>
-                  <p className='text-xs text-content-secondary'>
+                  <p className="">
                     Receive updates in your inbox
                   </p>
                 </div>
@@ -158,16 +158,16 @@ export default function Notifications () {
                   type='checkbox'
                   checked={settings.emailNotifications}
                   onChange={() => toggleSetting('emailNotifications')}
-                  className='w-5 h-5 text-primary rounded focus:ring-primary'
+                  className=""
                 />
               </label>
 
-              <label className='flex items-center justify-between p-3 bg-app-bg rounded-lg cursor-pointer hover:bg-ui-border/30 transition-colors border border-ui-border/50'>
+              <label className="">
                 <div>
-                  <p className='text-sm font-medium text-content-primary'>
+                  <p className="">
                     System Announcements
                   </p>
-                  <p className='text-xs text-content-secondary'>
+                  <p className="">
                     Important updates and announcements
                   </p>
                 </div>
@@ -176,7 +176,7 @@ export default function Notifications () {
                   checked={settings.systemAnnouncements}
                   onChange={() => toggleSetting('systemAnnouncements')}
                   disabled={!settings.emailNotifications}
-                  className='w-5 h-5 text-primary rounded focus:ring-primary disabled:opacity-50'
+                  className=""
                 />
               </label>
             </div>
@@ -184,37 +184,37 @@ export default function Notifications () {
 
           {/* Success Message */}
           {success && (
-            <div className='flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700'>
-              <Check className='w-5 h-5' />
-              <span className='text-sm font-medium'>
+            <div className="">
+              <Check className="" />
+              <span className="">
                 Notification preferences saved!
               </span>
             </div>
           )}
 
           {/* Submit Button */}
-          <div className='flex gap-3'>
+          <div className="">
             <button
               type='button'
               title='Cancel'
               onClick={() => navigate(-1)}
-              className='btn-secondary flex-1'
+              className=""
             >
               Cancel
             </button>
             <button
               type='submit'
               disabled={loading}
-              className='btn-coral flex-1'
+              className=""
             >
               {loading ? (
                 <>
-                  <Loader2 className='w-5 h-5 animate-spin' />
+                  <Loader2 className="" />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Save className='w-5 h-5' />
+                  <Save className="" />
                   Save Preferences
                 </>
               )}
@@ -225,3 +225,4 @@ export default function Notifications () {
     </div>
   )
 }
+

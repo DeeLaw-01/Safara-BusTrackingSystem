@@ -149,23 +149,23 @@ export default function ForgotPassword () {
   // Step 3: Done
   if (step === 'done') {
     return (
-      <div className='space-y-6 text-center'>
-        <div className='flex flex-col items-center gap-4 py-4'>
-          <div className='w-16 h-16 bg-green-50 rounded-full flex items-center justify-center'>
-            <CheckCircle className='w-9 h-9 text-green-500' />
+      <div className="">
+        <div className="">
+          <div className="">
+            <CheckCircle className="" />
           </div>
           <div>
-            <h2 className='text-2xl font-bold text-content-primary'>
+            <h2 className="">
               Password Reset!
             </h2>
-            <p className='text-content-secondary text-sm mt-2'>
+            <p className="">
               Your password has been updated successfully.
               <br />
               You can now sign in with your new password.
             </p>
           </div>
         </div>
-        <button onClick={() => navigate('/login')} className='btn-coral w-full'>
+        <button onClick={() => navigate('/login')} className="">
           Go to Login
         </button>
       </div>
@@ -175,43 +175,43 @@ export default function ForgotPassword () {
   // Step 2: OTP + new password
   if (step === 'otp') {
     return (
-      <div className='space-y-6'>
+      <div className="">
         <button
           onClick={() => {
             setStep('email')
             setError('')
             setOtp(['', '', '', '', '', ''])
           }}
-          className='flex items-center gap-1.5 text-sm text-content-secondary hover:text-content-primary transition-colors'
+          className=""
         >
-          <ArrowLeft className='w-4 h-4' /> Back
+          <ArrowLeft className="" /> Back
         </button>
 
-        <div className='text-center'>
-          <div className='w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4'>
-            <Mail className='w-7 h-7 text-red-500' />
+        <div className="">
+          <div className="">
+            <Mail className="" />
           </div>
-          <h2 className='text-2xl font-bold text-content-primary'>Check your email</h2>
-          <p className='text-content-secondary text-sm mt-2'>
+          <h2 className="">Check your email</h2>
+          <p className="">
             We sent a reset code to
             <br />
-            <span className='font-semibold text-content-primary'>{email}</span>
+            <span className="">{email}</span>
           </p>
         </div>
 
         {error && (
-          <div className='p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm text-center'>
+          <div className="">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleResetSubmit} className='space-y-5'>
+        <form onSubmit={handleResetSubmit} className="">
           {/* OTP boxes */}
           <div>
-            <label className='block text-sm font-medium text-content-primary mb-3 text-center'>
+            <label className="">
               Enter 6-digit code
             </label>
-            <div className='flex justify-center gap-3'>
+            <div className="">
               {otp.map((digit, i) => (
                 <input
                   key={i}
@@ -226,10 +226,7 @@ export default function ForgotPassword () {
                   onChange={e => handleOtpChange(i, e.target.value)}
                   onKeyDown={e => handleOtpKeyDown(i, e)}
                   onPaste={i === 0 ? handleOtpPaste : undefined}
-                   className='w-12 h-14 text-center text-xl font-bold text-content-primary
-                              bg-gray-50 border-2 border-ui-border rounded-xl
-                              focus:outline-none focus:border-content-primary/20 focus:bg-white
-                              transition-all duration-200'
+                   className=""
                 />
               ))}
             </div>
@@ -237,10 +234,10 @@ export default function ForgotPassword () {
 
           {/* New Password */}
           <div>
-            <label className='block text-sm font-medium text-content-primary mb-2'>
+            <label className="">
               New Password
             </label>
-            <div className='relative'>
+            <div className="">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={newPassword}
@@ -248,19 +245,19 @@ export default function ForgotPassword () {
                   setNewPassword(e.target.value)
                   setError('')
                 }}
-                className='input-auth pr-12'
+                className=""
                 placeholder='Enter new password'
                 required
               />
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute right-4 top-1/2 -translate-y-1/2 text-content-secondary hover:text-content-primary transition-colors'
+                className=""
               >
                 {showPassword ? (
-                  <EyeOff className='w-5 h-5' />
+                  <EyeOff className="" />
                 ) : (
-                  <Eye className='w-5 h-5' />
+                  <Eye className="" />
                 )}
               </button>
             </div>
@@ -268,7 +265,7 @@ export default function ForgotPassword () {
 
           {/* Confirm Password */}
           <div>
-            <label className='block text-sm font-medium text-content-primary mb-2'>
+            <label className="">
               Confirm Password
             </label>
             <input
@@ -278,7 +275,7 @@ export default function ForgotPassword () {
                 setConfirmPassword(e.target.value)
                 setError('')
               }}
-              className='input-auth'
+              className=""
               placeholder='Confirm new password'
               required
             />
@@ -287,23 +284,22 @@ export default function ForgotPassword () {
           <button
             type='submit'
             disabled={isLoading}
-            className='btn-coral w-full'
+            className=""
           >
             {isLoading ? (
-              <Loader2 className='w-5 h-5 animate-spin' />
+              <Loader2 className="" />
             ) : (
               'Reset Password'
             )}
           </button>
         </form>
 
-        <p className='text-center text-sm text-content-secondary'>
+        <p className="">
           Didn't receive it?{' '}
           <button
             onClick={handleResend}
             disabled={resendCooldown > 0 || isLoading}
-            className='font-semibold text-primary hover:text-primary-hover disabled:text-content-secondary/50
-                       disabled:cursor-not-allowed transition-colors'
+            className=""
           >
             {resendCooldown > 0
               ? `Resend in ${resendCooldown}s`
@@ -316,30 +312,30 @@ export default function ForgotPassword () {
 
   // Step 1: Email input
   return (
-    <div className='space-y-6'>
+    <div className="">
       <button
         onClick={() => navigate('/login')}
-        className='flex items-center gap-1.5 text-sm text-content-secondary hover:text-content-primary transition-colors'
+        className=""
       >
-        <ArrowLeft className='w-4 h-4' /> Back to Login
+        <ArrowLeft className="" /> Back to Login
       </button>
 
       <div>
-        <h2 className='text-2xl font-bold text-content-primary'>Forgot Password?</h2>
-        <p className='text-content-secondary text-sm mt-1'>
+        <h2 className="">Forgot Password?</h2>
+        <p className="">
           Enter your email and we'll send you a reset code.
         </p>
       </div>
 
       {error && (
-        <div className='p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm'>
+        <div className="">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleEmailSubmit} className='space-y-5'>
+      <form onSubmit={handleEmailSubmit} className="">
         <div>
-          <label className='block text-sm font-medium text-content-primary mb-2'>
+          <label className="">
             Email Address
           </label>
           <input
@@ -349,27 +345,27 @@ export default function ForgotPassword () {
               setEmail(e.target.value)
               setError('')
             }}
-            className='input-auth'
+            className=""
             placeholder='Enter your registered email'
             required
             autoFocus
           />
         </div>
 
-        <button type='submit' disabled={isLoading} className='btn-coral w-full'>
+        <button type='submit' disabled={isLoading} className="">
           {isLoading ? (
-            <Loader2 className='w-5 h-5 animate-spin' />
+            <Loader2 className="" />
           ) : (
             'Send Reset Code'
           )}
         </button>
       </form>
 
-      <p className='text-center text-content-secondary text-sm'>
+      <p className="">
         Remember your password?{' '}
         <Link
           to='/login'
-          className='text-primary hover:text-primary-hover font-semibold transition-colors'
+          className=""
         >
           Sign in
         </Link>
@@ -377,3 +373,4 @@ export default function ForgotPassword () {
     </div>
   )
 }
+
