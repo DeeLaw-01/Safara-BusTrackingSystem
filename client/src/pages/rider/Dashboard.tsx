@@ -93,6 +93,13 @@ const CSS = `
     cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
   .db-desk-nav-btn:hover { background: #eef2ff; border-color: #c7d2fe; color: #6366f1; }
+  .db-logout-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 13px; border-radius: 10px; border: 1px solid #fecaca;
+    background: #fff5f5; color: #ef4444; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .db-logout-btn:hover { background: #fee2e2; }
   .db-desk-user-chip {
     display: none; align-items: center; gap: 8px;
     padding: 5px 12px 5px 6px; border-radius: 99px;
@@ -865,20 +872,40 @@ export default function RiderDashboard() {
           <div className="db-topbar-spacer" />
 
           <nav className="db-desk-nav">
-            {([
-              { label: "Account", path: "/account", Icon: User },
-              { label: "Notifications", path: "/notifications", Icon: BellIcon },
-              { label: "Settings", path: "/settings", Icon: Settings },
-            ] as const).map(({ label, path, Icon }) => (
-              <button key={path} className="db-desk-nav-btn" onClick={() => navigate(path)}>
-                <Icon size={13} />{label}
+            {(
+              [
+                { label: "Account", path: "/account", Icon: User },
+                {
+                  label: "Notifications",
+                  path: "/notifications",
+                  Icon: BellIcon,
+                },
+                { label: "Settings", path: "/settings", Icon: Settings },
+              ] as const
+            ).map(({ label, path, Icon }) => (
+              <button
+                key={path}
+                className="db-desk-nav-btn"
+                onClick={() => navigate(path)}
+              >
+                <Icon size={13} />
+                {label}
               </button>
             ))}
+            <button className="db-logout-btn" onClick={logout}>
+              <LogOut size={13} />
+              Logout
+            </button>
           </nav>
 
-          <button className="db-desk-user-chip" onClick={() => navigate("/account")}>
+          <button
+            className="db-desk-user-chip"
+            onClick={() => navigate("/account")}
+          >
             <UserAvatar name={user?.name} avatar={user?.avatar} size="sm" />
-            <span className="db-desk-user-name">{user?.name?.split(" ")[0] ?? "Account"}</span>
+            <span className="db-desk-user-name">
+              {user?.name?.split(" ")[0] ?? "Account"}
+            </span>
           </button>
         </header>
 

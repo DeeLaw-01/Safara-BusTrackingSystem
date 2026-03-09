@@ -297,7 +297,12 @@ function AutoFollowMap({
 
 // â”€â”€â”€ Geometry helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+function haversineDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number {
   const R = 6371e3;
   const toRad = (deg: number) => (deg * Math.PI) / 180;
   const dLat = toRad(lat2 - lat1);
@@ -308,32 +313,63 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function findClosestPointOnPath(path: [number, number][], pos: [number, number]): number {
-  let minDist = Infinity, closestIdx = 0;
+function findClosestPointOnPath(
+  path: [number, number][],
+  pos: [number, number],
+): number {
+  let minDist = Infinity,
+    closestIdx = 0;
   for (let i = 0; i < path.length; i++) {
     const dist = haversineDistance(pos[0], pos[1], path[i][0], path[i][1]);
-    if (dist < minDist) { minDist = dist; closestIdx = i; }
+    if (dist < minDist) {
+      minDist = dist;
+      closestIdx = i;
+    }
   }
   return closestIdx;
 }
 
-function getNextStopIndex(stops: Stop[], position: [number, number], routePath?: [number, number][]): number {
+function getNextStopIndex(
+  stops: Stop[],
+  position: [number, number],
+  routePath?: [number, number][],
+): number {
   if (!position || stops.length === 0) return 0;
   if (routePath && routePath.length > 1) {
     const busPathIdx = findClosestPointOnPath(routePath, position);
     let nextIdx = 0;
     for (let i = 0; i < stops.length; i++) {
-      const stopPathIdx = findClosestPointOnPath(routePath, [stops[i].latitude, stops[i].longitude]);
-      const distToStop = haversineDistance(position[0], position[1], stops[i].latitude, stops[i].longitude);
-      if (busPathIdx > stopPathIdx && distToStop > 150) { nextIdx = Math.min(i + 1, stops.length - 1); }
-      else { break; }
+      const stopPathIdx = findClosestPointOnPath(routePath, [
+        stops[i].latitude,
+        stops[i].longitude,
+      ]);
+      const distToStop = haversineDistance(
+        position[0],
+        position[1],
+        stops[i].latitude,
+        stops[i].longitude,
+      );
+      if (busPathIdx > stopPathIdx && distToStop > 150) {
+        nextIdx = Math.min(i + 1, stops.length - 1);
+      } else {
+        break;
+      }
     }
     return nextIdx;
   }
-  let closestIdx = 0, minDist = Infinity;
+  let closestIdx = 0,
+    minDist = Infinity;
   stops.forEach((stop, idx) => {
-    const dist = haversineDistance(position[0], position[1], stop.latitude, stop.longitude);
-    if (dist < minDist) { minDist = dist; closestIdx = idx; }
+    const dist = haversineDistance(
+      position[0],
+      position[1],
+      stop.latitude,
+      stop.longitude,
+    );
+    if (dist < minDist) {
+      minDist = dist;
+      closestIdx = idx;
+    }
   });
   if (minDist > 500) return 0;
   if (minDist < 100 && closestIdx < stops.length - 1) return closestIdx + 1;
@@ -423,7 +459,10 @@ export default function ActiveTrip() {
     }
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-        const newPos: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+        const newPos: [number, number] = [
+          pos.coords.latitude,
+          pos.coords.longitude,
+        ];
         setPosition(newPos);
         latestPositionRef.current = newPos;
         const spd = pos.coords.speed ? pos.coords.speed * 3.6 : 0;
@@ -475,7 +514,10 @@ export default function ActiveTrip() {
       typeof bus.routeId === "object"
         ? (bus.routeId as { _id: string })._id
         : bus.routeId;
-    if (!routeId) { setError("No route assigned to your bus"); return; }
+    if (!routeId) {
+      setError("No route assigned to your bus");
+      return;
+    }
     setStarting(true);
     setError(null);
     try {
@@ -511,7 +553,8 @@ export default function ActiveTrip() {
   const stops = useMemo(() => route?.stops || [], [route]);
   const routePath: [number, number][] = useMemo(() => {
     if (route?.path && route.path.length > 1) return route.path;
-    if (stops.length > 1) return stops.map((s) => [s.latitude, s.longitude] as [number, number]);
+    if (stops.length > 1)
+      return stops.map((s) => [s.latitude, s.longitude] as [number, number]);
     return [];
   }, [route, stops]);
 
@@ -522,13 +565,27 @@ export default function ActiveTrip() {
   const nextStop = stops[nextStopIdx] || null;
   const distToNextStop = useMemo(() => {
     if (!position || !nextStop) return null;
-    return Math.round(haversineDistance(position[0], position[1], nextStop.latitude, nextStop.longitude));
+    return Math.round(
+      haversineDistance(
+        position[0],
+        position[1],
+        nextStop.latitude,
+        nextStop.longitude,
+      ),
+    );
   }, [position, nextStop]);
 
   const { coveredPath, remainingPath } = useMemo(() => {
-    if (!position || routePath.length === 0) return { coveredPath: [] as [number, number][], remainingPath: routePath };
+    if (!position || routePath.length === 0)
+      return {
+        coveredPath: [] as [number, number][],
+        remainingPath: routePath,
+      };
     const closestIdx = findClosestPointOnPath(routePath, position);
-    return { coveredPath: routePath.slice(0, closestIdx + 1), remainingPath: routePath.slice(closestIdx) };
+    return {
+      coveredPath: routePath.slice(0, closestIdx + 1),
+      remainingPath: routePath.slice(closestIdx),
+    };
   }, [routePath, position]);
 
   const driverIcon = useMemo(() => createDriverIcon(heading), [heading]);
@@ -555,7 +612,9 @@ export default function ActiveTrip() {
             <AlertCircle size={28} color="#6366f1" />
           </div>
           <div className="at-no-bus-title">No Bus Assigned</div>
-          <div className="at-no-bus-sub">You need a bus assigned to start a trip.</div>
+          <div className="at-no-bus-sub">
+            You need a bus assigned to start a trip.
+          </div>
         </div>
       </>
     );
@@ -563,19 +622,21 @@ export default function ActiveTrip() {
 
   const center: [number, number] =
     position ||
-    (stops.length > 0 ? [stops[0].latitude, stops[0].longitude] : [31.5204, 74.3587]);
+    (stops.length > 0
+      ? [stops[0].latitude, stops[0].longitude]
+      : [31.5204, 74.3587]);
 
-  const distLabel = distToNextStop !== null
-    ? distToNextStop > 1000
-      ? `${(distToNextStop / 1000).toFixed(1)} km`
-      : `${distToNextStop} m`
-    : null;
+  const distLabel =
+    distToNextStop !== null
+      ? distToNextStop > 1000
+        ? `${(distToNextStop / 1000).toFixed(1)} km`
+        : `${distToNextStop} m`
+      : null;
 
   return (
     <>
       <style>{CSS}</style>
       <div className="at-root">
-
         {/* â”€â”€ Top bar â”€â”€ */}
         {tripActive && nextStop ? (
           <div className="at-topbar">
@@ -604,7 +665,8 @@ export default function ActiveTrip() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="at-topbar-val">{bus.name}</div>
               <div className="at-topbar-label">
-                {bus.plateNumber} Â· {route ? `${stops.length} stops` : "No route assigned"}
+                {bus.plateNumber} Â·{" "}
+                {route ? `${stops.length} stops` : "No route assigned"}
               </div>
             </div>
             {!tripActive && (
@@ -613,7 +675,11 @@ export default function ActiveTrip() {
                 disabled={starting || !route}
                 className="at-start-btn"
               >
-                {starting ? <Loader2 size={15} className="animate-spin" /> : <Navigation size={15} />}
+                {starting ? (
+                  <Loader2 size={15} className="animate-spin" />
+                ) : (
+                  <Navigation size={15} />
+                )}
                 Start Trip
               </button>
             )}
@@ -624,13 +690,20 @@ export default function ActiveTrip() {
         <div className="at-map-area">
           {error && <div className="at-alert">{error}</div>}
           {locationError && tripActive && (
-            <div className="at-alert at-alert-warn">Location error: {locationError}</div>
+            <div className="at-alert at-alert-warn">
+              Location error: {locationError}
+            </div>
           )}
 
           <MapContainer
             center={center}
             zoom={16}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+            }}
             zoomControl={false}
           >
             <TileLayer
@@ -639,24 +712,45 @@ export default function ActiveTrip() {
             />
 
             {position && tripActive && (
-              <AutoFollowMap position={position} heading={heading} followMode={followMode} />
+              <AutoFollowMap
+                position={position}
+                heading={heading}
+                followMode={followMode}
+              />
             )}
 
             {tripActive && coveredPath.length > 1 && (
-              <Polyline positions={coveredPath} color="#94a3b8" weight={5} opacity={0.4} />
+              <Polyline
+                positions={coveredPath}
+                color="#94a3b8"
+                weight={5}
+                opacity={0.4}
+              />
             )}
             {remainingPath.length > 1 && (
-              <Polyline positions={remainingPath} color="#6366f1" weight={5} opacity={0.9} />
+              <Polyline
+                positions={remainingPath}
+                color="#6366f1"
+                weight={5}
+                opacity={0.9}
+              />
             )}
             {!tripActive && routePath.length > 1 && (
-              <Polyline positions={routePath} color="#6366f1" weight={4} opacity={0.7} />
+              <Polyline
+                positions={routePath}
+                color="#6366f1"
+                weight={4}
+                opacity={0.7}
+              />
             )}
 
             {stops.map((stop, index) => (
               <Marker
                 key={stop._id}
                 position={[stop.latitude, stop.longitude]}
-                icon={tripActive && index === nextStopIdx ? nextStopIcon : stopIcon}
+                icon={
+                  tripActive && index === nextStopIdx ? nextStopIcon : stopIcon
+                }
               >
                 <Popup>
                   <div style={{ fontSize: 12 }}>
@@ -676,7 +770,11 @@ export default function ActiveTrip() {
                 <Popup>
                   <div style={{ fontSize: 12 }}>
                     <div style={{ fontWeight: 700 }}>You are here</div>
-                    {speed > 0 && <div style={{ color: "#64748b" }}>{Math.round(speed)} km/h</div>}
+                    {speed > 0 && (
+                      <div style={{ color: "#64748b" }}>
+                        {Math.round(speed)} km/h
+                      </div>
+                    )}
                   </div>
                 </Popup>
               </Marker>
@@ -699,14 +797,32 @@ export default function ActiveTrip() {
             <div className="at-strip">
               <div className="at-strip-header">
                 <span className="at-strip-label">Upcoming stops</span>
-                <button onClick={handleEndTrip} disabled={ending} className="at-end-btn">
-                  {ending ? <Loader2 size={13} className="animate-spin" /> : <Square size={13} />}
+                <button
+                  onClick={handleEndTrip}
+                  disabled={ending}
+                  className="at-end-btn"
+                >
+                  {ending ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : (
+                    <Square size={13} />
+                  )}
                   End Trip
                 </button>
               </div>
-              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  overflowX: "auto",
+                  paddingBottom: 4,
+                }}
+              >
                 {stops.slice(nextStopIdx).map((stop, i) => (
-                  <div key={stop._id} className={`at-stop-chip ${i === 0 ? "at-stop-chip-next" : "at-stop-chip-future"}`}>
+                  <div
+                    key={stop._id}
+                    className={`at-stop-chip ${i === 0 ? "at-stop-chip-next" : "at-stop-chip-future"}`}
+                  >
                     <MapPin size={13} style={{ flexShrink: 0 }} />
                     <span style={{ whiteSpace: "nowrap" }}>{stop.name}</span>
                   </div>
@@ -727,7 +843,8 @@ export default function ActiveTrip() {
                   <div>
                     <div className="at-panel-bus-name">{bus.name}</div>
                     <div className="at-panel-bus-sub">
-                      {bus.plateNumber} Â· {route ? `${stops.length} stops` : "No route"}
+                      {bus.plateNumber} Â·{" "}
+                      {route ? `${stops.length} stops` : "No route"}
                     </div>
                   </div>
                 </div>
@@ -753,13 +870,15 @@ export default function ActiveTrip() {
                       <div className="at-metric">
                         <div className="at-metric-label">Speed</div>
                         <div className="at-metric-val">
-                          {Math.round(speed)}<span className="at-metric-unit"> km/h</span>
+                          {Math.round(speed)}
+                          <span className="at-metric-unit"> km/h</span>
                         </div>
                       </div>
                       <div className="at-metric">
                         <div className="at-metric-label">Stops left</div>
                         <div className="at-metric-val">
-                          {stops.length - nextStopIdx}<span className="at-metric-unit"> stops</span>
+                          {stops.length - nextStopIdx}
+                          <span className="at-metric-unit"> stops</span>
                         </div>
                       </div>
                     </div>
@@ -770,8 +889,20 @@ export default function ActiveTrip() {
                         <div className="at-stops-label">Upcoming Stops</div>
                         {stops.slice(nextStopIdx).map((stop, i) => (
                           <div key={stop._id} className="at-pstop-row">
-                            <span className={i === 0 ? "at-pstop-dot-next" : "at-pstop-dot-future"} />
-                            <span className={i === 0 ? "at-pstop-name-next" : "at-pstop-name-future"}>
+                            <span
+                              className={
+                                i === 0
+                                  ? "at-pstop-dot-next"
+                                  : "at-pstop-dot-future"
+                              }
+                            />
+                            <span
+                              className={
+                                i === 0
+                                  ? "at-pstop-name-next"
+                                  : "at-pstop-name-future"
+                              }
+                            >
                               {stop.name}
                             </span>
                           </div>
@@ -780,8 +911,16 @@ export default function ActiveTrip() {
                     )}
 
                     {/* End trip */}
-                    <button onClick={handleEndTrip} disabled={ending} className="at-panel-end-btn">
-                      {ending ? <Loader2 size={15} className="animate-spin" /> : <Square size={15} />}
+                    <button
+                      onClick={handleEndTrip}
+                      disabled={ending}
+                      className="at-panel-end-btn"
+                    >
+                      {ending ? (
+                        <Loader2 size={15} className="animate-spin" />
+                      ) : (
+                        <Square size={15} />
+                      )}
                       End Trip
                     </button>
                   </>
@@ -793,8 +932,20 @@ export default function ActiveTrip() {
                         <div className="at-stops-label">Route Stops</div>
                         {stops.map((stop, i) => (
                           <div key={stop._id} className="at-pstop-row">
-                            <span className={i === 0 ? "at-pstop-dot-next" : "at-pstop-dot-future"} />
-                            <span className={i === 0 ? "at-pstop-name-next" : "at-pstop-name-future"}>
+                            <span
+                              className={
+                                i === 0
+                                  ? "at-pstop-dot-next"
+                                  : "at-pstop-dot-future"
+                              }
+                            />
+                            <span
+                              className={
+                                i === 0
+                                  ? "at-pstop-name-next"
+                                  : "at-pstop-name-future"
+                              }
+                            >
                               {stop.name}
                             </span>
                           </div>
@@ -802,7 +953,9 @@ export default function ActiveTrip() {
                       </>
                     )}
                     {!route && (
-                      <div className="at-panel-no-route">No route assigned to this bus.</div>
+                      <div className="at-panel-no-route">
+                        No route assigned to this bus.
+                      </div>
                     )}
 
                     {/* Start trip */}
@@ -811,7 +964,11 @@ export default function ActiveTrip() {
                       disabled={starting || !route}
                       className="at-panel-start-btn"
                     >
-                      {starting ? <Loader2 size={15} className="animate-spin" /> : <Navigation size={15} />}
+                      {starting ? (
+                        <Loader2 size={15} className="animate-spin" />
+                      ) : (
+                        <Navigation size={15} />
+                      )}
                       Start Trip
                     </button>
                   </>

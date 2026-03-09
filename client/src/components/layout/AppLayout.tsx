@@ -72,7 +72,12 @@ export default function AppLayout() {
 
   const navItems = [
     { to: "/driver", icon: LayoutDashboard, label: "Dashboard", exact: true },
-    { to: "/driver/trip", icon: Navigation, label: "Active Trip", exact: false },
+    {
+      to: "/driver/trip",
+      icon: Navigation,
+      label: "Active Trip",
+      exact: false,
+    },
   ];
 
   return (
@@ -99,7 +104,9 @@ export default function AppLayout() {
           <div className="al-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
           <button className="al-logout-btn" onClick={logout}>
             <LogOut size={13} />
-            <span style={{ display: "none" }} className="sm-inline">Sign out</span>
+            <span style={{ display: "none" }} className="sm-inline">
+              Sign out
+            </span>
           </button>
         </header>
 
@@ -119,7 +126,9 @@ export default function AppLayout() {
                 className={`al-nav-item${active ? " al-nav-item-active" : ""}`}
               >
                 {active && <span className="al-nav-bar" />}
-                <div className={`al-nav-icon${active ? " al-nav-icon-active" : ""}`}>
+                <div
+                  className={`al-nav-icon${active ? " al-nav-icon-active" : ""}`}
+                >
                   <Icon size={17} />
                 </div>
                 {label}
